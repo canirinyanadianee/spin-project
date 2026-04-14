@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report</title>
+    <link rel="stylesheet" href="dayrec.css" />
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>
+  </head>
+  <!-- oncontextmenu="return false;" -->
+    <body oncontextmenu="return false;">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">REPORT</div>
+                    <div class="reportdate"><strong class="date"></strong><strong>/</strong><strong class="monthy"></strong><strong>/</strong><strong class="year"></strong></div>
+                </button>
+            </div>
+            <!-- end of header -->
+            <div class="finance">
+                <main>
+                    <h1 class="finance-header">Previous</h1>
+                    <div class="insights">
+                        <div class="users">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="worked-title">Worked Time</h3>
+                                    <h1 class="worked-time"><strong class="worked-hours">0</strong>h <strong class="worked-min">0</strong>m</h1>
+                                </div>
+                            </div>
+                            <div class="user-time">
+                                <small class="user-time-header">Time:</strong></small>
+                                <small class="user-time-starting">Starting,<strong class="user-time-starting-time">0:0</strong></small>
+                                <small class="user-time-ending">Ending,<strong class="user-time-ending-time">0:0</strong></small>
+                            </div>
+                            <div class="user-credits">
+                                <small class="user-credits-header">Credits:</strong></small>
+                                <small class="user-credits-starting">Starting,<strong class="user-credits-starting-now">0</strong></small>
+                                <small class="user-credits-ending">Ending,<strong class="user-credits-starting-end">0</strong></small>
+                            </div>
+                        </div>
+                        
+                        <div class="total-number-subsription">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3>Games</h3>
+                                    <h1 class="sub-number1">$</h1>
+                                    <h1 class="sub-number11">0</h1>
+                                </div>
+                                <div class="game-rate">
+                                    <h3>Rate</h3>
+                                    <h1 class="sub-number">Frw</h1>
+                                    <h1 class="sub-number111">0</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sales">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="pay-class">Cash In</h3>
+                                    <h1>Frw <h1 id="cashreceived">0</h1></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- --------------- END OF SALES------------------- -->
+                        <div class="expenses">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="cash-class">Cash out</h3>
+                                    <h1>Frw <h1 id="cashout">0</h1></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- --------------- END OF EXPENSES------------------- -->
+                        <div class="income">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3>Income</h3>
+                                    <h1>Frw<h1 id="profit">0</h1></h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                            </div> 
+                        </div>
+                        <!-- --------------- END OF INCOME------------------- -->
+                    </div>
+                    <h1 class="user-header">LogIn</h1>
+                    <div class="logins">
+                        <!-- --------------- END OF INCOME------------------- -->
+                    </div>
+                    <!-- Records -->
+                    <div class="recent-order">
+                        <h2 class="records-header">Records</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Time</th>
+                                    <th>Bet</th>
+                                    <th>Win</th>
+                                    <th>Income</th>
+                                    <th>Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+                <!-- history button -->
+                <div class="histroy-button">
+                    <button class="hist-button" onclick="backtohistory()">BACK</button>
+                </div>
+            </div>
+            <!-- end of users -->
+        </div>
+        <script src="dayrec.js"></script>
+    </body>
+</html>

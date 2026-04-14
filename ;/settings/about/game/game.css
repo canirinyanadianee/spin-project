@@ -1,0 +1,148 @@
+/*------------- ROOT VARIABLES --------*/
+:root {
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-info-dark: #7d8da1;
+    --color-primary-variant: #111e88;
+    --color-background: #f6f6f9;
+  
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+  
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+  
+    --box-shadow: 0 2rem 3rem var(--color-light);
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+  
+}
+  
+  
+/* ========================== DARK THEME VARAIBLES ============== */
+  
+* {
+      box-sizing: border-box;
+}
+  
+body{
+      background: var(--color-background);
+      font-family: "Lato", sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 0;
+      color: var(--color-dark);
+}
+.highpose {
+    width: 500px;
+    height: 210px;
+    border-color: #2a134e;
+    border-radius: 10px;
+    position: absolute;
+    background: linear-gradient(#1f1919, #ffffff);
+    text-align: center;
+    font-size: 20px;
+    top: -6%;
+    bottom: 72%;
+    right: 31.7%;
+}
+.highafterpose {
+  content: '';
+  position: absolute;
+  top: -2.8%;
+  right: 32.9%;
+  border-radius: 5%;
+  background-color: #000;
+  width: 465px;
+  height: 170px;
+  text-align: center;
+}
+.reporttitle {
+    font-size: 50px;
+    color: rgb(247, 189, 0);
+    font-weight: 1000;
+}
+.reportdate {
+    font-size: 20px;
+    color: rgb(231, 8, 0);
+    font-weight: 600;
+}
+/* ABONNOMENT STAGE START!!!!~ */
+.abonnoment{
+    background: var(--color-light);
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    /* text-align: center; */
+    position: relative;
+    /* left: 200px; */
+    top: 80px;
+    z-index: 1;
+    opacity: 1;
+  }
+  .end{
+    font-family: "Lato", sans-serif;
+    min-width: 400px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin: 0px 0px 20px 0px;
+    padding: 0.775rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.7;
+    color: white;
+    background: var(--color-background);
+  }
+  .end:hover {
+    background-color: #000000;
+  }
+
+/* last things */
+.histroy-button{
+    display: flex;
+    scale: auto;
+}
+.hist-button {
+    position: absolute;
+    top: -40px;
+    right: -25px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    background: var(--color-white);
+    border: none;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    transform: rotate(-40deg);
+}
+.hist-button:hover {
+    cursor: pointer;
+    box-shadow: none;
+}
+.spinwin {
+    color: rgb(247, 189, 0);
+}
+.developer {
+    
+    text-align: center;
+    color: #2a134e;
+}

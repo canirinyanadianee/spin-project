@@ -1,0 +1,544 @@
+/*------------- ROOT VARIABLES --------*/
+:root {
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-info-dark: #7d8da1;
+    --color-primary-variant: #111e88;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+
+}
+
+/* ========================== DARK THEME VARAIBLES ============== */
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 14px; 
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-background);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #0c0c0c;
+}
+body{
+    width: 100vw;
+    height: 100vh;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-background);
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-dark);
+}
+.container {
+    display: grid;
+    width: 96%;
+    margin: 0 auto;
+    gap: 1.8rem;
+    grid-template-columns: 0rem auto 0rem;
+}
+
+.highpose {
+    width: 500px;
+    height: 210px;
+    border-color: #2a134e;
+    border-radius: 10px;
+    position: absolute;
+    background: linear-gradient(#1f1919, #ffffff);
+    text-align: center;
+    font-size: 20px;
+    top: -6%;
+    bottom: 72%;
+    right: 31.7%;
+}
+.highafterpose {
+content: '';
+position: absolute;
+top: -2.8%;
+right: 32.9%;
+border-radius: 5%;
+background-color: #000;
+width: 465px;
+height: 170px;
+text-align: center;
+}
+.reporttitle {
+    font-size: 50px;
+    color: rgb(247, 189, 0);
+    font-weight: 1000;
+}
+.reportdate {
+    font-size: 20px;
+    color: rgb(231, 8, 0);
+    font-weight: 600;
+}
+.balancefrancs{
+    position: absolute;
+    top: 3.7%;
+    bottom: 68%;
+    right: 35.1%;
+    text-align: right;
+    font-size: 50px;
+    font-weight: 800;
+    color: rgb(87, 69, 10);
+    z-index: 3;
+}
+main{
+    margin-top: 13.4rem;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+main .insights {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.6rem;
+}
+main .remain-bal {
+    position: absolute;
+    top: 30%;
+    left: 35%;
+    width: 30%;
+    height: 200px;
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    place-items: center;
+    justify-content: center;
+}
+.rem-bal-title, .rem-bal-value {
+    color: var(--color-success);
+    font-size: 2rem;
+    font-weight: 700;
+}
+.rem-bal-value {
+    margin-top: 1.5rem;
+    color: var(--color-warning);
+    font-size: 4rem;
+    font-weight: 700;
+}
+.totalcash {
+    margin-top: .5rem;
+    color: var(--color-success);
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    color: white;
+    opacity: .2;
+}
+.totalcashout {
+    margin-left: 3rem;
+}
+main .logins {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.6rem;
+}
+main .insights > div{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    cursor: pointer;
+}
+
+main .logins > div{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+main .insights > div:hover {
+    box-shadow: none;
+}
+main .logins > div:hover {
+    box-shadow: none;
+}
+.start-balance {
+    color: var(--color-danger);
+}
+.sales {
+    color: var(--color-danger);
+}
+
+main .insights > div span {
+    background: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: 2rem;
+}
+main .logins > div span {
+    background: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: 2rem;
+}
+main .insights > div.expenses span {
+    background: var(--color-danger);
+}
+
+main .logins > div.expenses span {
+    background: var(--color-danger);
+}
+main .insights > div.income span{
+    background: var(--color-success);
+}
+
+main .logins > div.income span{
+    background: var(--color-success);
+}
+main .insights > div .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+main .logins > div .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+main .insights h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1rem;
+}
+main .logins h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1rem;
+}
+main .insights small {
+    margin-top: 1.3rem;
+    display: block;
+}
+main .logins small {
+    margin-top: 1.3rem;
+    display: block;
+}
+/* only logins */
+main .logins {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+main .logins > div{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+main .logins > div:hover {
+    box-shadow: none;
+}
+
+main .logins > div .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main .logins small {
+    margin-top: 1.3rem;
+    display: block;
+}
+/* =============== MAIN =================== */
+main.user{
+    margin-top: 1.4rem;
+    /* left: 10rem; */
+}
+.start-time {
+    color: var(--color-warning);
+}
+.main.user .now-balance.nowcredits{
+    text-align: center;
+}
+main.user .insights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+main.user .insights > div{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+main.user .insights > div:hover {
+    box-shadow: none;
+}
+
+main.user .insights > div span {
+    background: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: 2rem;
+}
+
+main.user .insights > div.expenses span {
+    background: var(--color-danger);
+}
+
+main.user .insights > div.income span{
+    background: var(--color-success);
+}
+
+main.user .insights > div .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main.user .insights h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1rem;
+}
+
+main.user .insights small {
+    margin-top: 1.3rem;
+    display: block;
+}
+.finance-header {
+    color: white;
+}
+.expenses {
+    color: var(--color-warning);
+}
+.income {
+    color: var(--color-success);
+    cursor: pointer;
+}
+.user-header {
+    margin-top: 1.5rem;
+    color: var(--color-primary);
+}
+.user-name{
+    color: var(--color-primary);
+}
+.worked-title {
+    color: #b18597;
+}
+#worked-title1 {
+    color: #b18597;
+}
+.user-cashreceived {
+    color: var(--color-success);
+}
+.worked-hours {
+    color: var(--color-success);
+}
+.worked-min {
+    color: var(--color-success);
+}
+.now-balance {
+    display: flex;
+}
+.now-credits{
+    margin-left: 13.5rem;
+    margin-top: -0.8rem;
+}
+.start-balance {
+    display: flex;
+}
+.start-credits {
+    margin-left: 10rem;
+    margin-top: 1.2rem;
+    text-align: right;
+}
+.added-balance {
+    display: flex;
+}
+.add-credits{
+    margin-left: 10rem;
+    margin-top: 1.2rem;
+    text-align: left;
+}
+.user-time {
+    display: flex;
+}
+.user-time-starting {
+    margin-left: 2rem;
+    margin-top: 1.2rem;
+    text-align: left;
+}
+.user-time-ending {
+    margin-left: 2rem;
+    margin-top: 1.2rem;
+    text-align: left;
+}
+.user-credits{
+    display: flex;
+}
+.user-credits-starting {
+    margin-left: 1.33rem;
+    margin-top: 1.2rem;
+    text-align: left;
+}
+.user-credits-ending {
+    margin-left: 2.65rem;
+    margin-top: 1.2rem;
+    text-align: left;
+}
+.user-time-header{
+    color: var(--color-warning);
+}
+.user-credits-header {
+    color: var(--color-warning);
+}
+.user-time-starting-time {
+    color: var(--color-danger);
+}
+.user-time-ending-time {
+    color: var(--color-success);
+}
+.user-credits-starting-now {
+    color: var(--color-danger);
+}
+.user-credits-starting-end {
+    color: var(--color-success);
+}
+.total-number-subsription {
+    color: var(--color-primary);
+}
+.sub-number {
+    text-align: right;
+}
+.game-rate {
+    text-align: right;
+}
+.histroy-button{
+    display: flex;
+  }
+  .hist-button {
+    position: absolute;
+    top: -40px;
+    right: -25px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    transform: rotate(-40deg);
+  }
+  .hist-button:hover {
+    cursor: pointer;
+    box-shadow: none;
+    transition: all 300ms ease;
+  }
+  /* =================== RECENTS ORDERS ========= */
+
+main .recent-order{
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+main .recent-order h2 {
+    margin-bottom: 0.8rem;
+}
+
+main .recent-order table {
+    background: var(--color-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+main .recent-order table:hover {
+    box-shadow: none;
+}
+
+main table tbody td{
+    height: 2.8rem;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark-variant);
+}
+
+main table tbody tr:last-child td {
+    border: none;
+}
+
+.rec-num {
+    color: #b18597;
+}
+.rec-tm {
+    color: rgb(190, 121, 236);
+    /* cursor: pointer; */
+}
+td {
+    cursor: pointer;
+}
+.rec-am {
+    color: var(--color-danger);
+}
+.rec-win {
+    color: var(--color-warning);
+}
+.rec-bl {
+    color: var(--color-success);
+}
+.link-tocall {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    top: 93%;
+    background: url(icon.png);
+    background-repeat: none;
+    background-size: cover;
+    color: white;
+    cursor: pointer;
+}

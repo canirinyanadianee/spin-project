@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MOO-GAME</title>
+    <link rel="stylesheet" href="./;/style.css"/>
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>
+</head>
+<!-- oncontextmenu="return false;" -->
+<body oncontextmenu="return false;">
+    <div id="app">
+        <img class="marker" src="./;/marker.png" />
+        <img class="wheel" src="./;/TEAM-5.png" />
+        <img class="button" onclick="transbtn()" src="./;/spin.png" />
+    </div>
+
+    <div class="balancediv"></div>
+    <div class="Section_top"></div>
+
+    <div class="imganimat"></div> 
+    <div class="logoanimat"></div>
+
+    <div class="shootanimat1"></div>
+    <div class="shootanimat2"></div>
+    <div class="shootanimat2of2"></div>
+    <div class="shootanimat3"></div>
+    <div class="shootanimat2of3"></div>
+    <div class="shootanimat3of3"></div>
+    <div class="shootanimat4"></div>
+    <div class="shootanimat5"></div>
+    <div class="shootanimat6"></div>
+    <div class="shootanimat2of6"></div>
+    <div class="shootanimat3of6"></div>
+    <div class="shootanimat4of6"></div>
+    <div class="shootanimat5of6"></div>
+    <div class="shootanimat6of6"></div>
+    <div class="shootanimat10"></div>
+    <div class="shootanimat2of10"></div>
+    <div class="shootanimat3of10"></div>
+    <div class="shootanimat4of10"></div>
+    <div class="shootanimat5of10"></div>
+    <div class="shootanimat6of10"></div>
+    <div class="shootanimat7of10"></div>
+    <div class="shootanimat8of10"></div>
+    <div class="shootanimat9of10"></div>
+    <div class="shootanimat10of10"></div>
+
+    <div class="win100times1-100"></div>
+    <div class="win100times1-50"></div>
+
+    <div class="win40times2-40"></div>
+    <div class="win40times2-3"></div>
+
+    <div class="win30player3-30"></div>
+    <div class="win30player3-3"></div>
+
+    <div class="win20player4-20"></div>
+    <div class="win20player4-3"></div>
+
+    <div class="win20player5-20"></div>
+    <div class="win20player5-3"></div>
+
+    <div class="win20player6-20"></div>
+    <div class="win20player6-3"></div>
+
+    <div class="win10player7-10"></div>
+    <div class="win10player7-3"></div>
+
+    <div class="win10player8-10"></div>
+    <div class="win10player8-3"></div>
+
+    <div class="win10player9-10"></div>
+    <div class="win10player9-3"></div>
+
+    <div class="win5player10-5"></div>
+    <!-- new system for animating shoot and the win -->
+    <div class="shootnbranimation"></div>
+    <div class="shootposition1"></div>
+    <div class="shootposition2">
+        <div class="shootposition1-2"></div>
+        <div class="shootposition2-2"></div>
+    </div>
+    <div class="shootposition3">
+        <div class="shootposition1-3"></div>
+        <div class="shootposition2-3"></div>
+        <div class="shootposition3-3"></div>
+    </div>
+    <div class="shootposition6">
+        <div class="shootposition1-6"></div>
+        <div class="shootposition2-6"></div>
+        <div class="shootposition3-6"></div>
+        <div class="shootposition4-6"></div>
+        <div class="shootposition5-6"></div>
+        <div class="shootposition6-6"></div>
+    </div>
+    <div class="shootposition10">
+        <div class="shootposition1-10"></div>
+        <div class="shootposition2-10"></div>
+        <div class="shootposition3-10"></div>
+        <div class="shootposition4-10"></div>
+        <div class="shootposition5-10"></div>
+        <div class="shootposition6-10"></div>
+        <div class="shootposition7-10"></div>
+        <div class="shootposition8-10"></div>
+        <div class="shootposition9-10"></div>
+        <div class="shootposition10-10"></div>
+    </div>
+
+    <div class="hidden"></div>
+    <h1 id="result" class="result"></h1>
+
+
+    <button class="win"></button>
+    <div class="wintext">WIN</div>
+    <div class="francs">Frw</div>
+    <button class="winafter" onclick="addwin">0</button>
+
+    <div class="cashout"></div>
+    <!-- <div class="wintext1">BALANCE</div>
+    <div class="francs1">Frw</div> -->
+    <div class="cashoutafter" id="output1">
+        <p>0</p>
+    </div>
+
+    <div id="text">BALANCE</div>
+    <div class="balance"></div>
+    <div class="balancefrancs">Frw</div>
+    <!-- <div class="cashoutafter" id="balancevalue">0</div> -->
+
+    <!-- PAY TRANSATION -->
+    <div class="popup" onclick="transbtn()">
+        <div class="close-btn">&times;</div>
+        <div class="form">
+            <div class="form-element">
+                <label for="tbuser"></label>
+                <input type="number" id="tbuser" placeholder="PAY">
+            </div>
+            <!-- <div class="form-element">
+                <label for="password"></label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div> -->
+            <div class="form-element">
+                <input type="button" id="paybtn1" value="PAY">
+            </div>
+        </div>
+    </div>
+    <!-- PAY TRANSATION END-->
+    <!-- CASH TRANSATION -->
+    <div class="popup1">
+        <div class="close-btn" onclick="transbtn()">&times;</div>
+        <div class="form">
+            <div class="form-element" onclick="transbtn()">
+                <label for="user"></label>
+                <input type="number" id="user" placeholder="CASH" maxlength="3" style="user-select: none;">
+            </div>
+            <!-- <div class="form-element">
+                <label for="password"></label>
+                <input type="password" id="password1" placeholder="Enter password">
+            </div> -->
+            <div class="form-element">
+                <input type="button" id="cashbtn" value="Add"onclick="addbtn()">
+            </div>
+        </div>
+    </div>
+    <!-- CASH TRANSATION END-->
+
+    <img src="./;/background.png" class="table" onclick="transbtn()">
+    
+    <button class="learn-more1" id="button1" onclick="countClicks1('9')">
+        <small class="btn-number1">9</small>
+    </button>
+    <p style="user-select: none;" id="display1">0</p>
+
+    <button class="learn-more2" id="button2" onclick="countClicks2('8')">
+        <small class="btn-number2">8</small></button>
+    <p style="user-select: none;" id="display2">0</p>
+
+    <button class="learn-more3" id="button3" onclick="countClicks3('7')">
+        <small class="btn-number3">7</small></button>
+    </button>
+    <p style="user-select: none;" id="display3">0</p>
+
+    <button class="learn-more4" id="button4" onclick="countClicks4('6')">
+        <small class="btn-number4">6</small></button>
+    </button>
+    <p style="user-select: none;" id="display4">0</p>
+
+    <button class="learn-more5" id="button5" onclick="countClicks5('5')">
+        <small class="btn-number5">5</small></button>
+    <p style="user-select: none;" id="display5">0</p>
+
+    <button class="learn-more6" id="button6" onclick="countClicks6('4')">
+        <small class="btn-number6">4</small></button>
+    </button>
+    <p style="user-select: none;" id="display6">100</p>
+
+    <button class="learn-more7" id="button7" onclick="countClicks7('3')">
+        <small class="btn-number7">3</small>
+    </button>
+    </button>
+    <p style="user-select: none;" id="display7">0</p>
+
+    <button class="learn-more8" id="button8" onclick="countClicks8('2')">
+        <small class="btn-number8">2</small></button>
+    </button>
+    <p style="user-select: none;" id="display8">0</p>
+
+    <button class="learn-more9" id="button9" onclick="countClicks9('1')">
+        <small class="btn-number9">1</small></button>
+    </button>
+    <p style="user-select: none;" id="display9">0</p>
+
+    <button class="learn-more10" id="button10" onclick="countClicks10('0')">
+        <small class="btn-number10">0</small></button>
+    </button>
+    <p style="user-select: none;" id="display10">0</p>
+
+    <button id="win5a" onclick="showbalance()"></button>
+    <button id="win10a" onclick="transbtn()"></button>
+    <button id="win10b" onclick="transbtn()"></button>
+    <button id="win10c" onclick="transbtn()"></button>
+    <button id="win20a" onclick="transbtn()"></button>
+    <button id="win20b" onclick="transbtn()"></button>
+    <button id="win20c" onclick="transbtn()"></button>
+    <button id="win30" onclick="transbtn()"></button>
+    <button id="win40" onclick="transbtn()"></button>
+    <!-- <a href="./index1.html" target="_top"> -->
+        <button id="win100" onclick="subbtn()"></button>
+    <!-- </a> -->
+    <div class="show-rmn">
+        <div class="show-remain"></div>
+        <div class="outer-count"></div>
+    </div>
+    
+
+
+    <button class="cash" id="Bikuzafter" onclick="gobtn()"></button>
+    <button class="pay" id="Bitsafter" onclick="backbtn()"></button>
+
+    <!-- records-->
+    <!-- records END-->
+    <!-- money appear start here... -->
+    <div class="moneydisplay6"></div>
+    <div class="moneydisplay5"></div>
+    <div class="moneydisplay4"></div>
+    <div class="moneydisplay3"></div>
+    <div class="moneydisplay2"></div>
+    <div class="moneydisplay1"></div>
+    <div class="coindisplay1"></div>
+    <div class="moneydisplay12"></div>
+    <div class="moneydisplay11"></div>
+    <div class="moneydisplay10"></div>  
+    <div class="moneydisplay9"></div>
+    <div class="moneydisplay8"></div>
+    <div class="moneydisplay7"></div>
+    <div class="coindisplay2"></div>
+    <!-- money appear end here... -->
+
+    <!-- <script src="./;/index.js"></script> -->
+    <script src="./;/scripts.js"></script>
+</body>
+
+</html>

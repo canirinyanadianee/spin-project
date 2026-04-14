@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUBSCRIPTION</title>
+    <link rel="stylesheet" href="sub.css" > 
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>  
+</head>
+<!-- oncontextmenu="return false;" -->
+<body oncontextmenu="return false;">
+    <div class="background">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">SUBSCRIPTION</div>
+                    <div class="reportdate"><strong class="nowdate"></strong><strong>/</strong><strong class="nowmonth"></strong><strong>/</strong><strong class="nowyear"></strong><strong> , </strong><strong class="nowHours"></strong><strong>:</strong><strong class="nowMinutes"></strong><strong>:</strong><strong class="nowSeconds"></strong></div>
+                </button>
+            </div>
+            <!-- history button -->
+            <div class="histroy-button">
+                <button class="hist-button" onclick="backtosetting()">BACK</button>
+            </div>
+            <!-- end of sub header -->
+            <main>
+                <div class="insights">
+                    <div class="user-id">
+                        <div class="middle">
+                            <div class="lef">
+                                <h3 class="id-header">Game ID</h3>
+                                <div class="user-id-container">
+                                    <h2 class="user-game-digits">Call 0795121905 for help.</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sales">
+                        <div class="middle">
+                            <div class="lef">
+                                <h3 class="remain-header">Balance 1M</h3>
+                                <div class="countdown">
+                                    <div class="time">990,000 RFW</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- --------------- END OF SALES------------------- -->
+                    <!-- <div class="expenses">
+                        <div class="middle">
+                            <div class="lef">
+                                <h3 class="newsub-header">Balance</h3>
+                                <div class="countdown">
+                                    <div class="newsub-time1">100 RFW</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- --------------- END OF EXPENSES------------------- -->
+                    <div class="income">
+                        <div class="middle">
+                            <div class="lef">
+                                <div class="add-btn" onclick="addsubbutton()"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- --------------- END OF INCOME------------------- -->
+                </div>
+                <!-- ===================END OF INSIGHTS=========== -->
+                
+                <!-- new user id start -->
+                <div class="new-user-id-form">
+                    <h1 class="final-user-name">Game ID/10Numbers</h1>
+                    <div class="show-id">
+                        <h2 class="number-written">0</h2>
+                        <h2><input type="number" class="user-phone-input" placeholder="0795121905"></h2>
+                    </div>
+                    <button type="button" class="finshed" onclick="gameiddone()">done</button>
+                </div>
+            <!-- new user if end! --> 
+                <!-- new user id start -->
+                <div class="new-user-id-form1">
+                    <h1 class="final-user-name1">PASSWORD</h1>
+                    <div class="show-id1">
+                        <h2 class="number-written1" id="show-pass" onclick="showpass()">Show</h2>
+                        <h2><input type="password" class="user-phone-input1" placeholder="Here!"></h2>
+                    </div>
+                    <div class="button-now">
+                        <button type="button" class="finshed1" onclick="backcredits()">back</button>
+                        <button type="button" class="finshed1" onclick="creditsdone()">NEXT</button>
+                    </div>
+                </div>
+                <!-- new user if end! --> 
+                <!-- numerical keypad start here -->
+                <div class="keypad1">
+                    <button class="key" id="keyboard" onclick="countClicks('7')">7</button>
+                    <button class="key" id="keyboard" onclick="countClicks('8')">8</button>
+                    <button class="key" id="keyboard" onclick="countClicks('9')">9</button>
+                    <button class="key" id="keyboard" onclick="countClicks('4')">4</button>
+                    <button class="key" id="keyboard" onclick="countClicks('5')">5</button>
+                    <button class="key" id="keyboard" onclick="countClicks('6')">6</button>
+                    <button class="key" id="keyboard" onclick="countClicks('1')">1</button>
+                    <button class="key" id="keyboard" onclick="countClicks('2')">2</button>
+                    <button class="key" id="keyboard" onclick="countClicks('3')">3</button>
+                    <button class="key1" id="keyboard1" onclick="countClicksdlt()">Dlt</button>
+                    <button class="key" id="lastkey" onclick="countClicks('0')">0</button>
+                </div>
+                <!-- numerical keypad end here -->  
+            </main>
+            <!-- ===================== END MAIN ==================== -->
+            <!-- subscription start here -->
+            <div class="gameid">
+                <h1 style="user-select: none; color: #cc0d0d">SUBSCRIPTION</h1>
+                <h3 style="user-select: none; color: #b48010">TOKEN:</h3>
+                <div class="code-gameid">
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong>--</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong>--</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+    
+                </div>
+                <button type="button" class="btn-primary" onclick="subback()">back</button>
+                <button type="button" class="btn-secondary" onclick="rechargebtn()">re-charge</button>
+            </div>
+            <div class="activation">
+                <h1 style="user-select: none; color: #dd9b0b">ACTIVATION</h1>
+                <button type="button" class="old-record"></button>
+                <button type="button" class="new-record"></button>
+            </div>
+            <div class="subscription">
+                <h1 style="user-select: none; color: #cc0d0d">SUBSCRIPTION</h1>
+                <button type="button" class="now-record"></button>
+                <button type="button" class="end-record"></button>
+            </div>
+            <!-- subscription end here -->
+             <!-- numerical keypad start here -->
+            <div class="keypad">
+                <button class="key" id="keyboard">7</button>
+                <button class="key" id="keyboard">8</button>
+                <button class="key" id="keyboard">9</button>
+                <button class="key" id="keyboard">4</button>
+                <button class="key" id="keyboard">5</button>
+                <button class="key" id="keyboard">6</button>
+                <button class="key" id="keyboard">1</button>
+                <button class="key" id="keyboard">2</button>
+                <button class="key" id="keyboard">3</button>
+                <button class="key1" id="keyboard1">Dlt</button>
+                <button class="key" id="lastkey">0</button>
+            </div>
+              <!-- numerical keypad end here -->
+            <!-- verify code -->
+            <div class="new-user-id-form3">
+                <h1 class="final-user-name">Verify Code</h1>
+                <h1 class="final-user-id-format"></h1>
+                <div class="button-now">
+                    <button type="button" class="finshed2" onclick="nexttoverifycode()">NEXT</button>
+                </div>
+            </div>
+            <!-- fill code -->
+             
+            <div class="verify-code">
+                <h1 style="user-select: none; color: #cc0d0d">VERIFY - CODE</h1>
+                <h3 class="generated-verify-code">Call 0795121905</h3>
+                <div class="verifycode-gameid">
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                </div>
+                <button type="button" class="btn-primary1" onclick="verifyback()">back</button>
+                <button type="button" class="btn-secondary1" onclick="saveverifyedid()">Verify</button>
+            </div>
+        </div>
+        <div class="link-tocall" onclick="infomation()"></div>
+    </div>
+    <script src="sub.js"></script>
+</body>
+</html>

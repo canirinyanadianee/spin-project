@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report</title>
+    <link rel="stylesheet" href="dep.css" />
+  </head>
+    <body oncontextmenu="return false;">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">FULL</div>
+                    <div class="reportdate"><strong class="date"></strong><strong>/</strong><strong class="monthy"></strong><strong>/</strong><strong class="year"></strong><strong>, </strong><strong class="Hours"></strong><strong>:</strong><strong class="Minutes"></strong><strong>:</strong><strong class="Seconds"></strong></div>
+                </button>
+            </div>
+            <!-- end of header -->
+            <div class="finance">
+                <main>
+                    <h2 class="finance-header">Previous</h2>
+                    <div class="insights">
+                        <div class="users" onclick="showcapital()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="worked-title">Work</h3>
+                                    <h1 class="worked-title">Day</h1>
+                                    <h1 id="worked-title1">0</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-number-subsription" onclick="showcapital()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3>Games</h3>
+                                    <h1 class="sub-number1">$</h1>
+                                    <h1 class="sub-number1" id="gamesnbr">0</h1>
+                                </div>
+                                <div class="game-rate">
+                                    <h3>Rate</h3>
+                                    <h1 class="sub-number">Frw</h1>
+                                    <h1 class="sub-number" id="ratenbr">0</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sales" onclick="showcapital()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="pay-class">Cash In</h3>
+                                    <h1>Frw <h1 id="cashreceived">0</h1></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- --------------- END OF SALES------------------- -->
+                        <div class="expenses" onclick="showcapital()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="cash-class">Cash Out</h3>
+                                    <h1>Frw <h1 id="cashout">0</h1></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- --------------- END OF EXPENSES------------------- -->
+                        <div class="income" onclick="showcapital()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3>Income</h3>
+                                    <h1>Frw<h1 id="profit">0</h1></h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                            </div> 
+                        </div>
+                        <!-- --------------- END OF INCOME------------------- -->
+                    </div>
+                    <!-- Records -->
+                    <div class="recent-order">
+                        <h2>Records</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Dates</th>
+                                    <th>Start.Time</th>
+                                    <th>End.Time</th>
+                                    <th>Worked.Time</th>
+                                    <th>CashIn</th>
+                                    <th>CashOut</th>
+                                    <th>Income</th>
+                                    <th>Games</th>
+                                    <th>Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+                <!-- history button -->
+                <div class="histroy-button">
+                    <button class="hist-button" onclick="backtohistory()">BACK</button>
+                </div>
+            </div>
+            <!-- end of users -->
+        </div>
+        <div class="link-tocall" onclick="infomation()"></div>
+        <script src="dep.js"></script>
+    </body>
+</html>

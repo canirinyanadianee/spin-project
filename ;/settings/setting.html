@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Setting</title>
+    <link rel="stylesheet" href="setting.css" />
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>
+  </head>
+  <!-- oncontextmenu="return false;" -->
+    <body oncontextmenu="return false;">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">MOO-GAME</div>
+                    <div class="reportdate"><strong class="date"></strong><strong>/</strong><strong class="monthy"></strong><strong>/</strong><strong class="year"></strong><strong>, </strong><strong class="Hours"></strong><strong>:</strong><strong class="Minutes"></strong><strong>:</strong><strong class="Seconds"></div>
+                </button>
+            </div>
+            <!-- history button -->
+            <div class="histroy-button">
+                <button class="hist-button" onclick="backtogameid()">BACK</button>
+            </div>
+            <!-- end of header -->
+            <div class="finance">
+                <main>
+                    <h1>SETTINGS</h1>
+                    <div class="insights">
+                        <div class="sales" onclick="torecents()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="recents">RECENTS</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription">Last Game</small>
+                             </div> 
+                        </div>
+                        <div class="income" onclick="today()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="daily">ToDay</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription">Records</small>
+                             </div> 
+                        </div>
+                        
+                        <div class="expenses" onclick="todeposit()">
+                            <div class="middle">
+                                <div class="lef">   
+                                    <h1 class="deposit">FULL</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                               <small class="add-credits">Records</small>
+                            </div> 
+                        </div>
+                        
+                    </div>
+                    <div class="user">
+                        <!-- <h1 class="user-header">MORE</h1> -->
+                        <div class="insights">
+                            <div class="sales" onclick="topend()">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h1 class="early-sub">SUBSCRIPTION</h1>
+                                    </div>
+                                </div>
+                                <div class="added-balance">
+                                <small class="last-ubscription">Recharge again</small>
+                                </div> 
+                            </div>
+                            <div class="income" onclick="todeposit()">
+                                <div class="middle">
+                                    <div class="lef1">
+                                        <h1 class="daily1" id="Credits-balance">ToDay</h1>
+                                    </div>
+                                </div>
+                                <div class="added-balance">
+                                    <small class="last-ubscription1">Credits. (Income / 100)</small>
+                                 </div> 
+                            </div>
+                            <div class="income" onclick="about()">
+                                <div class="middle">
+                                    <div class="lef1">
+                                        <h1 class="daily1" id="Credits-balance1">GAME</h1>
+                                    </div>
+                                </div>
+                                <div class="added-balance">
+                                    <small class="last-ubscription1">About</small>
+                                 </div> 
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>           
+        </div>
+        <div class="link-tocall" onclick="infomation()"></div>
+        <script src="setting.js"></script>
+    </body>
+</html>

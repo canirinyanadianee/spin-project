@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>about</title>
+    <link rel="stylesheet" href="about.css" />
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>
+  </head>
+  <!-- oncontextmenu="return false;" -->
+    <body oncontextmenu="return false;">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">ABOUT</div>
+                    <div class="reportdate"><strong class="date"></strong><strong>/</strong><strong class="monthy"></strong><strong>/</strong><strong class="year"></strong><strong>, </strong><strong class="Hours"></strong><strong>:</strong><strong class="Minutes"></strong><strong>:</strong><strong class="Seconds"></div>
+                </button>
+            </div>
+            <!-- history button -->
+            <div class="histroy-button">
+                <button class="hist-button" onclick="backtosetting()">BACK</button>
+            </div>
+            <!-- end of header -->
+            <div class="finance">
+                <main>
+                    <!-- <h1>Information</h1> -->
+                    <div class="insights">
+                        <div class="income" onclick="gotoabout()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="daily">ABOUT</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription1">Information</small>
+                             </div> 
+                        </div>
+                        <div class="sales" onclick="credits()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="recents">RESET</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription">Start Game</small>
+                             </div> 
+                        </div>
+                    </div>
+                    <!-- new user id start -->
+                    <div class="new-user-id-form1">
+                        <h1 class="final-user-name1">PASSWORD</h1>
+                        <div class="show-id1">
+                            <h2 class="number-written" id="show-pass" onclick="showpass()">Show</h2>
+                            <h2><input type="password" class="user-phone-input1" placeholder="Here!"></h2>
+                            <small class="final-user-name3" onclick="changepass()">Change</small>
+                            <!-- <small class="final-user-name3">Current password</small> -->
+                            <!-- <small class="final-user-name3">New password</small> -->
+                        </div>
+                        <div class="button-now">
+                            <button type="button" class="backbtn" id="btn" onclick="backcredits()">back</button>
+                            <button type="button" class="gobtn" id="btn"  onclick="creditsdone()">go</button>
+                        </div>
+                    </div>
+                    <!-- new user if end! --> 
+                    <!-- numerical keypad start here -->
+                    <div class="keypad">
+                        <button class="key" id="keyboard" onclick="countClicks('7')">7</button>
+                        <button class="key" id="keyboard" onclick="countClicks('8')">8</button>
+                        <button class="key" id="keyboard" onclick="countClicks('9')">9</button>
+                        <button class="key" id="keyboard" onclick="countClicks('4')">4</button>
+                        <button class="key" id="keyboard" onclick="countClicks('5')">5</button>
+                        <button class="key" id="keyboard" onclick="countClicks('6')">6</button>
+                        <button class="key" id="keyboard" onclick="countClicks('1')">1</button>
+                        <button class="key" id="keyboard" onclick="countClicks('2')">2</button>
+                        <button class="key" id="keyboard" onclick="countClicks('3')">3</button>
+                        <button class="key1" id="keyboard1" onclick="countClicksdlt()">Dlt</button>
+                        <button class="key" id="lastkey" onclick="countClicks('0')">0</button>
+                    </div>
+                    <!-- numerical keypad end here -->
+                </main>
+            </div>           
+        </div>
+        <div class="link-tocall" onclick="infomation()"></div>
+        <!-- <div id="cutomAlert">This is an alert message!</div> -->
+
+        <script src="about.js"></script>
+    </body>
+</html>

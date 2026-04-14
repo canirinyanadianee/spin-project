@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recents</title>
+    <link rel="stylesheet" href="recs.css" />
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>
+  </head>
+  <!-- oncontextmenu="return false;" -->
+    <body oncontextmenu="return false;">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">RECENTS</div>
+                    <div class="reportdate"><strong class="date"></strong><strong>/</strong><strong class="monthy"></strong><strong>/</strong><strong class="year"></strong><strong>, </strong><strong class="Hours"></strong><strong>:</strong><strong class="Minutes"></strong><strong>:</strong><strong class="Seconds"></strong></div>
+                </button>
+            </div>
+            <!-- end of header -->
+            <main>
+                <div class="recent-order">
+                    <h2>Last Game</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <!-- <th>No.</th> -->
+                                <th>Time</th>
+                                <th class="btn1" onclick="gobtn()"></th>
+                                <th class="btn2"></th>
+                                <th class="btn3"></th>
+                                <th class="btn4"></th>
+                                <th class="btn5"></th>
+                                <th class="btn6"></th>
+                                <th class="btn7"></th>
+                                <th class="btn8"></th>
+                                <th class="btn9"></th>
+                                <th class="btn10" onclick="storegamestatus()"></th>
+                                <!-- <th>Bet</th> -->
+                                <th>Win</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            
+            <!-- history button -->
+            <div class="histroy-button">
+                <button class="hist-button" onclick="backtohistory()">BACK</button>
+            </div>
+        </div>
+        <div class="link-tocall" onclick="infomation()"></div>
+        <script src="recs.js"></script>
+    </body>
+</html>

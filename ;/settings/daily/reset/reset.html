@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset</title>
+    <link rel="stylesheet" href="reset.css" />
+    <script>
+        console.log = function() {};
+        console.table = function () {};
+    </script>
+  </head>
+  <!-- oncontextmenu="return false;" -->
+    <body oncontextmenu="return false;">
+        <div class="container">
+            <div class="header">
+                <button class="highpose"></button>
+                <button class="highafterpose">
+                    <div class="reporttitle">RESET</div>
+                    <div class="reportdate"><strong class="date"></strong><strong>/</strong><strong class="monthy"></strong><strong>/</strong><strong class="year"></strong><strong>, </strong><strong class="Hours"></strong><strong>:</strong><strong class="Minutes"></strong><strong>:</strong><strong class="Seconds"></div>
+                </button>
+            </div>
+            <!-- history button -->
+            <div class="histroy-button">
+                <button class="hist-button" onclick="backtogameid()">BACK</button>
+            </div>
+            <!-- end of header -->
+            <div class="finance">
+                <main>
+                    <h1>REPAIR</h1>
+                    <div class="insights">
+                        <div class="sales" onclick="cashoutreset()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="recents">CashOut</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription">Reset</small>
+                             </div> 
+                        </div>
+                        <div class="income" onclick="subfault()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="daily2">SUB</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription">Fault</small>
+                             </div> 
+                        </div>
+                        <div class="income" onclick="subreset()">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h1 class="daily3">SUB</h1>
+                                </div>
+                            </div>
+                            <div class="added-balance">
+                                <small class="last-ubscription">Balance</small>
+                             </div> 
+                        </div>
+                    </div>
+                    <div class="user">
+                        <!-- <h1 class="user-header">MORE</h1> -->
+                    </div>
+                    <!-- new user if end! --> 
+                </main>
+            </div>
+            <div class="gameid">
+                <h1 style="user-select: none; color: #cc0d0d" class="gameid-header"></h1>
+                <h3 style="user-select: none; color: #b48010" class="gameid-function"></h3>
+                <div class="code-gameid">
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong>--</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong>--</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code" placeholder="0" min="0" max="9" required>
+    
+                </div>
+                <button type="button" class="btn-primary" onclick="subback()">back</button>
+                <button type="button" class="btn-secondary" onclick="rechargebtn()">re-charge</button>
+            </div>
+            <div class="keypad">
+                <button class="key" id="keyboard">7</button>
+                <button class="key" id="keyboard">8</button>
+                <button class="key" id="keyboard">9</button>
+                <button class="key" id="keyboard">4</button>
+                <button class="key" id="keyboard">5</button>
+                <button class="key" id="keyboard">6</button>
+                <button class="key" id="keyboard">1</button>
+                <button class="key" id="keyboard">2</button>
+                <button class="key" id="keyboard">3</button>
+                <button class="key1" id="keyboard1">Dlt</button>
+                <button class="key" id="lastkey">0</button>
+            </div>
+            <!-- SUB SET -->
+            <div class="verify-code">
+                <h1 style="user-select: none; color: #cc0d0d" class="verify-code-header">SUBSCRIPTION</h1>
+                <h3 style="user-select: none; color: #b48010" class="generated-verify-code">Setting</h3>
+                <div class="verifycode-gameid">
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <div style="user-select: none; color: #ffffff"><strong class="dashline">-</strong></div>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                    <input type="number" style="background-color: #020202; color: #b48010" class="code1" placeholder="0" min="0" max="9" required>
+                </div>
+                <button type="button" class="btn-primary1" onclick="subback()">back</button>
+                <button type="button" class="btn-secondary1" onclick="rechargebtn()">Verify</button>
+            </div>
+        </div>
+        <div class="link-tocall" onclick="infomation()"></div>
+        <script src="reset.js"></script>
+    </body>
+</html>
