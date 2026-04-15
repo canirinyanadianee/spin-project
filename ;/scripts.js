@@ -7501,7 +7501,6 @@ chatinput.addEventListener("input", function () {
 
     chatinput.setSelectionRange(start, end);
 });
-<<<<<<< HEAD
 
 // Chat functionality
 let selectedAgent = null;
