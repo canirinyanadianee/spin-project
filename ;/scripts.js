@@ -7501,3 +7501,72 @@ chatinput.addEventListener("input", function () {
 
     chatinput.setSelectionRange(start, end);
 });
+
+// Chat functionality
+let selectedAgent = null;
+
+function selectAgent(name, imgSrc) {
+    // Update chat header
+    const headerImg = document.querySelector('.chat-header img');
+    const agentName = document.querySelector('.chat-agent-name');
+    if (headerImg && agentName) {
+        headerImg.src = imgSrc;
+        agentName.textContent = name;
+    }
+    // Clear previous messages
+    const messageBody = document.querySelector('.chat-message-body');
+    if (messageBody) {
+        messageBody.innerHTML = '';
+    }
+    // Set selected agent
+    selectedAgent = { name, imgSrc };
+    // hide panel after selecting an agent
+    const panel = document.querySelector('.all-agents-panel');
+    if (panel) {
+        panel.classList.remove('visible');
+    }
+}
+
+// Send message functionality
+const sendBtn = document.querySelector('.chat-send-btn');
+const chatInput = document.querySelector('.chat-input');
+
+if (sendBtn) {
+    sendBtn.addEventListener('click', sendMessage);
+}
+
+if (chatInput) {
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+}
+
+function sendMessage() {
+    if (!selectedAgent) {
+        alert('Please select an agent first.');
+        return;
+    }
+    const message = chatInput.value.trim();
+    if (message === '') return;
+    
+    // Append message to chat body
+    const messageBody = document.querySelector('.chat-message-body');
+    if (messageBody) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message';
+        messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+        messageBody.appendChild(messageDiv);
+        // Scroll to bottom
+        messageBody.scrollTop = messageBody.scrollHeight;
+    }
+    // Clear input
+    chatInput.value = '';
+}
+
+function toggleAgents() {
+    const panel = document.querySelector('.all-agents-panel');
+    if (!panel) return;
+    panel.classList.toggle('visible');
+}

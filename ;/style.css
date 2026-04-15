@@ -7860,17 +7860,18 @@ button.pay:active::before {
     text-align: center;
 }
 .all-bets {
-    width: 50%;
+    width: auto;
     height: 70%;
-    /* background: rgb(51, 101, 78); */
     border-radius: var(--border-radius-3);
     display: flex;
-    place-items: left;
-    justify-content: left; 
+    align-items: center;
+    justify-content: left;
 }
 .allbets-img {
     display: flex;
     justify-content: left;
+    align-items: center;
+    gap: 0.4rem;
     text-align: center;
     cursor: pointer;
 }
@@ -7882,6 +7883,7 @@ button.pay:active::before {
     border: 1.5px rgb(47, 179, 64) solid;
     border-radius: 50%;
     z-index: 3;
+    cursor: pointer;
 }
 .playercircle2 {
     width: 24px;
@@ -7892,6 +7894,7 @@ button.pay:active::before {
     border-radius: 50%;
     margin-left: -0.5rem;
     z-index: 2;
+    cursor: pointer;
 }
 .playercircle3 {
     width: 24px;
@@ -7901,6 +7904,7 @@ button.pay:active::before {
     border: 1.5px rgb(47, 179, 64) solid;
     border-radius: 50%;
     margin-left: -0.5rem;
+    cursor: pointer;
 }
 .circle {
     display: flex;
@@ -8016,11 +8020,68 @@ button.pay:active::before {
     border-radius: var(--border-radius-3);
     background-color: rgb(0, 0, 0, 0.3);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.agents-selector {
+    display: none;
+}
+.all-agents-panel {
+    width: 100%;
+    display: none;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.7rem 0.5rem;
+    background-color: rgba(255, 255, 255, 0.08);
+    justify-content: flex-start;
+    border-bottom: 1px solid #0ef;
+}
+.all-agents-panel.visible {
+    display: flex;
+}
+.agent-card {
+    min-width: 72px;
+    max-width: 100px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    border: 1px solid rgba(47, 179, 64, 0.6);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.agent-card:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.12);
+}
+.agent-card img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.agent-card-name {
+    font-size: 11px;
+    color: white;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.online-point {
+    cursor: pointer;
 }
 .chat-header {
   display: flex;
-  margin-top: .5rem;
+  margin-top: 0;
   margin-left: .5rem;
+  margin-bottom: .5rem;
+  align-items: center;
 }
 .chat-agent-info {
   /* display: flex; */
@@ -8043,9 +8104,9 @@ button.pay:active::before {
 .chat-body {
   width: 100%;
   height: 100%;
-  margin-top: .5rem;
+  margin-top: 0;
   color: rgb(116, 113, 113);
-  height: 275px;
+  flex: 1;
   /* display: flex; */
   background-color: rgb(47, 179, 64);
   background: #1a1919;
@@ -8058,51 +8119,70 @@ button.pay:active::before {
   /* justify-content: center; */
   /* place-items: center; */
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-message-body {
   width: 95%;
-  height: 75%;
+  flex: 1;
   border: 1px solid #0ef;
+  overflow-y: auto;
+  padding: 0.5rem;
+  background-color: #1a1a1a;
+  margin: 0 auto;
+}
+
+.chat-message {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: #333;
+  border-radius: var(--border-radius-1);
+  color: white;
+  font-size: 12px;
 }
 .chat-body-message-input {
   margin-top: .3em;
   width: 95%;
-  height: 15%;
+  height: 50px;
   background-color: white;
   border-radius: var(--border-radius-3);
   display: flex;
-  place-content: center;
-  text-align: center;
-  place-items: center;
-  /* justify-content: center; */
-  /* place-items: center; */
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem;
   overflow: hidden;
+  margin: 0.3rem auto 0.5rem auto;
+  gap: 0.5rem;
 }
 .chat-input {
   width: 88%;
-  height: 90%;
+  height: 100%;
   background: none;
   border: none;
   font-size: 15px;
   color: rgb(0, 0, 0);
+  outline: none;
 }
 .chat-input:focus {
   outline: none;
   border: none;
 }
 .chat-send-btn {
-  width: 10%;
-  height: 90%;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  /* border: 1px solid black; */
+  flex-shrink: 0;
   cursor: pointer;
   background: url(sendicon.png);
   background-size: 60%;
-  background-position: 6px 10px;
+  background-position: center;
   background-repeat: no-repeat;
   transform: rotate(45deg);
   background-color: #0f0f0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .chat-send-btn:hover {
   scale: 1.03;
@@ -8285,22 +8365,18 @@ button.pay:active::before {
     margin-top: .2rem;
     width: 100%;
     display: flex;
-    justify-content: center;
-    text-align: center;
-    place-items: center;
-    place-content: center;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.7rem;
 }
 .first-top-header-agent {
     margin-top: .2rem;
     margin-bottom: .5rem;
     width: 100%;
     display: flex;
-    justify-content: center;
-    text-align: center;
-    place-items: center;
-    place-content: center;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.7rem;
 }
 .allbets-loading-shape {
     margin-top: .5rem;

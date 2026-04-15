@@ -268,28 +268,50 @@
                     <div class="first-top-header">
                         <div class="all-bets">
                             <div class="allbets-img">
-                                <img src=";/;/player-img/user1.png" class="playercircle1">
-                                <img src=";/;/player-img/user20.png" class="playercircle2">
-                                <img src=";/;/player-img/user5.png" class="playercircle3">
+                                <img src=";/;/player-img/user1.png" class="playercircle1" onclick="selectAgent('Agent Alpha', ';/;/player-img/user1.png')">
+                                <img src=";/;/player-img/user20.png" class="playercircle2" onclick="selectAgent('Agent Beta', ';/;/player-img/user20.png')">
+                                <img src=";/;/player-img/user5.png" class="playercircle3" onclick="selectAgent('Agent Gamma', ';/;/player-img/user5.png')">
                             </div>
                         </div>
                         <div class="total-win-value">
-                            <div class="online-point">Change</div>
+                            <div class="online-point" onclick="toggleAgents()">Change</div>
                         </div>
                     </div>
                     <div class="first-top-header-agent">
                         <div class="total-bets-value">
-<<<<<<< HEAD
-                            <div class="out-player">1000000</div>
-=======
                             <div class="out-player">105</div>
->>>>>>> d4937889370e42e0a7583124c19f9712398ea408
                         </div>
                         <div class="total-bets">Agents</div>
                         <div class="total-win-text">My Agent</div>
                     </div>
                 </div>
                 <div class="chat-container">
+                    <div class="all-agents-panel">
+                        <div class="agent-card" onclick="selectAgent('Agent Alpha', ';/;/player-img/user1.png')">
+                            <img src=";/;/player-img/user1.png" alt="Agent Alpha">
+                            <span class="agent-card-name">Agent Yvette</span>
+                        </div>
+                        <div class="agent-card" onclick="selectAgent('Agent Beta', ';/;/player-img/user20.png')">
+                            <img src=";/;/player-img/user20.png" alt="Agent Beta">
+                            <span class="agent-card-name">Agent Chakilla</span>
+                        </div>
+                        <div class="agent-card" onclick="selectAgent('Agent Gamma', ';/;/player-img/user5.png')">
+                            <img src=";/;/player-img/user5.png" alt="Agent Gamma">
+                            <span class="agent-card-name">Agent Mireille</span>
+                        </div>
+                        <div class="agent-card" onclick="selectAgent('Agent Delta', ';/;/player-img/user2.png')">
+                            <img src=";/;/player-img/user2.png" alt="Agent Delta">
+                            <span class="agent-card-name">Agent Vital</span>
+                        </div>
+                        <div class="agent-card" onclick="selectAgent('Agent Echo', ';/;/player-img/user3.png')">
+                            <img src=";/;/player-img/user3.png" alt="Agent Echo">
+                            <span class="agent-card-name">Agent Yambii</span>
+                        </div>
+                        <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
+                            <img src=";/;/player-img/user4.png" alt="Agent Fox">
+                            <span class="agent-card-name">Agent Herve</span>
+                        </div>
+                    </div>
                     <div class="chat-header">
                         <img src=";/;/player-img/user1.png" class="playercircle1">
                         <div class="chat-agent-info">
