@@ -7570,7 +7570,7 @@ function toggleAgents() {
     if (!panel) return;
     panel.classList.toggle('visible');
 }
-=======
+
 //
 function addCommas(number) {
     // Convert number to string
