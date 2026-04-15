@@ -34,11 +34,15 @@ body {
   display: grid;
   place-items: center;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
   top: -40%;
   font-family: 'Poppins', sans-serif;
   background-color: #eee;
   transition: background-color 0.35s ease-in-out;
   overflow: hidden;
+  padding: 0;
+  font-size: clamp(12px, 2vw, 16px);
 }
 
 .result {
@@ -53,11 +57,12 @@ body {
 }
 
 #app {
-  width: 400px;
-  height: 400px;
+  width: clamp(280px, 90vw, 400px);
+  height: clamp(280px, 90vw, 400px);
   margin: 0 auto;
   position: relative;
-  top: -22%
+  top: -22%;
+  aspect-ratio: 1 / 1;
 }
 
 .marker {
@@ -7672,7 +7677,7 @@ button.pay:active::before {
     place-content: center;
     justify-content: center;
 }
-.previous-part-header, .top-part-header {
+.top-part-header {
     width: 95%;
     height: 3%;
     background-color: rgb(0, 0, 0, 0.2);
@@ -7680,6 +7685,17 @@ button.pay:active::before {
     justify-content: center;
     text-align: center;
     place-items: center;
+    place-content: center;
+    justify-content: center;
+}
+.previous-part-header {
+    width: 95%;
+    height: 3%;
+    background-color: rgba(247, 245, 245, 0.2);
+    border-radius: var(--border-radius-2);
+    justify-content: center;
+    text-align: left;
+    place-items: left;
     place-content: center;
     justify-content: center;
 }
@@ -7848,6 +7864,8 @@ button.pay:active::before {
 /*  */
 .round-result-header {
     margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: .5rem;
     color: #b6abab;
 }
 .round-result {
@@ -8677,4 +8695,50 @@ button.pay:active::before {
   user-select: none;
   border: 1px solid white;
   padding: 2px;
+}
+/* start transaction records */
+
+main{
+  margin-top: 0rem;
+}
+
+main .transaction {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  margin-bottom: 1em;
+}
+
+main .transaction > div{
+  background: var(--color-white);
+  padding: .5rem;
+  border-radius: 1rem;
+  /* margin-top: 1rem; */
+  box-shadow: var(--box-shadow);
+  transition: all 300ms ease;
+}
+
+main .transaction > div:hover {
+  box-shadow: none;
+}
+
+main .transaction > div .middle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+main .transaction small {
+  display: block;
+}
+
+main > div .middle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+main h3 {
+  /* margin: 1rem 0 0.6rem; */
+  font-size: .7rem;
 }

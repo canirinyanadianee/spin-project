@@ -1,0 +1,403 @@
+/* ============= RESPONSIVE DESIGN FOR MOO-GAME ============= */
+
+/* Tablet and Medium Screens (768px - 1024px) */
+@media screen and (max-width: 1200px) {
+  body {
+    font-size: clamp(11px, 1.8vw, 15px);
+  }
+  
+  #app {
+    width: clamp(250px, 85vw, 380px);
+    height: clamp(250px, 85vw, 380px);
+    top: -20%;
+  }
+  
+  .wheel {
+    width: 95%;
+    height: 95%;
+    left: -14%;
+  }
+  
+  .marker {
+    width: 5vw;
+    height: auto;
+    top: 12%;
+    left: 48%;
+  }
+  
+  .button {
+    width: 60%;
+    height: 60%;
+    left: 20%;
+    top: 43%;
+  }
+  
+  .result {
+    font-size: 1.5rem;
+    left: 35%;
+  }
+  
+  /* Adjust text displays */
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(28px, 4vw, 45px);
+  }
+  
+  .win, .cashout {
+    width: clamp(250px, 90vw, 320px);
+    height: clamp(120px, 30%, 170px);
+  }
+  
+  .winafter, #output1 {
+    width: clamp(220px, 85%, 285px);
+    height: clamp(100px, 25%, 130px);
+    font-size: clamp(32px, 5vw, 50px);
+    padding-right: clamp(70px, 20%, 110px);
+    padding-top: clamp(30px, 8%, 45px);
+  }
+  
+  /* Button scaling */
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    padding: 2.2em 2.2em;
+    font-size: 0.75rem;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 65px;
+    height: 30px;
+    font-size: 26px;
+  }
+}
+
+/* Mobile and Small Screens (480px - 767px) */
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 12px;
+  }
+  
+  body {
+    font-size: clamp(10px, 2vw, 14px);
+    overflow-y: auto;
+  }
+  
+  #app {
+    width: clamp(200px, 95vw, 350px);
+    height: clamp(200px, 95vw, 350px);
+    top: -18%;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    left: -14.8%;
+  }
+  
+  .marker {
+    width: 6vw;
+    top: 10%;
+    left: 47%;
+  }
+  
+  .button {
+    width: 55%;
+    height: 55%;
+    left: 22.5%;
+  }
+  
+  .result {
+    font-size: 1.2rem;
+    left: 30%;
+  }
+  
+  /* Text elements */
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(20px, 4vw, 40px);
+    top: clamp(30px, 4%, 50px);
+  }
+  
+  .win, .cashout {
+    width: clamp(220px, 90vw, 300px);
+    height: clamp(100px, 25%, 150px);
+    font-size: 16px;
+  }
+  
+  .winafter, #output1 {
+    width: clamp(190px, 85%, 270px);
+    height: clamp(90px, 22%, 120px);
+    font-size: clamp(28px, 5vw, 45px);
+    padding-right: clamp(60px, 18%, 100px);
+    padding-top: clamp(25px, 7%, 40px);
+    top: clamp(20px, 4%, 45px);
+  }
+  
+ /* Buttons - Reduce spacing for mobile */
+  button.learn-more1 { left: clamp(8%, 8%, 11%); top: 75%; }
+  button.learn-more2 { left: clamp(16%, 16%, 19%); top: 75%; }
+  button.learn-more3 { left: clamp(24%, 24%, 27%); top: 75%; }
+  button.learn-more4 { left: clamp(32%, 32%, 35%); top: 75%; }
+  button.learn-more5 { left: clamp(40%, 40%, 43%); top: 75%; }
+  button.learn-more6 { left: clamp(48%, 48%, 51%); top: 75%; }
+  button.learn-more7 { left: clamp(56%, 56%, 59%); top: 75%; }
+  button.learn-more8 { left: clamp(64%, 64%, 67%); top: 75%; }
+  button.learn-more9 { left: clamp(72%, 72%, 75%); top: 75%; }
+  button.learn-more10 { left: clamp(80%, 80%, 83%); top: 75%; }
+  
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    padding: 1.8em 1.8em;
+    font-size: 0.65rem;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 55px;
+    height: 25px;
+    font-size: 20px;
+    top: 70%;
+  }
+  
+  /* Popups */
+  .popup, .popup1 {
+    width: clamp(280px, 90vw, 360px);
+  }
+  
+  #user, #tbuser {
+    width: 160px;
+    height: 160px;
+    font-size: 40px;
+  }
+  
+  /* Rectangle elements */
+  .rectangle1, .rectangle2 {
+    width: 80px;
+    height: 380px;
+    display: none;
+  }
+  
+  /* Win display elements */
+  .WINDISPLAY, .CREDITDISPLAY {
+    width: 170px;
+    height: 60px;
+    font-size: 35px;
+  }
+}
+
+/* Extra Small Screens (< 480px) */
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 10px;
+  }
+  
+  body {
+    font-size: clamp(9px, 2.5vw, 12px);
+  }
+  
+  #app {
+    width: clamp(160px, 95vw, 320px);
+    height: clamp(160px, 95vw, 320px);
+    top: -15%;
+  }
+  
+  .wheel {
+    width: 105%;
+    height: 105%;
+    left: -15%;
+  }
+  
+  .marker {
+    width: 8vw;
+    top: 8%;
+    left: 46%;
+  }
+  
+  .button {
+    width: 50%;
+    height: 50%;
+    left: 25%;
+    top: 42%;
+  }
+  
+  .result {
+    font-size: 1rem;
+    left: 25%;
+    top: 2%;
+  }
+  
+  /* Text elements */
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(16px, 3.5vw, 30px);
+  }
+  
+  .win, .cashout {
+    width: clamp(200px, 88vw, 280px);
+    height: clamp(90px, 22%, 130px);
+    font-size: 14px;
+  }
+  
+  .winafter, #output1 {
+    width: clamp(170px, 80%, 250px);
+    height: clamp(80px, 20%, 110px);
+    font-size: clamp(22px, 4vw, 38px);
+    padding-right: 50px;
+    padding-top: 20px;
+  }
+  
+  /* Compressed button layout */
+  button.learn-more1 { left: 4%; }
+  button.learn-more2 { left: 13.5%; }
+  button.learn-more3 { left: 23%; }
+  button.learn-more4 { left: 32.5%; }
+  button.learn-more5 { left: 42%; }
+  button.learn-more6 { left: 51.5%; }
+  button.learn-more7 { left: 61%; }
+  button.learn-more8 { left: 70.5%; }
+  button.learn-more9 { left: 80%; }
+  button.learn-more10 { left: 89%; }
+  
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    padding: 1.3em 1.3em;
+    font-size: 0.55rem;
+    top: 75.5%;
+  }
+  
+  button.learn-more1::before,
+  button.learn-more2::before,
+  button.learn-more3::before,
+  button.learn-more4::before,
+  button.learn-more5::before,
+  button.learn-more6::before,
+  button.learn-more7::before,
+  button.learn-more8::before,
+  button.learn-more9::before,
+  button.learn-more10::before {
+    box-shadow: 0 0 0 1px #b18597, 0 0.4em 0 0 #ffe3e2;
+    transform: translate3d(0, 0.5em, -1em);
+  }
+  
+  #display1 { left: 5.5%; top: 71%; }
+  #display2 { left: 14.5%; top: 71%; }
+  #display3 { left: 24%; top: 71%; }
+  #display4 { left: 33.5%; top: 71%; }
+  #display5 { left: 43%; top: 71%; }
+  #display6 { left: 52.5%; top: 71%; }
+  #display7 { left: 62%; top: 71%; }
+  #display8 { left: 71.5%; top: 71%; }
+  #display9 { left: 81%; top: 71%; }
+  #display10 { left: 90%; top: 71%; }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 45px;
+    height: 20px;
+    font-size: 16px;
+  }
+  
+  /* Adjust popup sizes */
+  .popup, .popup1 {
+    width: clamp(260px, 85vw, 330px);
+  }
+  
+  #user, #tbuser {
+    width: 130px;
+    height: 130px;
+    font-size: 32px;
+  }
+  
+  /* Hide elements that don't fit */
+  .rectangle1, .rectangle2 {
+    display: none;
+  }
+  
+  .WINDISPLAY, .CREDITDISPLAY {
+    width: 140px;
+    height: 50px;
+    font-size: 28px;
+  }
+}
+
+/* Landscape Mode Adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  body {
+    min-height: 100vh;
+  }
+  
+  #app {
+    top: -10%;
+  }
+  
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    top: 75%;
+    padding: 1.5em 1.5em;
+    font-size: 0.6rem;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    top: 70%;
+    font-size: 18px;
+  }
+}
+
+/* High DPI Screens (Retina Display) */
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  body {
+    font-size: clamp(11px, 2vw, 16px);
+  }
+}
+
+/* Touch Device Optimization */
+@media (hover: none) and (pointer: coarse) {
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    min-height: 32px;
+  }
+}

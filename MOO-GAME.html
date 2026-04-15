@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>MOO-GAME</title>
     <link rel="stylesheet" href="./;/style.css"/>
+    <link rel="stylesheet" href="./;/responsive.css"/>
     <!-- <script>
         console.log = function() {};
         console.table = function () {};
@@ -259,8 +260,8 @@
     <div class="container2-2">
         <div class="head-block">
             <div class="circle head-AllBets" onclick="allbetchoos()">Chats</div>
-            <div class="circle head-Mybets" onclick="mybetchoos()">Previous</div>
-            <div class="circle head-Top" onclick="topbetchoos()">Top</div>
+            <div class="circle head-Mybets" onclick="mybetchoos()">Records</div>
+            <div class="circle head-Top" onclick="topbetchoos()">Games</div>
         </div>
         <div class="all-table-body">
             <div class="allbets-choosen">
@@ -279,7 +280,11 @@
                     </div>
                     <div class="first-top-header-agent">
                         <div class="total-bets-value">
+<<<<<<< HEAD
                             <div class="out-player">105</div>
+=======
+                            <div class="out-player">20</div>
+>>>>>>> 56af2d81f0840c04716b2d87f1736ac2695d7075
                         </div>
                         <div class="total-bets">Agents</div>
                         <div class="total-win-text">My Agent</div>
@@ -330,19 +335,59 @@
             </div>
             <div class="previous-choosen">
                 <div class="previous-part-header">
-                    <div class="round-result-header">Round Result</div>
-                    <div class="round-result">
-                        <div class="round-result-value">2.47x</div>
-                    </div>
-                </div>
-                <div class="previous-table" onclick="userselectamount()">
-                    <div class="mybets-table-head">
-                        <div class="user-name-photo">Player</div>
-                        <div class="user-betRWF">Bet RWF</div>
-                        <div class="user-X">X</div>
-                        <div class="user-cashoutRWF">Win RWF</div>
-                    </div>
-                    <div class="previous-table-body"></div>
+                    <div class="round-result-header">Cash transaction</div>
+                    <main>
+                        <div class="transaction">
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
                 </div>
             </div>
             <div class="top-choosen">
@@ -412,7 +457,7 @@
         </div>
         <div class="cash-input-field-title">Amount to transfer</div>
         <div class="cash-input-value">
-            <input type="number" class="cash-inputfield">
+            <input type="text" class="cash-inputfield">
             <div class="current-francs">Rwf</div>
         </div>
         <div class="cash-send-btn">Apply</div>

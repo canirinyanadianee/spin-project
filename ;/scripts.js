@@ -7501,6 +7501,7 @@ chatinput.addEventListener("input", function () {
 
     chatinput.setSelectionRange(start, end);
 });
+<<<<<<< HEAD
 
 // Chat functionality
 let selectedAgent = null;
@@ -7570,3 +7571,70 @@ function toggleAgents() {
     if (!panel) return;
     panel.classList.toggle('visible');
 }
+=======
+//
+function addCommas(number) {
+    // Convert number to string
+    let numStr = number.toString();
+
+    // Regex to match groups of three digits
+    let regex = /\B(?=(\d{3})+(?!\d))/g;
+
+    // Insert commas at every third position from the end
+    numStr = numStr.replace(regex, ',');
+
+    return numStr;
+}
+const amountinput = document.querySelector('.cash-inputfield');
+amountinput.addEventListener("input", function () {
+    let valuenow = amountinput.value;
+    // Remove all characters except numbers and limit to 7 digits
+    value = valuenow.replace(/[^0-9]/g, '').slice(0, 7);
+    // Prevent 0 as first number
+    if (value.startsWith('0') && value.length > 1) {
+        value = value.substring(1);
+    }
+    // Add comma after  every 3 digits
+    value = addCommas(value);
+    amountinput.value = value;
+});
+// transaction bar
+const transactionbar = JSON.parse(localStorage.getItem(`transaction`)) || [];//***transacation record in local storage
+
+transactionbar.forEach(function (log, index) {
+    // add comma to each user income
+    var userincomenow = logingame[index].userincome*100;
+    addCommas(userincomenow);
+    // separate workedtime
+    workedTime = logingame[index].workedhours
+    workedTime = workedTime.split(":");
+    // console.log(workedTime);
+
+    const tr = document.createElement('div');
+    const trContent = `
+                        <div class="users">
+                            <div class="middle">
+                                <div class="lef">
+                                    <h3 class="user-name">${lognbrarry[index]} (${workedTime[0]}h ${workedTime[1]}m)</h3>
+                                    <h1>Frw <h1 class="user-cashreceived">${fullincome[0]}</h1></h1>
+                                </div>
+                            </div>
+                            <div class="user-time">
+                                <small class="user-time-header">Time:</strong></small>
+                                <small class="user-time-starting">Starting,<strong class="user-time-starting-time">${log.starttime}</strong></small>
+                                <small class="user-time-ending">Ending,<strong class="user-time-ending-time">${log.endtime}</strong></small>
+                            </div>
+                            <div class="user-credits">
+                                <small class="user-credits-header">Credits:</strong></small>
+                                <small class="user-credits-starting">Starting,<strong class="user-credits-starting-now">${log.startcredits}</strong></small>
+                                <small class="user-credits-ending">Ending,<strong class="user-credits-starting-end">${log.endcredits}</strong></small>
+                            </div>
+                        </div>
+                        `;
+    tr.innerHTML = trContent;
+    document.querySelector('main .logins').appendChild(tr);
+    // console.log("index",index);
+})
+function addtransaction(type, amount) {
+}
+>>>>>>> 56af2d81f0840c04716b2d87f1736ac2695d7075
