@@ -7636,4 +7636,3 @@ transactionbar.forEach(function (log, index) {
 })
 function addtransaction(type, amount) {
 }
->>>>>>> 56af2d81f0840c04716b2d87f1736ac2695d7075
