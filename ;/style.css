@@ -7625,8 +7625,10 @@ button.pay:active::before {
   width: 30%;
   height: 60.2%;
   background: #1a1919;
+  background: #8a8989;
+  color: black;
   /* background-color: var(--color-light); */
-  border-radius: var(--border-radius-3);
+  border-radius: var(--border-radius-1);
   justify-content: center;
   place-items: center;
   white-space: nowrap;  /* Prevents wrapping the text to the next line */
@@ -7647,6 +7649,7 @@ button.pay:active::before {
     width: 95%;
     height: 4.6%;
     background-color: rgb(0, 0, 0, 0.3);
+    background-color: rgb(0, 0, 0);
     border-radius: var(--border-radius-3);
     display: flex;
     justify-content: center;
@@ -7670,7 +7673,8 @@ button.pay:active::before {
     width: 95%;
     height: 3%;
     background-color: rgb(0, 0, 0, 0.3);
-    border-radius: var(--border-radius-2);
+    background-color: rgb(0, 0, 0);
+    border-radius: var(--border-radius-1);
     justify-content: center;
     text-align: center;
     place-items: center;
@@ -7690,14 +7694,32 @@ button.pay:active::before {
 }
 .previous-part-header {
     width: 95%;
-    height: 3%;
+    height: auto;
     background-color: rgba(247, 245, 245, 0.2);
     border-radius: var(--border-radius-2);
-    justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
     text-align: left;
-    place-items: left;
-    place-content: center;
-    justify-content: center;
+}
+.select-date {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.select-date-input {
+    min-width: 170px;
+    padding: 0.45rem 0.7rem;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 0.95rem;
+}
+.select-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 .firt-part-x-win-rounds, .second-part-day-month-Year {
     margin-top: 0.3rem;
@@ -7828,6 +7850,7 @@ button.pay:active::before {
 .player-x-day {
     width: 100%;
     background-color: rgb(0, 0, 0, 0.3);
+    background-color: rgb(0, 0, 0);
     border-radius: var(--border-radius-3);
     font-size: 13px;
 }
@@ -7936,7 +7959,7 @@ button.pay:active::before {
     border-radius: var(--border-radius-3);
     font-size: 14px;
     color: #b6abab;
-    background-color: #29292c;
+    background-color: #1d4521;
     transition: background-color 0.7s ease;
     user-select: none;
     cursor: pointer;
@@ -8030,13 +8053,14 @@ button.pay:active::before {
 .chat-container {
     width: 95%;
     height: 100%;
-    margin-top: .7rem;
+    margin-top: .5rem;
     color: rgb(116, 113, 113);
-    height: 315px;
+    height: 355px;
     /* display: flex; */
     /* place-content: left; */
-    border-radius: var(--border-radius-3);
+    border-radius: var(--border-radius-1);
     background-color: rgb(0, 0, 0, 0.3);
+    background-color: rgb(0, 0, 0);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -8047,13 +8071,18 @@ button.pay:active::before {
 }
 .all-agents-panel {
     width: 100%;
+    height: 180px;
+    overflow-y: auto;
     display: none;
     flex-wrap: wrap;
     gap: 0.6rem;
     padding: 0.7rem 0.5rem;
     background-color: rgba(255, 255, 255, 0.08);
     justify-content: flex-start;
-    border-bottom: 1px solid #0ef;
+    /* border-bottom: 1px solid #0ef; */
+}
+.all-agents-panel::-webkit-scrollbar {
+  width: 6px;
 }
 .all-agents-panel.visible {
     display: flex;
@@ -8074,7 +8103,7 @@ button.pay:active::before {
 }
 .agent-card:hover {
     transform: translateY(-2px);
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(84, 153, 32, 0.638);
 }
 .agent-card img {
     width: 36px;
@@ -8096,7 +8125,7 @@ button.pay:active::before {
 }
 .chat-header {
   display: flex;
-  margin-top: 0;
+  margin-top: .5rem;
   margin-left: .5rem;
   margin-bottom: .5rem;
   align-items: center;
@@ -8142,12 +8171,12 @@ button.pay:active::before {
 }
 
 .chat-message-body {
-  width: 95%;
+  width: 100%;
   flex: 1;
-  border: 1px solid #0ef;
+  /* border: 1px solid #0ef; */
   overflow-y: auto;
   padding: 0.5rem;
-  background-color: #1a1a1a;
+  /* background-color: #1a1a1a; */
   margin: 0 auto;
 }
 
@@ -8287,6 +8316,7 @@ button.pay:active::before {
     height: 5.85%;
     background: var(--color-white);
     background-color: rgb(0, 0, 0, 0.3);
+    background-color: rgb(0, 0, 0);
     border-radius: var(--border-radius-3);
     display: flex;
     place-items: center;
@@ -8300,6 +8330,7 @@ button.pay:active::before {
     width: 97%;
     height: 5.85%;
     background-color: rgb(0, 0, 0, 0.3);
+    background-color: rgb(0, 0, 0);
     border-radius: var(--border-radius-3);
     display: flex;
     place-items: center;
@@ -8699,7 +8730,12 @@ button.pay:active::before {
 /* start transaction records */
 
 main{
-  margin-top: 0rem;
+  margin-top: 1rem;
+  width: 95%;
+  max-height: 200px;
+  background-color: rgb(243, 243, 243);
+  overflow: hidden;
+  sc
 }
 
 main .transaction {
