@@ -116,31 +116,10 @@ window.addEventListener('storage', function(event) {
 });
 
 var highbalance= Number(newBalance);
-document.addEventListener('keydown', function(event) {
-    // Check if F12 key is pressed
-    if (event.key === 'F12' || event.keyCode === 123) {
-        event.preventDefault();
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'I') {
-        event.preventDefault();
-        console.log("Developer tools shortcut prevented.");
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'J') {
-        event.preventDefault();
-        console.log("JavaScript Console shortcut prevented.");
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'C') {
-        event.preventDefault();
-    }
-});
 
 var allowstart=0;
 
-window.addEventListener("contextmenu", function(){
-    stopcounting();
-});
 function transbtn() {
-    stopcounting();
     if(event.button==0 && gamerunning==0) {
         transaction();
         allowstart=1;
@@ -772,7 +751,6 @@ function gobtn() {
     if(betcondition==0) {
         //
         gamerunning=0;
-        stopcounting();
         console.log("start button begin..");
         document.querySelector(".popup").classList.remove("active");
         document.querySelector(".popup1").classList.remove("active");
@@ -798,7 +776,6 @@ function gobtn() {
             //
             update= new Date().getTime();
             deadline = Number(localStorage.getItem('deadline') || 0);
-            stopcounting();
             console.log("sumbutton",sumbutton);
             distart++;
             removeannimaiton();
@@ -995,7 +972,6 @@ var balancecash=0;
 function backbtn() {
     console.warn('back button pressed!!!....1');
     if(gamerunning==0) {
-        stopcounting();
         console.warn('back button pressed!!!....2');
         const winafter = document.querySelector('.winafter');
         let win = Number(winafter.textContent)/100 || 0;
@@ -1066,14 +1042,10 @@ window.addEventListener("keyup", function(e){
     };
     if(e.keyCode==87){
         backbtn();
-    }else if(stopall==0){
-        stopcounting();
-    };
+    }
     if(e.keyCode==8){
         backbtn();
-    }else if(stopall==0){
-        stopcounting();
-    };
+    }
 });
 // BACK end...............................
 
@@ -1393,7 +1365,6 @@ function checkamou() {
 }
 function btn10() {
     if(gamerunning==0 && betcondition==0) {
-        stopcounting();
         if(popu==1){
         
         }else{
@@ -1427,14 +1398,6 @@ function btn10() {
 }
 function btn9() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1468,14 +1431,6 @@ function btn9() {
 }
 function btn8() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1508,14 +1463,6 @@ function btn8() {
 }
 function btn7() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1555,7 +1502,6 @@ function btn6() {
         update= new Date().getTime();
         deadline = Number(localStorage.getItem('deadline') || 0);
         
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1595,7 +1541,6 @@ function btn5() {
         update= new Date().getTime();
         deadline = Number(localStorage.getItem('deadline') || 0);
         
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1628,18 +1573,10 @@ function btn5() {
 }
 function btn4() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
-            addtobalance()
+            addtobalance() 
             newBalance = Number(qaziCheking.balance);
             console.log({Balance: newBalance})
             if(newBalance>=1){
@@ -1668,14 +1605,6 @@ function btn4() {
 }
 function btn3() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1708,14 +1637,6 @@ function btn3() {
 }
 function btn2() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1748,14 +1669,6 @@ function btn2() {
 }
 function btn1() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1867,8 +1780,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn10()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==111){
         if(popu==1){
             e.preventDefault();
@@ -1878,8 +1790,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn10()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==90){
         if(popu==1){
             e.preventDefault();
@@ -1889,8 +1800,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn1()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==88){
         if(popu==1){
             e.preventDefault();
@@ -1900,8 +1810,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn2()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==67){
         if(popu==1){
             e.preventDefault();
@@ -1911,8 +1820,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn3()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==86){
         if(popu==1){
             e.preventDefault();
@@ -1922,8 +1830,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn4()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==66){
         if(popu==1){
             e.preventDefault();
@@ -1933,8 +1840,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn5()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==78){
         if(popu==1){
             e.preventDefault();
@@ -1944,8 +1850,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn6()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==77){
         if(popu==1){
             e.preventDefault();
@@ -1955,8 +1860,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn7()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==96){
         if(popu==1){
             e.preventDefault();
@@ -1966,8 +1870,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn7()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==188){
         if(popu==1){
             e.preventDefault();
@@ -1977,8 +1880,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn8()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==190){
         if(popu==1){
             e.preventDefault();
@@ -1988,8 +1890,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn9()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==110){
         if(popu==1){
             e.preventDefault();
@@ -1999,53 +1900,42 @@ window.addEventListener("keydown", function(e){
         }else {
             btn9()
         }
-    }else if(stopall==0){
-    };
+    }
     // number button-38.3308*38.317910,..,0N////000,,,,...MMMMM00,,,...//////
     if(e.keyCode==48){
         btn10();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==49){
         btn9();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==50){
         btn8();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==51){
         btn7();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==52){
         btn6();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==53){
         btn5();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==54){
         btn4();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==55){
         btn3();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==56){
         btn2();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==57){
         btn1();
-    }else if(stopall==0){
-    };
+    }
 });
 
 const balancerec = document.querySelector('.balancediv');
-
+// JKLSDFK
 function balancedivrec() {
     balancerec.innerHTML = localStorage.getItem("cashin") - localStorage.getItem("cashout");
     balancerec.classList.add("balancediv");
@@ -4876,56 +4766,9 @@ document.addEventListener("mousedown", () => {
     document.documentElement.requestFullscreen().catch();
 });
 
-function subbtn(){
-    if(gamerunning==0) {
-        location.href = "./;/settings/setting.html";
-    };
-};
 
 var fill=0;
 var allowenter=0;
-function fail() {
-    failback = setInterval(() => {
-        document.querySelector('.btn-primary').classList.add("fail");
-        setTimeout(() => {
-            document.querySelector('.btn-primary').classList.remove("fail");
-        }, 100);
-    }, 200);
-    setTimeout(() => {
-        clearInterval(failback);
-        setTimeout(() => {
-            codes[0].value='';
-            codes[1].value='';
-            codes[2].value='';
-            codes[3].value='';
-            codes[4].value='';
-            codes[5].value='';
-            codes[6].value='';
-            codes[7].value='';
-            codes[8].value='';
-            codes[9].value='';
-            codes[10].value='';
-            codes[11].value='';
-            codes[12].value='';
-            codes[13].value='';
-            codes[14].value='';
-            codes[15].value='';
-            codes[16].value='';
-            codes[17].value='';
-            codes[18].value='';
-            codes[19].value='';
-            codes[0].focus();
-            }, 500);
-    }, 3000);
-}
-function done() {
-    doneback = setInterval(() => {
-        document.querySelector('.btn-secondary').classList.add("done");
-        setTimeout(() => {
-            document.querySelector('.btn-secondary').classList.remove("done");
-        }, 100);
-    }, 200);
-}
 // balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
 
 var turn = [];
@@ -6970,21 +6813,6 @@ document.querySelector('.outer-count').innerText = logintimerem;
 
 var remainTime;
 var countingstart=0
-function clickremainder() {
-    countingstart=1
-    remainTime = setInterval(() => {
-        logintimerem--;
-        document.querySelector('.outer-count').innerText = logintimerem
-        if(logintimerem==0){
-            clearInterval(remainTime);
-            document.querySelector('.outer-count').innerText = "Out";
-            if(allownewuserlogin==0) {
-                allownewuserlogin = 1;
-                clearInterval(continueupdate);
-            };
-        };
-    }, 1000);
-}
 
 var helpcheck=0;
 var nowstart=0;
@@ -7192,18 +7020,6 @@ function reportrec() {
 }
 // reportrec();
 let continueupdate;
-function runreport() {
-    startloginform()
-    continueupdate = setInterval(() => {
-        updateloginform()
-    }, 1000);
-}
-runreport();
-normalcounting();
-var gametb = Number(localStorage.getItem('gametab')||0);
-if(gametb==0) {
-    location.href = "./;/settings/about/game/game.html";
-}
 /// subtime protection
 // save now time to limit low time clock
 function nowDate(date) {
@@ -7448,7 +7264,7 @@ function mybetchoos() {
         topchoosentable.classList.remove("section-appear-table-header");
         if(previousetablechange==0) {
             previousetablechange = 1;
-            runprevioustable();
+            // runprevioustable();
         }
     }
 }
