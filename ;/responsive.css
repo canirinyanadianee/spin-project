@@ -87,6 +87,7 @@
   body {
     font-size: clamp(10px, 2vw, 14px);
     overflow-y: auto;
+    overflow-x: hidden;
   }
   
   #app {
@@ -122,6 +123,7 @@
   #text, .wintext, .balancefrancs, .francs {
     font-size: clamp(20px, 4vw, 40px);
     top: clamp(30px, 4%, 50px);
+    right: clamp(10px, 2%, 20px);
   }
   
   .win, .cashout {
@@ -207,6 +209,8 @@
   
   body {
     font-size: clamp(9px, 2.5vw, 12px);
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   
   #app {
@@ -243,6 +247,7 @@
   /* Text elements */
   #text, .wintext, .balancefrancs, .francs {
     font-size: clamp(16px, 3.5vw, 30px);
+    right: clamp(5px, 1%, 15px);
   }
   
   .win, .cashout {
@@ -345,12 +350,50 @@
 @media screen and (orientation: landscape) and (max-height: 500px) {
   body {
     min-height: 100vh;
+    overflow-y: auto;
   }
   
   #app {
-    top: -10%;
+    top: -5%;
+    width: clamp(150px, 40vw, 300px);
+    height: clamp(150px, 40vw, 300px);
   }
   
+  .wheel {
+    width: 120%;
+    height: 120%;
+  }
+  
+  .marker {
+    top: 5%;
+  }
+  
+  .button {
+    top: 40%;
+    width: 45%;
+    height: 45%;
+  }
+  
+  .result {
+    top: 1%;
+    font-size: 0.8rem;
+  }
+  
+  /* Adjust text positions */
+  #text, .wintext, .balancefrancs, .francs {
+    top: 20px;
+    right: 10px;
+  }
+  
+  .win, .cashout {
+    top: 60px;
+  }
+  
+  .winafter, #output1 {
+    top: 40px;
+  }
+  
+  /* Move buttons up */
   button.learn-more1,
   button.learn-more2,
   button.learn-more3,
@@ -361,23 +404,136 @@
   button.learn-more8,
   button.learn-more9,
   button.learn-more10 {
-    top: 75%;
-    padding: 1.5em 1.5em;
-    font-size: 0.6rem;
+    top: 65%;
+    padding: 1.2em 1.2em;
+    font-size: 0.5rem;
   }
   
   #display1, #display2, #display3, #display4, #display5,
   #display6, #display7, #display8, #display9, #display10 {
-    top: 70%;
-    font-size: 18px;
+    top: 60%;
+    font-size: 14px;
+  }
+  
+  /* Hide or minimize table section in landscape */
+  .container2-2 {
+    display: none;
+  }
+  
+  /* Adjust popups */
+  .popup, .popup1 {
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
-/* High DPI Screens (Retina Display) */
-@media screen and (-webkit-min-device-pixel-ratio: 2) {
+/* Portrait Mode Adjustments for Mobile */
+@media screen and (orientation: portrait) and (max-width: 480px) {
   body {
-    font-size: clamp(11px, 2vw, 16px);
+    overflow-y: auto;
   }
+  
+  #app {
+    top: -10%;
+  }
+  
+  /* Popup should remain hidden until the user taps the menu button */
+  .container2-2 {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    top: 10%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    height: auto;
+    max-height: 55vh;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-50px);
+    pointer-events: none;
+  }
+  
+  .container2-2.show {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin: 20px auto 0;
+    width: 95%;
+    height: auto;
+    max-height: 55vh;
+    overflow-y: auto;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  
+  /* Adjust button positions for portrait */
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    top: 80%;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    top: 75%;
+  }
+}
+
+.orientation-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.orientation-overlay.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orientation-overlay .message {
+  max-width: 420px;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(16, 16, 16, 0.95);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+}
+
+.orientation-overlay .message h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+}
+
+.orientation-overlay .message p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.orientation-overlay .message button {
+  border: none;
+  background: #38b3ff;
+  color: #080a0c;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 /* Touch Device Optimization */

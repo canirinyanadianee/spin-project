@@ -7240,6 +7240,7 @@ function startgameagain() {
     };
     runcountdown();
 }
+startgameagain();
 //active user 
 
 var startuser = 0;
@@ -7581,5 +7582,33 @@ amountinput.addEventListener("input", function () {
     // Add comma after  every 3 digits
     value = addCommas(value);
     amountinput.value = value;
+});
+
+function updateMobileOrientationOverlay() {
+    const overlay = document.getElementById('orientationOverlay');
+    if (!overlay) return;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+    if (isMobile && isPortrait) {
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
+}
+
+function tryLandscapeLock() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {
+            // Some browsers only allow lock in fullscreen or after user gesture
+        }).finally(updateMobileOrientationOverlay);
+    } else {
+        updateMobileOrientationOverlay();
+    }
+}
+
+window.addEventListener('load', () => {
+    updateMobileOrientationOverlay();
+    window.addEventListener('resize', updateMobileOrientationOverlay);
+    window.addEventListener('orientationchange', updateMobileOrientationOverlay);
 });
 // transaction bar
