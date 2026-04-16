@@ -8732,9 +8732,9 @@ button.pay:active::before {
 main{
   margin-top: 1rem;
   width: 95%;
-  max-height: 200px;
+  max-height: 400px;
   background-color: rgb(243, 243, 243);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 main .transaction {
