@@ -7050,7 +7050,7 @@ function normalcounting() {
 }
 
 function stopcounting() {
-    normalcounting()
+    // normalcounting()
 }
 console.log("clicked for activate time")
 // HERE IS TO GENERATE NEW LOGIN REPORT
@@ -7156,14 +7156,6 @@ function updateloginform() {
 }
 // localStorage.setItem("2/6/2024", []);
 // gamestartingdate
-const startindate = localStorage.getItem("startingdate");
-if(!startindate){
-    nowtime = new Date();
-    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
-    localStorage.setItem('startingdate',logindates);
-}else {
-    console.log("startingdates",startindate);
-}
 // daily report records
 function reportrec() {
     nowtime = new Date();
@@ -7225,13 +7217,7 @@ function nowDate(date) {
 };
 var lasttimeclock = 0;
 var nowtimeclock  = 0;
-setInterval(() => { 
-    innocent();
-}, 1000);
 
-function clearallmusic(){
-    clearTimeout(startgame);
-};
 var startgame;
 let countdowntxt;
 var timetogo = 5;
@@ -7254,7 +7240,6 @@ function startgameagain() {
     };
     runcountdown();
 }
-startgameagain();
 //active user 
 
 var startuser = 0;
@@ -7598,41 +7583,3 @@ amountinput.addEventListener("input", function () {
     amountinput.value = value;
 });
 // transaction bar
-const transactionbar = JSON.parse(localStorage.getItem(`transaction`)) || [];//***transacation record in local storage
-
-transactionbar.forEach(function (log, index) {
-    // add comma to each user income
-    var userincomenow = logingame[index].userincome*100;
-    addCommas(userincomenow);
-    // separate workedtime
-    workedTime = logingame[index].workedhours
-    workedTime = workedTime.split(":");
-    // console.log(workedTime);
-
-    const tr = document.createElement('div');
-    const trContent = `
-                        <div class="users">
-                            <div class="middle">
-                                <div class="lef">
-                                    <h3 class="user-name">${lognbrarry[index]} (${workedTime[0]}h ${workedTime[1]}m)</h3>
-                                    <h1>Frw <h1 class="user-cashreceived">${fullincome[0]}</h1></h1>
-                                </div>
-                            </div>
-                            <div class="user-time">
-                                <small class="user-time-header">Time:</strong></small>
-                                <small class="user-time-starting">Starting,<strong class="user-time-starting-time">${log.starttime}</strong></small>
-                                <small class="user-time-ending">Ending,<strong class="user-time-ending-time">${log.endtime}</strong></small>
-                            </div>
-                            <div class="user-credits">
-                                <small class="user-credits-header">Credits:</strong></small>
-                                <small class="user-credits-starting">Starting,<strong class="user-credits-starting-now">${log.startcredits}</strong></small>
-                                <small class="user-credits-ending">Ending,<strong class="user-credits-starting-end">${log.endcredits}</strong></small>
-                            </div>
-                        </div>
-                        `;
-    tr.innerHTML = trContent;
-    document.querySelector('main .logins').appendChild(tr);
-    // console.log("index",index);
-})
-function addtransaction(type, amount) {
-}
