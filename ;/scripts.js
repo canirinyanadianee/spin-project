@@ -116,31 +116,10 @@ window.addEventListener('storage', function(event) {
 });
 
 var highbalance= Number(newBalance);
-document.addEventListener('keydown', function(event) {
-    // Check if F12 key is pressed
-    if (event.key === 'F12' || event.keyCode === 123) {
-        event.preventDefault();
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'I') {
-        event.preventDefault();
-        console.log("Developer tools shortcut prevented.");
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'J') {
-        event.preventDefault();
-        console.log("JavaScript Console shortcut prevented.");
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'C') {
-        event.preventDefault();
-    }
-});
 
 var allowstart=0;
 
-window.addEventListener("contextmenu", function(){
-    stopcounting();
-});
 function transbtn() {
-    stopcounting();
     if(event.button==0 && gamerunning==0) {
         transaction();
         allowstart=1;
@@ -772,7 +751,6 @@ function gobtn() {
     if(betcondition==0) {
         //
         gamerunning=0;
-        stopcounting();
         console.log("start button begin..");
         document.querySelector(".popup").classList.remove("active");
         document.querySelector(".popup1").classList.remove("active");
@@ -798,7 +776,6 @@ function gobtn() {
             //
             update= new Date().getTime();
             deadline = Number(localStorage.getItem('deadline') || 0);
-            stopcounting();
             console.log("sumbutton",sumbutton);
             distart++;
             removeannimaiton();
@@ -995,7 +972,6 @@ var balancecash=0;
 function backbtn() {
     console.warn('back button pressed!!!....1');
     if(gamerunning==0) {
-        stopcounting();
         console.warn('back button pressed!!!....2');
         const winafter = document.querySelector('.winafter');
         let win = Number(winafter.textContent)/100 || 0;
@@ -1066,14 +1042,10 @@ window.addEventListener("keyup", function(e){
     };
     if(e.keyCode==87){
         backbtn();
-    }else if(stopall==0){
-        stopcounting();
-    };
+    }
     if(e.keyCode==8){
         backbtn();
-    }else if(stopall==0){
-        stopcounting();
-    };
+    }
 });
 // BACK end...............................
 
@@ -1393,7 +1365,6 @@ function checkamou() {
 }
 function btn10() {
     if(gamerunning==0 && betcondition==0) {
-        stopcounting();
         if(popu==1){
         
         }else{
@@ -1427,14 +1398,6 @@ function btn10() {
 }
 function btn9() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1468,14 +1431,6 @@ function btn9() {
 }
 function btn8() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1508,14 +1463,6 @@ function btn8() {
 }
 function btn7() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1555,7 +1502,6 @@ function btn6() {
         update= new Date().getTime();
         deadline = Number(localStorage.getItem('deadline') || 0);
         
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1595,7 +1541,6 @@ function btn5() {
         update= new Date().getTime();
         deadline = Number(localStorage.getItem('deadline') || 0);
         
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1628,18 +1573,10 @@ function btn5() {
 }
 function btn4() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
-            addtobalance()
+            addtobalance() 
             newBalance = Number(qaziCheking.balance);
             console.log({Balance: newBalance})
             if(newBalance>=1){
@@ -1668,14 +1605,6 @@ function btn4() {
 }
 function btn3() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1708,14 +1637,6 @@ function btn3() {
 }
 function btn2() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1748,14 +1669,6 @@ function btn2() {
 }
 function btn1() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1867,8 +1780,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn10()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==111){
         if(popu==1){
             e.preventDefault();
@@ -1878,8 +1790,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn10()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==90){
         if(popu==1){
             e.preventDefault();
@@ -1889,8 +1800,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn1()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==88){
         if(popu==1){
             e.preventDefault();
@@ -1900,8 +1810,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn2()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==67){
         if(popu==1){
             e.preventDefault();
@@ -1911,8 +1820,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn3()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==86){
         if(popu==1){
             e.preventDefault();
@@ -1922,8 +1830,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn4()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==66){
         if(popu==1){
             e.preventDefault();
@@ -1933,8 +1840,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn5()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==78){
         if(popu==1){
             e.preventDefault();
@@ -1944,8 +1850,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn6()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==77){
         if(popu==1){
             e.preventDefault();
@@ -1955,8 +1860,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn7()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==96){
         if(popu==1){
             e.preventDefault();
@@ -1966,8 +1870,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn7()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==188){
         if(popu==1){
             e.preventDefault();
@@ -1977,8 +1880,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn8()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==190){
         if(popu==1){
             e.preventDefault();
@@ -1988,8 +1890,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn9()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==110){
         if(popu==1){
             e.preventDefault();
@@ -1999,53 +1900,42 @@ window.addEventListener("keydown", function(e){
         }else {
             btn9()
         }
-    }else if(stopall==0){
-    };
+    }
     // number button-38.3308*38.317910,..,0N////000,,,,...MMMMM00,,,...//////
     if(e.keyCode==48){
         btn10();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==49){
         btn9();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==50){
         btn8();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==51){
         btn7();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==52){
         btn6();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==53){
         btn5();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==54){
         btn4();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==55){
         btn3();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==56){
         btn2();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==57){
         btn1();
-    }else if(stopall==0){
-    };
+    }
 });
 
 const balancerec = document.querySelector('.balancediv');
-
+// JKLSDFK
 function balancedivrec() {
     balancerec.innerHTML = localStorage.getItem("cashin") - localStorage.getItem("cashout");
     balancerec.classList.add("balancediv");
@@ -4876,56 +4766,9 @@ document.addEventListener("mousedown", () => {
     document.documentElement.requestFullscreen().catch();
 });
 
-function subbtn(){
-    if(gamerunning==0) {
-        location.href = "./;/settings/setting.html";
-    };
-};
 
 var fill=0;
 var allowenter=0;
-function fail() {
-    failback = setInterval(() => {
-        document.querySelector('.btn-primary').classList.add("fail");
-        setTimeout(() => {
-            document.querySelector('.btn-primary').classList.remove("fail");
-        }, 100);
-    }, 200);
-    setTimeout(() => {
-        clearInterval(failback);
-        setTimeout(() => {
-            codes[0].value='';
-            codes[1].value='';
-            codes[2].value='';
-            codes[3].value='';
-            codes[4].value='';
-            codes[5].value='';
-            codes[6].value='';
-            codes[7].value='';
-            codes[8].value='';
-            codes[9].value='';
-            codes[10].value='';
-            codes[11].value='';
-            codes[12].value='';
-            codes[13].value='';
-            codes[14].value='';
-            codes[15].value='';
-            codes[16].value='';
-            codes[17].value='';
-            codes[18].value='';
-            codes[19].value='';
-            codes[0].focus();
-            }, 500);
-    }, 3000);
-}
-function done() {
-    doneback = setInterval(() => {
-        document.querySelector('.btn-secondary').classList.add("done");
-        setTimeout(() => {
-            document.querySelector('.btn-secondary').classList.remove("done");
-        }, 100);
-    }, 200);
-}
 // balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
 
 var turn = [];
@@ -6970,88 +6813,11 @@ document.querySelector('.outer-count').innerText = logintimerem;
 
 var remainTime;
 var countingstart=0
-function clickremainder() {
-    countingstart=1
-    remainTime = setInterval(() => {
-        logintimerem--;
-        document.querySelector('.outer-count').innerText = logintimerem
-        if(logintimerem==0){
-            clearInterval(remainTime);
-            document.querySelector('.outer-count').innerText = "Out";
-            if(allownewuserlogin==0) {
-                allownewuserlogin = 1;
-                clearInterval(continueupdate);
-            };
-        };
-    }, 1000);
-}
 
 var helpcheck=0;
 var nowstart=0;
 var allownewuserlogin = 0;
 let checkstarting;
-function normalcounting() {
-    // console.log("helpcheck is",helpcheck);
-    if(helpcheck==0){
-        helpcheck=1;
-        checkstarting = setInterval(() => {
-            nowstart++;
-            // console.log("nowstart is",nowstart)
-            if(nowstart==900){
-                clearInterval(checkstarting);
-            }
-        }, 1000);
-        if(countingstart==1){
-            clearInterval(remainTime);
-            logintimerem = 180;
-            document.querySelector('.outer-count').innerText = logintimerem;
-        }
-        document.querySelector('.show-rmn').classList.remove("show-remain-time");
-        newsetout = setTimeout(() => {
-            logintimerem = 180;
-            document.querySelector('.outer-count').innerText = logintimerem;
-            document.querySelector('.show-rmn').classList.add("show-remain-time");
-            if(countingstart==1){
-                clearInterval(remainTime);
-            }
-            clickremainder()
-        }, 900000);
-    }else if(helpcheck==1){
-        clearTimeout(newsetout);
-        clearInterval(checkstarting);
-        nowstart=0;
-        // console.log("nowstart refresh",nowstart);
-        checkstarting = setInterval(() => {
-            nowstart++;
-            // console.log("nowstart is",nowstart)
-            if(nowstart==900){
-                clearInterval(checkstarting);
-            }
-        }, 1000);
-        if(countingstart==1){
-            clearInterval(remainTime);
-            logintimerem = 180;
-            document.querySelector('.outer-count').innerText = logintimerem;
-        }
-        document.querySelector('.show-rmn').classList.remove("show-remain-time");
-        newsetout = setTimeout(() => {
-            console.log("10 Seconds has been reached")
-            logintimerem = 180;
-            document.querySelector('.outer-count').innerText = logintimerem;
-            document.querySelector('.show-rmn').classList.add("show-remain-time");
-            clickremainder()
-        }, 900000);
-        if(allownewuserlogin==1) {
-            allownewuserlogin = 0;
-            runreport();
-        }
-    }
-
-}
-
-function stopcounting() {
-    normalcounting()
-}
 console.log("clicked for activate time")
 // HERE IS TO GENERATE NEW LOGIN REPORT
 function startloginform() {
@@ -7093,125 +6859,7 @@ function startloginform() {
     console.log("now login form start from mouse enter");
 }
 
-// const logindates = `${nowtime.getDate()}/${nowtime.getMonth()+1}/${nowtime.getFullYear()}`;
-// localStorage.setItem(`${logindates}`,JSON.stringify([]));
-// TO UPDATE CURRENT LOGIN
-function updateloginform() {
-    nowtime = new Date();
-    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
-    var reporttoday =  JSON.parse(localStorage.getItem(`${logindates}`));
-    if(!reporttoday) {
-        startloginform();
-        updateloginform();
-    }else {
-        var allformlogin = reporttoday[0];
-        var currentlogin = allformlogin[0];
-        // console.table(currentlogin);
-        // update
-        // console.log("start updates.....");
-        startcrd = currentlogin.startcredits;
-        // console.log("startcredits",startcrd);
-        nowcredits = localStorage.getItem("cashin") - localStorage.getItem("cashout");
-        // console.log("nowcredits",nowcredits);
-        // you have to save now credits
-        // let calculate the income form start and now credits
-        balcredits = nowcredits-startcrd;
-        // console.log("balcredits", balcredits);
-        // start of time
-        // nowtime
-        const nowTime = new Date();
-        // console.log(nowTime)
-        endtime = `${nowTime.getHours()}:${nowTime.getMinutes()}`;
-        // start time
-        const starttime = new Date(currentlogin.fulltime);
-        // console.log("starttime",starttime);
-        // diff time in milliseconds
-        const elapsedTimeInMilliseconds = nowTime - starttime;
-        // console.log("elapsedTimeInMilliseconds",elapsedTimeInMilliseconds);
-        // Convert milliseconds to hours, andminutes
-        const hours = Math.floor(elapsedTimeInMilliseconds / 3600000);
-        const minutes = Math.floor((elapsedTimeInMilliseconds % 3600000) / 60000);
-        // console.log("starttime", currentlogin.starttime);
-        // console.log("endtime",endtime);
-        workedTime = `${hours}:${minutes}`;
-        // console.log("workedTime is ",workedTime);
-        // updated login
-        updatedlogin = [
-            {
-                userincome: balcredits,
-                starttime: currentlogin.starttime,
-                endtime: endtime,
-                startcredits: startcrd,
-                endcredits: nowcredits,
-                fulltime: new Date(currentlogin.fulltime),
-                workedhours: workedTime
-            }
-        ];
-        // console.table(updatedlogin);
-        
-        allformlogin[0]= updatedlogin[0];
-        reporttoday[0] = allformlogin;
-        localStorage.setItem(`${logindates}`,JSON.stringify(reporttoday));
-    }
-}
-// localStorage.setItem("2/6/2024", []);
-// gamestartingdate
-const startindate = localStorage.getItem("startingdate");
-if(!startindate){
-    nowtime = new Date();
-    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
-    localStorage.setItem('startingdate',logindates);
-}else {
-    console.log("startingdates",startindate);
-}
-// daily report records
-function reportrec() {
-    nowtime = new Date();
-    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
-    // console.log(logindates);
-    let reporttoday =  JSON.parse(localStorage.getItem(`${logindates}`));
-    // console.log("REPORTTODAY",reporttoday);
-    if (!reporttoday[1]) {
-        reporttoday[1] = [];
-        localStorage.setItem(`${logindates}`, JSON.stringify(reporttoday));
-        reporttoday =  JSON.parse(localStorage.getItem(`${logindates}`));
-    }
-    // console.log("REPORTTODAY",reporttoday);
-    matchrec = [
-        {
-            Time: `${nowtime.getHours() < 10 ? '0' + nowtime.getHours() : nowtime.getHours()}:${nowtime.getMinutes() < 10 ? '0' + nowtime.getMinutes() : nowtime.getMinutes()}:${nowtime.getSeconds() < 10 ? '0' + nowtime.getSeconds() : nowtime.getSeconds()}`,
-            Bet: Number(sumbutton)*100,
-            win: win*100,
-            income: Number(sumbutton-win)*100
-        }
-    ];
-    // console.table(matchrec);
-    recordstoday = reporttoday[1];
-    recordstoday.unshift(matchrec[0]);
-    // console.log(recordstoday);
-    reporttoday[1] =  recordstoday;
-    // console.table(reporttoday[1])
-    localStorage.setItem(`${logindates}`,JSON.stringify(reporttoday));
-    try {
-        localStorage.setItem(`${logindates}`,JSON.stringify(reporttoday));
-    } catch (e) {
-        console.warn('Could not save before unload', e);
-    }
-}
-// reportrec();
 let continueupdate;
-function runreport() {
-    startloginform()
-    continueupdate = setInterval(() => {
-        updateloginform()
-    }, 1000);
-}
-runreport();
-normalcounting();
-var gametb = Number(localStorage.getItem('gametab')||0);
-if(gametb==0) {
-    location.href = "./;/settings/about/game/game.html";
-}
 /// subtime protection
 // save now time to limit low time clock
 function nowDate(date) {
@@ -7225,13 +6873,7 @@ function nowDate(date) {
 };
 var lasttimeclock = 0;
 var nowtimeclock  = 0;
-setInterval(() => { 
-    innocent();
-}, 1000);
 
-function clearallmusic(){
-    clearTimeout(startgame);
-};
 var startgame;
 let countdowntxt;
 var timetogo = 5;
@@ -7462,7 +7104,7 @@ function mybetchoos() {
         topchoosentable.classList.remove("section-appear-table-header");
         if(previousetablechange==0) {
             previousetablechange = 1;
-            runprevioustable();
+            // runprevioustable();
         }
     }
 }
