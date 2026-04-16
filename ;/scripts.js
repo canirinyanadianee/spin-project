@@ -6818,6 +6818,71 @@ var helpcheck=0;
 var nowstart=0;
 var allownewuserlogin = 0;
 let checkstarting;
+<<<<<<< HEAD
+=======
+function normalcounting() {
+    // console.log("helpcheck is",helpcheck);
+    if(helpcheck==0){
+        helpcheck=1;
+        checkstarting = setInterval(() => {
+            nowstart++;
+            // console.log("nowstart is",nowstart)
+            if(nowstart==900){
+                clearInterval(checkstarting);
+            }
+        }, 1000);
+        if(countingstart==1){
+            clearInterval(remainTime);
+            logintimerem = 180;
+            document.querySelector('.outer-count').innerText = logintimerem;
+        }
+        document.querySelector('.show-rmn').classList.remove("show-remain-time");
+        newsetout = setTimeout(() => {
+            logintimerem = 180;
+            document.querySelector('.outer-count').innerText = logintimerem;
+            document.querySelector('.show-rmn').classList.add("show-remain-time");
+            if(countingstart==1){
+                clearInterval(remainTime);
+            }
+            clickremainder()
+        }, 900000);
+    }else if(helpcheck==1){
+        clearTimeout(newsetout);
+        clearInterval(checkstarting);
+        nowstart=0;
+        // console.log("nowstart refresh",nowstart);
+        checkstarting = setInterval(() => {
+            nowstart++;
+            // console.log("nowstart is",nowstart)
+            if(nowstart==900){
+                clearInterval(checkstarting);
+            }
+        }, 1000);
+        if(countingstart==1){
+            clearInterval(remainTime);
+            logintimerem = 180;
+            document.querySelector('.outer-count').innerText = logintimerem;
+        }
+        document.querySelector('.show-rmn').classList.remove("show-remain-time");
+        newsetout = setTimeout(() => {
+            console.log("10 Seconds has been reached")
+            logintimerem = 180;
+            document.querySelector('.outer-count').innerText = logintimerem;
+            document.querySelector('.show-rmn').classList.add("show-remain-time");
+            clickremainder()
+        }, 900000);
+        if(allownewuserlogin==1) {
+            allownewuserlogin = 0;
+            runreport();
+        }
+    }
+
+}
+
+function stopcounting() {
+    // normalcounting()
+}
+>>>>>>> dc2240b2f227e255bfad1f02c849d75d2d973996
 console.log("clicked for activate time")
 // HERE IS TO GENERATE NEW LOGIN REPORT
 function startloginform() {
@@ -6859,6 +6924,107 @@ function startloginform() {
     console.log("now login form start from mouse enter");
 }
 
+<<<<<<< HEAD
+=======
+// const logindates = `${nowtime.getDate()}/${nowtime.getMonth()+1}/${nowtime.getFullYear()}`;
+// localStorage.setItem(`${logindates}`,JSON.stringify([]));
+// TO UPDATE CURRENT LOGIN
+function updateloginform() {
+    nowtime = new Date();
+    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
+    var reporttoday =  JSON.parse(localStorage.getItem(`${logindates}`));
+    if(!reporttoday) {
+        startloginform();
+        updateloginform();
+    }else {
+        var allformlogin = reporttoday[0];
+        var currentlogin = allformlogin[0];
+        // console.table(currentlogin);
+        // update
+        // console.log("start updates.....");
+        startcrd = currentlogin.startcredits;
+        // console.log("startcredits",startcrd);
+        nowcredits = localStorage.getItem("cashin") - localStorage.getItem("cashout");
+        // console.log("nowcredits",nowcredits);
+        // you have to save now credits
+        // let calculate the income form start and now credits
+        balcredits = nowcredits-startcrd;
+        // console.log("balcredits", balcredits);
+        // start of time
+        // nowtime
+        const nowTime = new Date();
+        // console.log(nowTime)
+        endtime = `${nowTime.getHours()}:${nowTime.getMinutes()}`;
+        // start time
+        const starttime = new Date(currentlogin.fulltime);
+        // console.log("starttime",starttime);
+        // diff time in milliseconds
+        const elapsedTimeInMilliseconds = nowTime - starttime;
+        // console.log("elapsedTimeInMilliseconds",elapsedTimeInMilliseconds);
+        // Convert milliseconds to hours, andminutes
+        const hours = Math.floor(elapsedTimeInMilliseconds / 3600000);
+        const minutes = Math.floor((elapsedTimeInMilliseconds % 3600000) / 60000);
+        // console.log("starttime", currentlogin.starttime);
+        // console.log("endtime",endtime);
+        workedTime = `${hours}:${minutes}`;
+        // console.log("workedTime is ",workedTime);
+        // updated login
+        updatedlogin = [
+            {
+                userincome: balcredits,
+                starttime: currentlogin.starttime,
+                endtime: endtime,
+                startcredits: startcrd,
+                endcredits: nowcredits,
+                fulltime: new Date(currentlogin.fulltime),
+                workedhours: workedTime
+            }
+        ];
+        // console.table(updatedlogin);
+        
+        allformlogin[0]= updatedlogin[0];
+        reporttoday[0] = allformlogin;
+        localStorage.setItem(`${logindates}`,JSON.stringify(reporttoday));
+    }
+}
+// localStorage.setItem("2/6/2024", []);
+// gamestartingdate
+// daily report records
+function reportrec() {
+    nowtime = new Date();
+    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
+    // console.log(logindates);
+    let reporttoday =  JSON.parse(localStorage.getItem(`${logindates}`));
+    // console.log("REPORTTODAY",reporttoday);
+    if (!reporttoday[1]) {
+        reporttoday[1] = [];
+        localStorage.setItem(`${logindates}`, JSON.stringify(reporttoday));
+        reporttoday =  JSON.parse(localStorage.getItem(`${logindates}`));
+    }
+    // console.log("REPORTTODAY",reporttoday);
+    matchrec = [
+        {
+            Time: `${nowtime.getHours() < 10 ? '0' + nowtime.getHours() : nowtime.getHours()}:${nowtime.getMinutes() < 10 ? '0' + nowtime.getMinutes() : nowtime.getMinutes()}:${nowtime.getSeconds() < 10 ? '0' + nowtime.getSeconds() : nowtime.getSeconds()}`,
+            Bet: Number(sumbutton)*100,
+            win: win*100,
+            income: Number(sumbutton-win)*100
+        }
+    ];
+    // console.table(matchrec);
+    recordstoday = reporttoday[1];
+    recordstoday.unshift(matchrec[0]);
+    // console.log(recordstoday);
+    reporttoday[1] =  recordstoday;
+    // console.table(reporttoday[1])
+    localStorage.setItem(`${logindates}`,JSON.stringify(reporttoday));
+    try {
+        localStorage.setItem(`${logindates}`,JSON.stringify(reporttoday));
+    } catch (e) {
+        console.warn('Could not save before unload', e);
+    }
+}
+// reportrec();
+>>>>>>> dc2240b2f227e255bfad1f02c849d75d2d973996
 let continueupdate;
 /// subtime protection
 // save now time to limit low time clock
@@ -6896,7 +7062,6 @@ function startgameagain() {
     };
     runcountdown();
 }
-startgameagain();
 //active user 
 
 var startuser = 0;
@@ -7240,41 +7405,3 @@ amountinput.addEventListener("input", function () {
     amountinput.value = value;
 });
 // transaction bar
-const transactionbar = JSON.parse(localStorage.getItem(`transaction`)) || [];//***transacation record in local storage
-
-transactionbar.forEach(function (log, index) {
-    // add comma to each user income
-    var userincomenow = logingame[index].userincome*100;
-    addCommas(userincomenow);
-    // separate workedtime
-    workedTime = logingame[index].workedhours
-    workedTime = workedTime.split(":");
-    // console.log(workedTime);
-
-    const tr = document.createElement('div');
-    const trContent = `
-                        <div class="users">
-                            <div class="middle">
-                                <div class="lef">
-                                    <h3 class="user-name">${lognbrarry[index]} (${workedTime[0]}h ${workedTime[1]}m)</h3>
-                                    <h1>Frw <h1 class="user-cashreceived">${fullincome[0]}</h1></h1>
-                                </div>
-                            </div>
-                            <div class="user-time">
-                                <small class="user-time-header">Time:</strong></small>
-                                <small class="user-time-starting">Starting,<strong class="user-time-starting-time">${log.starttime}</strong></small>
-                                <small class="user-time-ending">Ending,<strong class="user-time-ending-time">${log.endtime}</strong></small>
-                            </div>
-                            <div class="user-credits">
-                                <small class="user-credits-header">Credits:</strong></small>
-                                <small class="user-credits-starting">Starting,<strong class="user-credits-starting-now">${log.startcredits}</strong></small>
-                                <small class="user-credits-ending">Ending,<strong class="user-credits-starting-end">${log.endcredits}</strong></small>
-                            </div>
-                        </div>
-                        `;
-    tr.innerHTML = trContent;
-    document.querySelector('main .logins').appendChild(tr);
-    // console.log("index",index);
-})
-function addtransaction(type, amount) {
-}
