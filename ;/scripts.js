@@ -6818,8 +6818,6 @@ var helpcheck=0;
 var nowstart=0;
 var allownewuserlogin = 0;
 let checkstarting;
-<<<<<<< HEAD
-=======
 function normalcounting() {
     // console.log("helpcheck is",helpcheck);
     if(helpcheck==0){
@@ -6882,7 +6880,6 @@ function normalcounting() {
 function stopcounting() {
     // normalcounting()
 }
->>>>>>> dc2240b2f227e255bfad1f02c849d75d2d973996
 console.log("clicked for activate time")
 // HERE IS TO GENERATE NEW LOGIN REPORT
 function startloginform() {
@@ -6924,8 +6921,6 @@ function startloginform() {
     console.log("now login form start from mouse enter");
 }
 
-<<<<<<< HEAD
-=======
 // const logindates = `${nowtime.getDate()}/${nowtime.getMonth()+1}/${nowtime.getFullYear()}`;
 // localStorage.setItem(`${logindates}`,JSON.stringify([]));
 // TO UPDATE CURRENT LOGIN
@@ -7024,7 +7019,6 @@ function reportrec() {
     }
 }
 // reportrec();
->>>>>>> dc2240b2f227e255bfad1f02c849d75d2d973996
 let continueupdate;
 /// subtime protection
 // save now time to limit low time clock
@@ -7062,6 +7056,7 @@ function startgameagain() {
     };
     runcountdown();
 }
+startgameagain();
 //active user 
 
 var startuser = 0;
