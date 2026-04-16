@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
     <title>MOO-GAME</title>
     <link rel="stylesheet" href="./;/style.css"/>
     <link rel="stylesheet" href="./;/responsive.css"/>
@@ -472,6 +474,14 @@
             <div class="current-francs">Rwf</div>
         </div>
         <div class="cash-send-btn">Apply</div>
+    </div>
+
+    <div class="orientation-overlay" id="orientationOverlay">
+        <div class="message">
+            <h2>Rotate your phone</h2>
+            <p>For the best experience, please turn your device to landscape mode.</p>
+            <button type="button" onclick="tryLandscapeLock()">Try landscape view</button>
+        </div>
     </div>
 
     <script src="./;/scripts.js"></script>

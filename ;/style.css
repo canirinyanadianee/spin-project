@@ -41,7 +41,7 @@ body {
   background-color: #eee;
   transition: background-color 0.35s ease-in-out;
   overflow: hidden;
-  padding: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   font-size: clamp(12px, 2vw, 16px);
 }
 
