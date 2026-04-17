@@ -17,473 +17,458 @@
 </head>
 <!-- oncontextmenu="return false;" -->
 <body>
-    
-    <div id="app">
-        <img class="marker" src="./;/marker.png" />
-        <img class="wheel" src="./;/TEAM-5.webp" />
-        <img class="button" onclick="transbtn()" src="./;/spin.png" />
-    </div>
-    <div class="balancediv"></div>
-    <div class="Section_top"></div>
-
-    <div class="imganimat"></div>
-    <div class="logoanimat"></div>
-
-    <div class="shootanimat1"></div>
-    <div class="shootanimat2"></div>
-    <div class="shootanimat2of2"></div>
-    <div class="shootanimat3"></div>
-    <div class="shootanimat2of3"></div>
-    <div class="shootanimat3of3"></div>
-    <div class="shootanimat4"></div>
-    <div class="shootanimat5"></div>
-    <div class="shootanimat6"></div>
-    <div class="shootanimat2of6"></div>
-    <div class="shootanimat3of6"></div>
-    <div class="shootanimat4of6"></div>
-    <div class="shootanimat5of6"></div>
-    <div class="shootanimat6of6"></div>
-    <div class="shootanimat10"></div>
-    <div class="shootanimat2of10"></div>
-    <div class="shootanimat3of10"></div>
-    <div class="shootanimat4of10"></div>
-    <div class="shootanimat5of10"></div>
-    <div class="shootanimat6of10"></div>
-    <div class="shootanimat7of10"></div>
-    <div class="shootanimat8of10"></div>
-    <div class="shootanimat9of10"></div>
-    <div class="shootanimat10of10"></div>
-
-    <div class="win100times1-100"></div>
-    <div class="win100times1-50"></div>
-
-    <div class="win40times2-40"></div>
-    <div class="win40times2-3"></div>
-
-    <div class="win30player3-30"></div>
-    <div class="win30player3-3"></div>
-
-    <div class="win20player4-20"></div>
-    <div class="win20player4-3"></div>
-
-    <div class="win20player5-20"></div>
-    <div class="win20player5-3"></div>
-
-    <div class="win20player6-20"></div>
-    <div class="win20player6-3"></div>
-
-    <div class="win10player7-10"></div>
-    <div class="win10player7-3"></div>
-
-    <div class="win10player8-10"></div>
-    <div class="win10player8-3"></div>
-
-    <div class="win10player9-10"></div>
-    <div class="win10player9-3"></div>
-
-    <div class="win5player10-5"></div>
-    <!-- new system for animating shoot and the win -->
-    <div class="shootnbranimation"></div>
-    <div class="shootposition1"></div>
-    <div class="shootposition2">
-        <div class="shootposition1-2"></div>
-        <div class="shootposition2-2"></div>
-    </div>
-    <div class="shootposition3">
-        <div class="shootposition1-3"></div>
-        <div class="shootposition2-3"></div>
-        <div class="shootposition3-3"></div>
-    </div>
-    <div class="shootposition6">
-        <div class="shootposition1-6"></div>
-        <div class="shootposition2-6"></div>
-        <div class="shootposition3-6"></div>
-        <div class="shootposition4-6"></div>
-        <div class="shootposition5-6"></div>
-        <div class="shootposition6-6"></div>
-    </div>
-    <div class="shootposition10">
-        <div class="shootposition1-10"></div>
-        <div class="shootposition2-10"></div>
-        <div class="shootposition3-10"></div>
-        <div class="shootposition4-10"></div>
-        <div class="shootposition5-10"></div>
-        <div class="shootposition6-10"></div>
-        <div class="shootposition7-10"></div>
-        <div class="shootposition8-10"></div>
-        <div class="shootposition9-10"></div>
-        <div class="shootposition10-10"></div>
-    </div>
-
-    <div class="hidden"></div>
-    <h1 id="result" class="result"></h1>
-
-    <button class="win"></button>
-    <div class="wintext">WIN</div>
-    <div class="francs">Frw</div>
-    <button class="winafter" onclick="addwin">0</button>
-
-    <div class="cashout"></div>
-    <div class="cashoutafter" id="output1">
-        <p>0</p>
-    </div>
-
-    <div id="text">BALANCE</div>
-    <div class="balance"></div>
-    <div class="balancefrancs">Frw</div>
-    <!-- <div class="cashoutafter" id="balancevalue">0</div> -->
-
-    <!-- PAY TRANSATION -->
-    <div class="popup" onclick="transbtn()">
-        <div class="close-btn">&times;</div>
-        <div class="form">
-            <div class="form-element">
-                <label for="tbuser"></label>
-                <input type="number" id="tbuser" placeholder="PAY">
-            </div>
-            <!-- <div class="form-element">
-                <label for="password"></label>
-                <input type="password" id="password" placeholder="Enter password">
-            </div> -->
-            <div class="form-element">
-                <input type="button" id="paybtn1" value="PAY">
+    <div class="spin-container">
+        <!-- backgroun image start -->
+        <div class="Section_top"></div>
+        <!-- backgroun image end -->
+         <!-- rotating whell start -->
+        <div id="app">
+            <img class="marker" src="./;/marker.png" />
+            <img class="wheel" src="./;/TEAM-5.webp" />
+            <img class="button" onclick="transbtn()" src="./;/spin.png" style="width: 220px; height: 220px;" />
+            <div class="shoot-nbr">
+                <div class="shootanimat1"></div>
+                <div class="shootanimat2"></div>
+                <div class="shootanimat3"></div>
+                <div class="shootanimat4"></div>
+                <div class="shootanimat5"></div>
+                <div class="shootanimat6"></div>
+                <div class="shootanimat10"></div>
             </div>
         </div>
-    </div>
-    <!-- PAY TRANSATION END-->
-    <!-- CASH TRANSATION -->
-    <div class="popup1">
-        <div class="close-btn" onclick="transbtn()">&times;</div>
-        <div class="form">
-            <div class="form-element" onclick="transbtn()">
-                <label for="user"></label>
-                <input type="number" id="user" placeholder="CASH" maxlength="3" style="user-select: none;">
-            </div>
-            <!-- <div class="form-element">
-                <label for="password"></label>
-                <input type="password" id="password1" placeholder="Enter password">
-            </div> -->
-            <div class="form-element">
-                <input type="button" id="cashbtn" value="Add"onclick="addbtn()">
+         <!-- rotating whell end -->
+
+
+        <div class="win100times1-100"></div>
+        <div class="win100times1-50"></div>
+
+        <div class="win40times2-40"></div>
+        <div class="win40times2-3"></div>
+
+        <div class="win30player3-30"></div>
+        <div class="win30player3-3"></div>
+
+        <div class="win20player4-20"></div>
+        <div class="win20player4-3"></div>
+
+        <div class="win20player5-20"></div>
+        <div class="win20player5-3"></div>
+
+        <div class="win20player6-20"></div>
+        <div class="win20player6-3"></div>
+
+        <div class="win10player7-10"></div>
+        <div class="win10player7-3"></div>
+
+        <div class="win10player8-10"></div>
+        <div class="win10player8-3"></div>
+
+        <div class="win10player9-10"></div>
+        <div class="win10player9-3"></div>
+
+        <div class="win5player10-5"></div>
+        <!-- new system for animating shoot and the win -->
+        <div class="shootnbranimation"></div>
+        <div class="shootposition1"></div>
+        <div class="shootposition2">
+            <div class="shootposition1-2"></div>
+            <div class="shootposition2-2"></div>
+        </div>
+        <div class="shootposition3">
+            <div class="shootposition1-3"></div>
+            <div class="shootposition2-3"></div>
+            <div class="shootposition3-3"></div>
+        </div>
+        <div class="shootposition6">
+            <div class="shootposition1-6"></div>
+            <div class="shootposition2-6"></div>
+            <div class="shootposition3-6"></div>
+            <div class="shootposition4-6"></div>
+            <div class="shootposition5-6"></div>
+            <div class="shootposition6-6"></div>
+        </div>
+        <div class="shootposition10">
+            <div class="shootposition1-10"></div>
+            <div class="shootposition2-10"></div>
+            <div class="shootposition3-10"></div>
+            <div class="shootposition4-10"></div>
+            <div class="shootposition5-10"></div>
+            <div class="shootposition6-10"></div>
+            <div class="shootposition7-10"></div>
+            <div class="shootposition8-10"></div>
+            <div class="shootposition9-10"></div>
+            <div class="shootposition10-10"></div>
+        </div>
+
+        <div class="hidden"></div>
+        <h1 id="result" class="result"></h1>
+
+        <button class="win"></button>
+        <div class="wintext">WIN</div>
+        <div class="francs">Frw</div>
+        <button class="winafter" onclick="addwin">0</button>
+
+        <div class="cashout"></div>
+        <div class="cashoutafter" id="output1">
+            <p>0</p>
+        </div>
+
+        <div id="text">BALANCE</div>
+        <div class="balance"></div>
+        <div class="balancefrancs">Frw</div>
+        <!-- <div class="cashoutafter" id="balancevalue">0</div> -->
+
+        <!-- PAY TRANSATION -->
+        <div class="popup" onclick="transbtn()">
+            <div class="close-btn">&times;</div>
+            <div class="form">
+                <div class="form-element">
+                    <label for="tbuser"></label>
+                    <input type="number" id="tbuser" placeholder="PAY">
+                </div>
+                <!-- <div class="form-element">
+                    <label for="password"></label>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div> -->
+                <div class="form-element">
+                    <input type="button" id="paybtn1" value="PAY">
+                </div>
             </div>
         </div>
-    </div>
-    <!-- CASH TRANSATION END-->
-
-    <img src="./;/background.png" class="table">
-    
-    <button class="learn-more1" id="button1" onclick="countClicks1('9')">
-        <small class="btn-number1">9</small>
-    </button>
-    <p style="user-select: none;" id="display1">0</p>
-
-    <button class="learn-more2" id="button2" onclick="countClicks2('8')">
-        <small class="btn-number2">8</small></button>
-    <p style="user-select: none;" id="display2">0</p>
-
-    <button class="learn-more3" id="button3" onclick="countClicks3('7')">
-        <small class="btn-number3">7</small></button>
-    </button>
-    <p style="user-select: none;" id="display3">0</p>
-
-    <button class="learn-more4" id="button4" onclick="countClicks4('6')">
-        <small class="btn-number4">6</small></button>
-    </button>
-    <p style="user-select: none;" id="display4">0</p>
-
-    <button class="learn-more5" id="button5" onclick="countClicks5('5')">
-        <small class="btn-number5">5</small></button>
-    <p style="user-select: none;" id="display5">0</p>
-
-    <button class="learn-more6" id="button6" onclick="countClicks6('4')">
-        <small class="btn-number6">4</small></button>
-    </button>
-    <p style="user-select: none;" id="display6">100</p>
-
-    <button class="learn-more7" id="button7" onclick="countClicks7('3')">
-        <small class="btn-number7">3</small>
-    </button>
-    </button>
-    <p style="user-select: none;" id="display7">0</p>
-
-    <button class="learn-more8" id="button8" onclick="countClicks8('2')">
-        <small class="btn-number8">2</small></button>
-    </button>
-    <p style="user-select: none;" id="display8">0</p>
-
-    <button class="learn-more9" id="button9" onclick="countClicks9('1')">
-        <small class="btn-number9">1</small></button>
-    </button>
-    <p style="user-select: none;" id="display9">0</p>
-
-    <button class="learn-more10" id="button10" onclick="countClicks10('0')">
-        <small class="btn-number10">0</small></button>
-    </button>
-    <p style="user-select: none;" id="display10">0</p>
-
-    <button id="win5a" onclick="transbtn()"></button>
-    <button id="win10a" onclick="transbtn()"></button>
-    <button id="win10b" onclick="transbtn()"></button>
-    <button id="win10c" onclick="transbtn()"></button>
-    <button id="win20a" onclick="transbtn()"></button>
-    <button id="win20b" onclick="transbtn()"></button>
-    <button id="win20c" onclick="transbtn()"></button>
-    <button id="win30" onclick="transbtn()"></button>
-    <button id="win40" onclick="transbtn()"></button>
-    <!-- <a href="./index1.html" target="_top"> -->
-        <button id="win100" onclick="subbtn()"></button>
-    <!-- </a> -->
-    <div class="show-rmn">
-        <div class="show-remain"></div>
-        <div class="outer-count"></div>
-    </div>
-    
-    <button class="cash" id="Bikuzafter" onclick="betbutton()"></button>
-    <button class="pay" id="Bitsafter" onclick="backbtn()"></button>
-
-    <!-- records-->
-    <!-- records END-->
-    <!-- money appear start here... -->
-    <div class="moneydisplay6"></div>
-    <div class="moneydisplay5"></div>
-    <div class="moneydisplay4"></div>
-    <div class="moneydisplay3"></div>
-    <div class="moneydisplay2"></div>
-    <div class="moneydisplay1"></div>
-    <div class="coindisplay1"></div>
-    <div class="moneydisplay12"></div>
-    <div class="moneydisplay11"></div>
-    <div class="moneydisplay10"></div>  
-    <div class="moneydisplay9"></div>
-    <div class="moneydisplay8"></div>
-    <div class="moneydisplay7"></div>
-    <div class="coindisplay2"></div>
-    <!-- money appear end here... -->
-    <div class="container2-2">
-        <div class="head-block">
-            <div class="circle head-AllBets" onclick="allbetchoos()">Chats</div>
-            <div class="circle head-Mybets" onclick="mybetchoos()">Records</div>
-            <div class="circle head-Top" onclick="topbetchoos()">Games</div>
-        </div>
-        <div class="all-table-body">
-            <div class="allbets-choosen">
-                <div class="second-part-header">
-                    <div class="first-top-header">
-                        <div class="all-bets">
-                            <div class="allbets-img">
-                                <img src=";/;/player-img/user1.png" class="playercircle1" onclick="selectAgent('Agent Alpha', ';/;/player-img/user1.png')">
-                                <img src=";/;/player-img/user20.png" class="playercircle2" onclick="selectAgent('Agent Beta', ';/;/player-img/user20.png')">
-                                <img src=";/;/player-img/user5.png" class="playercircle3" onclick="selectAgent('Agent Gamma', ';/;/player-img/user5.png')">
-                            </div>
-                        </div>
-                        <div class="total-win-value">
-                            <div class="online-point" onclick="toggleAgents()">Change</div>
-                        </div>
-                    </div>
-                    <div class="first-top-header-agent">
-                        <div class="total-bets-value">
-                            <div class="out-player">20</div>
-                        </div>
-                        <div class="total-bets">Agents</div>
-                        <div class="total-win-text">My Agent</div>
-                    </div>
+        <!-- PAY TRANSATION END-->
+        <!-- CASH TRANSATION -->
+        <div class="popup1">
+            <div class="close-btn" onclick="transbtn()">&times;</div>
+            <div class="form">
+                <div class="form-element" onclick="transbtn()">
+                    <label for="user"></label>
+                    <input type="number" id="user" placeholder="CASH" maxlength="3" style="user-select: none;">
                 </div>
-                <div class="chat-container">
-                    <div class="all-agents-panel">
-                        <div class="agent-card" onclick="selectAgent('Agent Alpha', ';/;/player-img/user1.png')">
-                            <img src=";/;/player-img/user1.png" alt="Agent Alpha">
-                            <span class="agent-card-name">Agent Yvette</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Beta', ';/;/player-img/user20.png')">
-                            <img src=";/;/player-img/user20.png" alt="Agent Beta">
-                            <span class="agent-card-name">Agent Chakilla</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Gamma', ';/;/player-img/user5.png')">
-                            <img src=";/;/player-img/user5.png" alt="Agent Gamma">
-                            <span class="agent-card-name">Agent Mireille</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Delta', ';/;/player-img/user2.png')">
-                            <img src=";/;/player-img/user2.png" alt="Agent Delta">
-                            <span class="agent-card-name">Agent Vital</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Echo', ';/;/player-img/user3.png')">
-                            <img src=";/;/player-img/user3.png" alt="Agent Echo">
-                            <span class="agent-card-name">Agent Yambii</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
-                            <img src=";/;/player-img/user4.png" alt="Agent Fox">
-                            <span class="agent-card-name">Agent Herve</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
-                            <img src=";/;/player-img/user4.png" alt="Agent Fox">
-                            <span class="agent-card-name">Agent Herve</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
-                            <img src=";/;/player-img/user4.png" alt="Agent Fox">
-                            <span class="agent-card-name">Agent Herve</span>
-                        </div>
-                        <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
-                            <img src=";/;/player-img/user4.png" alt="Agent Fox">
-                            <span class="agent-card-name">Agent Herve</span>
-                        </div>
-                    </div>
-                    <div class="chat-header">
-                        <img src=";/;/player-img/user1.png" class="playercircle1">
-                        <div class="chat-agent-info">
-                            <div class="chat-agent-name">d***42</div>
-                            <div class="chat-online-user">last seen yesterday at 19:19</div>
-                        </div>
-                    </div>
-                    <div class="chat-body">
-                        <div class="chat-message-body"></div>
-                        <div class="chat-body-message-input">
-                            <input class="chat-input" placeholder="Type a message" spellcheck="false" autocapitalize="sentences"></input>
-                            <div class="chat-send-btn"></div>
-                        </div>
-                    </div>
+                <!-- <div class="form-element">
+                    <label for="password"></label>
+                    <input type="password" id="password1" placeholder="Enter password">
+                </div> -->
+                <div class="form-element">
+                    <input type="button" id="cashbtn" value="Add"onclick="addbtn()">
                 </div>
             </div>
-            <div class="previous-choosen">
-                <div class="previous-part-header">
-                    <div class="round-result-header">Cash transaction</div>
-                    <div class="select-date">
-                        <input type="date" class="select-date-input" />
-                    </div>
-                </div>
-                <main>
-                    <div class="transaction">
-                        <div class="users">
-                            <div class="middle">
-                                <div class="lef">
-                                    <h3 class="user-name">1. Cash in</h3>
-                                    <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+        </div>
+        <!-- CASH TRANSATION END-->
+
+        <img src="./;/background.png" class="table">
+        
+        <button class="learn-more1" id="button1" onclick="countClicks1('9')">
+            <small class="btn-number1">9</small>
+        </button>
+        <p style="user-select: none;" id="display1">0</p>
+
+        <button class="learn-more2" id="button2" onclick="countClicks2('8')">
+            <small class="btn-number2">8</small></button>
+        <p style="user-select: none;" id="display2">0</p>
+
+        <button class="learn-more3" id="button3" onclick="countClicks3('7')">
+            <small class="btn-number3">7</small></button>
+        </button>
+        <p style="user-select: none;" id="display3">0</p>
+
+        <button class="learn-more4" id="button4" onclick="countClicks4('6')">
+            <small class="btn-number4">6</small></button>
+        </button>
+        <p style="user-select: none;" id="display4">0</p>
+
+        <button class="learn-more5" id="button5" onclick="countClicks5('5')">
+            <small class="btn-number5">5</small></button>
+        <p style="user-select: none;" id="display5">0</p>
+
+        <button class="learn-more6" id="button6" onclick="countClicks6('4')">
+            <small class="btn-number6">4</small></button>
+        </button>
+        <p style="user-select: none;" id="display6">100</p>
+
+        <button class="learn-more7" id="button7" onclick="countClicks7('3')">
+            <small class="btn-number7">3</small>
+        </button>
+        </button>
+        <p style="user-select: none;" id="display7">0</p>
+
+        <button class="learn-more8" id="button8" onclick="countClicks8('2')">
+            <small class="btn-number8">2</small></button>
+        </button>
+        <p style="user-select: none;" id="display8">0</p>
+
+        <button class="learn-more9" id="button9" onclick="countClicks9('1')">
+            <small class="btn-number9">1</small></button>
+        </button>
+        <p style="user-select: none;" id="display9">0</p>
+
+        <button class="learn-more10" id="button10" onclick="countClicks10('0')">
+            <small class="btn-number10">0</small></button>
+        </button>
+        <p style="user-select: none;" id="display10">0</p>
+
+        <button id="win5a" onclick="transbtn()"></button>
+        <button id="win10a" onclick="transbtn()"></button>
+        <button id="win10b" onclick="transbtn()"></button>
+        <button id="win10c" onclick="transbtn()"></button>
+        <button id="win20a" onclick="transbtn()"></button>
+        <button id="win20b" onclick="transbtn()"></button>
+        <button id="win20c" onclick="transbtn()"></button>
+        <button id="win30" onclick="transbtn()"></button>
+        <button id="win40" onclick="transbtn()"></button>
+        <!-- <a href="./index1.html" target="_top"> -->
+            <button id="win100" onclick="subbtn()"></button>
+        <!-- </a> -->
+        <div class="show-rmn">
+            <div class="show-remain"></div>
+            <div class="outer-count"></div>
+        </div>
+        
+        <button class="cash" id="Bikuzafter" onclick="betbutton()"></button>
+        <button class="pay" id="Bitsafter" onclick="backbtn()"></button>
+
+        <!-- records-->
+        <!-- records END-->
+        <!-- money appear start here... -->
+        <div class="moneydisplay6"></div>
+        <div class="moneydisplay5"></div>
+        <div class="moneydisplay4"></div>
+        <div class="moneydisplay3"></div>
+        <div class="moneydisplay2"></div>
+        <div class="moneydisplay1"></div>
+        <div class="coindisplay1"></div>
+        <div class="moneydisplay12"></div>
+        <div class="moneydisplay11"></div>
+        <div class="moneydisplay10"></div>  
+        <div class="moneydisplay9"></div>
+        <div class="moneydisplay8"></div>
+        <div class="moneydisplay7"></div>
+        <div class="coindisplay2"></div>
+        <!-- money appear end here... -->
+        <div class="container2-2">
+            <div class="head-block">
+                <div class="circle head-AllBets" onclick="allbetchoos()">Chats</div>
+                <div class="circle head-Mybets" onclick="mybetchoos()">Records</div>
+                <div class="circle head-Top" onclick="topbetchoos()">Games</div>
+            </div>
+            <div class="all-table-body">
+                <div class="allbets-choosen">
+                    <div class="second-part-header">
+                        <div class="first-top-header">
+                            <div class="all-bets">
+                                <div class="allbets-img">
+                                    <img src=";/;/player-img/user1.png" class="playercircle1" onclick="selectAgent('Agent Alpha', ';/;/player-img/user1.png')">
+                                    <img src=";/;/player-img/user20.png" class="playercircle2" onclick="selectAgent('Agent Beta', ';/;/player-img/user20.png')">
+                                    <img src=";/;/player-img/user5.png" class="playercircle3" onclick="selectAgent('Agent Gamma', ';/;/player-img/user5.png')">
                                 </div>
                             </div>
-                            <div class="user-time">
-                                <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
-                                <small class="user-time-header">Time: 14:12</strong></small>
+                            <div class="total-win-value">
+                                <div class="online-point" onclick="toggleAgents()">Change</div>
                             </div>
                         </div>
-                        <div class="users">
-                            <div class="middle">
-                                <div class="lef">
-                                    <h3 class="user-name">1. Cash in</h3>
-                                    <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
-                                </div>
+                        <div class="first-top-header-agent">
+                            <div class="total-bets-value">
+                                <div class="out-player">20</div>
                             </div>
-                            <div class="user-time">
-                                <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
-                                <small class="user-time-header">Time: 14:12</strong></small>
-                            </div>
-                        </div>
-                        <div class="users">
-                            <div class="middle">
-                                <div class="lef">
-                                    <h3 class="user-name">1. Cash in</h3>
-                                    <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
-                                </div>
-                            </div>
-                            <div class="user-time">
-                                <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
-                                <small class="user-time-header">Time: 14:12</strong></small>
-                            </div>
-                        </div>
-                        <div class="users">
-                            <div class="middle">
-                                <div class="lef">
-                                    <h3 class="user-name">1. Cash in</h3>
-                                    <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
-                                </div>
-                            </div>
-                            <div class="user-time">
-                                <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
-                                <small class="user-time-header">Time: 14:12</strong></small>
-                            </div>
+                            <div class="total-bets">Agents</div>
+                            <div class="total-win-text">My Agent</div>
                         </div>
                     </div>
-                </main>
-            </div>
-            <div class="top-choosen">
-                <div class="top-part-header">
-                    <div class="firt-part-x-win-rounds">
-                        <div class="tops1 part-x" onclick="topx()">x</div>
-                        <div class="tops1 part-Win" onclick="topwin()">Win</div>
-                        <div class="tops1 part-Rounds" onclick="topround()">Rounds</div>
-                    </div>
-                    <div class="second-part-day-month-Year">
-                        <div class="tops2 part-Day" onclick="topday()">Day</div>
-                        <div class="tops2 part-Month" onclick="topmonth()">Month</div>
-                        <div class="tops2 part-Year" onclick="topyear()">Year</div>
-                    </div>
-                </div>
-                <div class="top-player-table">
-                    <div class="room-part-x">
-                        <div class="part-x-day"></div>
-                        <div class="part-x-Month"></div>
-                        <div class="part-x-Year"></div>
-                    </div>
-                    <div class="room-part-win">
-                        <div class="part-win-day"></div>
-                        <div class="part-win-Month"></div>
-                        <div class="part-win-Year"></div>
-                    </div>
-                    <div class="room-part-round">
-                        <div class="round-header-top">
-                            <div class="round-header">Date & Time</div>
-                            <div class="round-header-x">X</div>
+                    <div class="chat-container">
+                        <div class="all-agents-panel">
+                            <div class="agent-card" onclick="selectAgent('Agent Alpha', ';/;/player-img/user1.png')">
+                                <img src=";/;/player-img/user1.png" alt="Agent Alpha">
+                                <span class="agent-card-name">Agent Yvette</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Beta', ';/;/player-img/user20.png')">
+                                <img src=";/;/player-img/user20.png" alt="Agent Beta">
+                                <span class="agent-card-name">Agent Chakilla</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Gamma', ';/;/player-img/user5.png')">
+                                <img src=";/;/player-img/user5.png" alt="Agent Gamma">
+                                <span class="agent-card-name">Agent Mireille</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Delta', ';/;/player-img/user2.png')">
+                                <img src=";/;/player-img/user2.png" alt="Agent Delta">
+                                <span class="agent-card-name">Agent Vital</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Echo', ';/;/player-img/user3.png')">
+                                <img src=";/;/player-img/user3.png" alt="Agent Echo">
+                                <span class="agent-card-name">Agent Yambii</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
+                                <img src=";/;/player-img/user4.png" alt="Agent Fox">
+                                <span class="agent-card-name">Agent Herve</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
+                                <img src=";/;/player-img/user4.png" alt="Agent Fox">
+                                <span class="agent-card-name">Agent Herve</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
+                                <img src=";/;/player-img/user4.png" alt="Agent Fox">
+                                <span class="agent-card-name">Agent Herve</span>
+                            </div>
+                            <div class="agent-card" onclick="selectAgent('Agent Fox', ';/;/player-img/user4.png')">
+                                <img src=";/;/player-img/user4.png" alt="Agent Fox">
+                                <span class="agent-card-name">Agent Herve</span>
+                            </div>
                         </div>
-                        <div class="round-table">
-                            <div class="part-round-day"></div>
-                            <div class="part-round-Month"></div>
-                            <div class="part-round-Year"></div>
+                        <div class="chat-header">
+                            <img src=";/;/player-img/user1.png" class="playercircle1">
+                            <div class="chat-agent-info">
+                                <div class="chat-agent-name">d***42</div>
+                                <div class="chat-online-user">last seen yesterday at 19:19</div>
+                            </div>
+                        </div>
+                        <div class="chat-body">
+                            <div class="chat-message-body"></div>
+                            <div class="chat-body-message-input">
+                                <input class="chat-input" placeholder="Type a message" spellcheck="false" autocapitalize="sentences"></input>
+                                <div class="chat-send-btn"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="previous-choosen">
+                    <div class="previous-part-header">
+                        <div class="round-result-header">Cash transaction</div>
+                        <div class="select-date">
+                            <input type="date" class="select-date-input" />
+                        </div>
+                    </div>
+                    <main>
+                        <div class="transaction">
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                            <div class="users">
+                                <div class="middle">
+                                    <div class="lef">
+                                        <h3 class="user-name">1. Cash in</h3>
+                                        <h1>Frw <h1 class="user-cashreceived">10,000</h1></h1>
+                                    </div>
+                                </div>
+                                <div class="user-time">
+                                    <small class="user-time-ending">status:<strong class="user-time-ending-time">Pending</strong></small>
+                                    <small class="user-time-header">Time: 14:12</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+                <div class="top-choosen">
+                    <div class="top-part-header">
+                        <div class="firt-part-x-win-rounds">
+                            <div class="tops1 part-x" onclick="topx()">x</div>
+                            <div class="tops1 part-Win" onclick="topwin()">Win</div>
+                            <div class="tops1 part-Rounds" onclick="topround()">Rounds</div>
+                        </div>
+                        <div class="second-part-day-month-Year">
+                            <div class="tops2 part-Day" onclick="topday()">Day</div>
+                            <div class="tops2 part-Month" onclick="topmonth()">Month</div>
+                            <div class="tops2 part-Year" onclick="topyear()">Year</div>
+                        </div>
+                    </div>
+                    <div class="top-player-table">
+                        <div class="room-part-x">
+                            <div class="part-x-day"></div>
+                            <div class="part-x-Month"></div>
+                            <div class="part-x-Year"></div>
+                        </div>
+                        <div class="room-part-win">
+                            <div class="part-win-day"></div>
+                            <div class="part-win-Month"></div>
+                            <div class="part-win-Year"></div>
+                        </div>
+                        <div class="room-part-round">
+                            <div class="round-header-top">
+                                <div class="round-header">Date & Time</div>
+                                <div class="round-header-x">X</div>
+                            </div>
+                            <div class="round-table">
+                                <div class="part-round-day"></div>
+                                <div class="part-round-Month"></div>
+                                <div class="part-round-Year"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- let start auto count down -->
-    <div class="count-dwn">
-        <div class="count-dwn-text">5</div>
-    </div>
-    <!-- active round nbr -->
-    <div class="active-game-user" onclick="showmoneydisplay()">
-        <div class="active-users-photos">
-            <img src=";/;/player-img/user2.png" class="playercircle1 active-user">
-            <img src=";/;/player-img/user20.png" class="playercircle2 active-user">
-            <img src=";/;/player-img/user5.png" class="playercircle3 active-user">
+        <!-- let start auto count down -->
+        <div class="count-dwn">
+            <div class="count-dwn-text">5</div>
         </div>
-        <div class="active-users-nbr">461</div>
-    </div>
-    <!--  -->
-    <div class="show-trs" onclick="addcashPopup()"></div>
-    <div class="show-menu" onclick="addmenupopup()"></div>
-    <!--  -->
-    <div class="cash-flow">
-        <div class="cash-header">
-            <div class="cash-title-logo"></div>
-            <div class="cash-flow-close-btn" onclick="removecashPopup()">&times;</div>
+        <!-- active round nbr -->
+        <div class="active-game-user" onclick="showmoneydisplay()">
+            <div class="active-users-photos">
+                <img src=";/;/player-img/user2.png" class="playercircle1 active-user">
+                <img src=";/;/player-img/user20.png" class="playercircle2 active-user">
+                <img src=";/;/player-img/user5.png" class="playercircle3 active-user">
+            </div>
+            <div class="active-users-nbr">461</div>
         </div>
-        <div class="cash-toggle-btn">
-            <div class="cash-btn-in" onclick="addmoneyinPopup()">In</div>
-            <div class="cash-btn-out" onclick="addmoneyoutPopup()">Out</div>
+        <!--  -->
+        <div class="show-trs" onclick="addcashPopup()"></div>
+        <div class="show-menu" onclick="addmenupopup()"></div>
+        <!--  -->
+        <div class="cash-flow">
+            <div class="cash-header">
+                <div class="cash-title-logo"></div>
+                <div class="cash-flow-close-btn" onclick="removecashPopup()">&times;</div>
+            </div>
+            <div class="cash-toggle-btn">
+                <div class="cash-btn-in" onclick="addmoneyinPopup()">In</div>
+                <div class="cash-btn-out" onclick="addmoneyoutPopup()">Out</div>
+            </div>
+            <div class="cash-input-field-title">Amount to transfer</div>
+            <div class="cash-input-value">
+                <input type="text" class="cash-inputfield">
+                <div class="current-francs">Rwf</div>
+            </div>
+            <div class="cash-send-btn">Apply</div>
         </div>
-        <div class="cash-input-field-title">Amount to transfer</div>
-        <div class="cash-input-value">
-            <input type="text" class="cash-inputfield">
-            <div class="current-francs">Rwf</div>
-        </div>
-        <div class="cash-send-btn">Apply</div>
-    </div>
 
-    <!-- <div class="orientation-overlay" id="orientationOverlay">
+    <div class="orientation-overlay" id="orientationOverlay">
         <div class="message">
             <h2>Rotate your phone</h2>
             <p>For the best experience, please turn your device to landscape mode.</p>
             <button type="button" onclick="tryLandscapeLock()">Try landscape view</button>
-        </div> -->
+        </div>
     </div>
-
+    <!-- js link -->
     <script src="./;/scripts.js"></script>
 </body>
 </html>
