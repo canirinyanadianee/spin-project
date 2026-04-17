@@ -302,32 +302,14 @@ function transaction() {
         } 
     }  
 }
-const logoanimat = document.querySelector('.logoanimat');
 const timesanimat = document.querySelector('.timesanimat');
 const shoot1 = document.querySelector('.shootanimat1');
 const shoot2 = document.querySelector('.shootanimat2');
-const shoot2of2 = document.querySelector('.shootanimat2of2');
 const shoot3 = document.querySelector('.shootanimat3');
-const shoot2of3 = document.querySelector('.shootanimat2of3');
-const shoot3of3 = document.querySelector('.shootanimat3of3');
 const shoot6 = document.querySelector('.shootanimat6');
 const shoot5 = document.querySelector('.shootanimat5');
 const shoot4 = document.querySelector('.shootanimat4');
-const shoot2of6 = document.querySelector('.shootanimat2of6');
-const shoot3of6 = document.querySelector('.shootanimat3of6');
-const shoot4of6 = document.querySelector('.shootanimat4of6');
-const shoot5of6 = document.querySelector('.shootanimat5of6');
-const shoot6of6 = document.querySelector('.shootanimat6of6');
 const shoot10 = document.querySelector('.shootanimat10');
-const shoot2of10 = document.querySelector('.shootanimat2of10');
-const shoot3of10 = document.querySelector('.shootanimat3of10');
-const shoot4of10 = document.querySelector('.shootanimat4of10');
-const shoot5of10 = document.querySelector('.shootanimat5of10');
-const shoot6of10 = document.querySelector('.shootanimat6of10');
-const shoot7of10 = document.querySelector('.shootanimat7of10');
-const shoot8of10 = document.querySelector('.shootanimat8of10');
-const shoot9of10 = document.querySelector('.shootanimat9of10');
-const shoot10of10 = document.querySelector('.shootanimat10of10');
 
 
 // *3animation 
@@ -367,7 +349,6 @@ const chelsea = document.querySelector('.win5player10');
 // // *players animation
 setTimeout(autoanimation, 10000);
 function autoanimation() {
-    logoanimat.classList.add("logoanimation");
     // timesanimat.classList.add("timesanimation");
     // soundeffect();
 }
@@ -405,33 +386,15 @@ function allowbutton(){
 }
 function removeannimaiton(){
     removenotescoins();
-    logoanimat.classList.remove("logoanimation");
     // if(runnan==1){
     //     clearTimeout(runplayerannimation);
     // }
     // timesanimat.classList.remove("timesanimation");
     shoot1.classList.remove("shoot1animation");
     shoot2.classList.remove("shoot2animation");
-    shoot2of2.classList.remove("shoot2of2animation");
     shoot3.classList.remove("shoot3animation");
-    shoot2of3.classList.remove("shoot2of3animation");
-    shoot3of3.classList.remove("shoot3of3animation");
     shoot6.classList.remove("shoot6animation");
-    shoot2of6.classList.remove("shoot2of6animation");
-    shoot3of6.classList.remove("shoot3of6animation");
-    shoot4of6.classList.remove("shoot4of6animation");
-    shoot5of6.classList.remove("shoot5of6animation");
-    shoot6of6.classList.remove("shoot6of6animation");
     shoot10.classList.remove("shoot10animation");
-    shoot2of10.classList.remove("shoot2of10animation");
-    shoot3of10.classList.remove("shoot3of10animation");
-    shoot4of10.classList.remove("shoot4of10animation");
-    shoot5of10.classList.remove("shoot5of10animation");
-    shoot6of10.classList.remove("shoot6of10animation");
-    shoot7of10.classList.remove("shoot7of10animation");
-    shoot8of10.classList.remove("shoot8of10animation");
-    shoot9of10.classList.remove("shoot9of10animation");
-    shoot10of10.classList.remove("shoot10of10animation");
     // remove display
     // 1 shoots
     position1.classList.remove("shootr2-5");
@@ -1933,19 +1896,6 @@ window.addEventListener("keydown", function(e){
         btn1();
     }
 });
-
-const balancerec = document.querySelector('.balancediv');
-// JKLSDFK
-function balancedivrec() {
-    balancerec.innerHTML = localStorage.getItem("cashin") - localStorage.getItem("cashout");
-    balancerec.classList.add("balancediv");
-}
-
-function balancedivclear() {
-    balancerec.classList.remove("balancediv");
-    console.log("clean innerHTML");
-    balancerec.innerHTML = "";
-}
 
 function to0(){
     count1 = 0;

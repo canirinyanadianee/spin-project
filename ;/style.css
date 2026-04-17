@@ -33,71 +33,70 @@
 body {
   display: grid;
   place-items: center;
-  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   max-width: 100vw;
-  top: -40%;
   font-family: 'Poppins', sans-serif;
   background-color: #eee;
   transition: background-color 0.35s ease-in-out;
-  overflow: hidden;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   font-size: clamp(12px, 2vw, 16px);
 }
-
-.result {
-  position: absolute;
-  top: 0%;
-  left: 36.5%;
-  color: #000;
-  font-size: 2rem;
-  font-weight: 500;
-  font-weight: bold;
+.spin-container {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  display: inline-flex;
+  background-color: #0ef;
+  place-content: center;
+  place-items: center;
+  justify-content: center;
+  place-content: center;
   text-align: center;
 }
 
 #app {
-  width: clamp(280px, 90vw, 400px);
-  height: clamp(280px, 90vw, 400px);
-  margin: 0 auto;
-  position: relative;
-  top: -22%;
-  aspect-ratio: 1 / 1;
+  /* position: relative; */
+  /* top: 10%; */
+  position: absolute;
+  top: 36%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* z-index: 10; ensures it's above */
+  width: 520px;
+  height: 520px;
+  /* background-color: #0ef; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* horizontal center */
+  justify-content: flex-start; /* stick to top */
+}
+.wheel {
+  display: block;
+  width: 520px; /* adjust as needed */
 }
 
 .marker {
   position: absolute;
-  top: 50px;
-  width: 60px;
-  left: 170px;
-  z-index: 3;
-  cursor: none;
-  display: block;
-}
-
-.wheel {
-  position: absolute;
-  top: 20%;
-  left: -14.8%;
-  width: 520px;
-  height: 520px;
-  scale: 1;
+  top: -35px; /* adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px; /* adjust */
   z-index: 2;
 }
-
-.button {
+.button, .shoot-nbr {
   position: absolute;
-  left: 19.7%;
-  top: 45%;
-  display: block;
-  width: 240px;
-  height: 240px;
-  margin: 40px auto;
-  z-index: 3;
-  cursor: pointer;
-  z-index: 8;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
+/* shoot nbr */
+.shoot-nbr {
+  width: 520px;
+  height: 520px;
+  /* background-color: aqua; */
+}
+/* app element end here........... */
 
 .hidden{
   opacity: 0;
@@ -375,11 +374,11 @@ section {
 
 
 .Section_top {
+  position: relative;
   top: 0%;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  position: absolute;
+  /* overflow: hidden; */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -833,6 +832,7 @@ section {
 }
 .shootposition10-10 {
   position: absolute;
+  /* position: relative; */
   top: 15.2%;
   left: 6.95%;
   width: 230px;
@@ -3412,51 +3412,14 @@ section {
   }
   33%,66%{
     background-image: url(2-Number-PNG.png);
-    transform: scale(0.4);
-    top: -22%;
-    right: -30.5%;
-    width: 130%;
-    height: 130%;
-  }
-  66%,100% { 
-    background-image: url(2-Number-PNG.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-} 
-
-.shoot2of2animation{
-  animation-name: shoot2of2;
-  animation-duration: 6s;
-  animation-timing-function: ease-out;
-}
-.shootanimat2of2 {
-  position: absolute;
-  background-repeat: no-repeat;
-  z-index: 9;
-}
-@keyframes shoot2of2 {
-  0%,33% { 
-    background-image: url(photo2-2.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-  33%,66%{
-    background-image: url(photo2-2.png);
-    transform: scale(0.14);
-    top: -36%;
-    right: -25.5%;
+    transform: scale(0.35);
+    top: -28%;
+    right: -42.5%;
     width: 150%;
     height: 150%;
   }
   66%,100% { 
-    background-image: url(photo2-2.png);
+    background-image: url(2-Number-PNG.png);
     transform: scale(0);
     top: -40%;
     right: -14.5%;
@@ -3487,9 +3450,9 @@ section {
   }
   33%,66%{
     background-image: url(3-Number-PNG.png);
-    transform: scale(0.25);
-    top: -39%;
-    right: -33.5%;
+    transform: scale(0.35);
+    top: -28%;
+    right: -42.5%;
     width: 150%;
     height: 150%;
   }
@@ -3502,78 +3465,6 @@ section {
     height: 150%;
   }
 }
-.shoot2of3animation{
-  animation-name: shoot2of3;
-  animation-duration: 6s;
-  animation-timing-function: ease-out;
-}
-.shootanimat2of3 {
-  position: absolute;
-  background-repeat: no-repeat;
-  z-index: 9;
-}
-@keyframes shoot2of3 {
-  0%,33% { 
-    background-image: url(photo2-3.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-  33%,66%{
-    background-image: url(photo2-3.png);
-    transform: scale(0.14);
-    top: -36%;
-    right: -25.5%;
-    width: 150%;
-    height: 150%;
-  }
-  66%,100% { 
-    background-image: url(photo2-3.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-} 
-.shoot3of3animation{
-  animation-name: shoot3of3;
-  animation-duration: 6s;
-  animation-timing-function: ease-out;
-}
-.shootanimat3of3 {
-  position: absolute;
-  background-repeat: no-repeat;
-  z-index: 9;
-}
-@keyframes shoot3of3 {
-  0%,33% { 
-    background-image: url(photo3-3.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-  33%,66%{
-    background-image: url(photo3-3.png);
-    transform: scale(0.14);
-    top: -36%;
-    right: -25.5%;
-    width: 150%;
-    height: 150%;
-  }
-  66%,100% { 
-    background-image: url(photo3-3.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-} 
 .shootanimat4 {
   position: absolute;
   background-repeat: no-repeat;
@@ -3595,9 +3486,9 @@ section {
   }
   33%,66%{
     background-image: url(4-Number-PNG.png);
-    transform: scale(0.25);
-    top: -39%;
-    right: -33.5%;
+    transform: scale(0.35);
+    top: -28%;
+    right: -42.5%;
     width: 150%;
     height: 150%;
   }
@@ -3631,14 +3522,14 @@ section {
   }
   33%,66%{
     background-image: url(5-Number-PNG.png);
-    transform: scale(0.25);
-    top: -39%;
-    right: -33.5%;
+    transform: scale(0.35);
+    top: -28%;
+    right: -42.5%;
     width: 150%;
     height: 150%;
   }
   66%,100% { 
-    background-image: url(5-Number-PNG.png);
+    background-image: url(R8-5.png);
     transform: scale(0);
     top: -40%;
     right: -14.5%;
@@ -3667,9 +3558,9 @@ section {
   }
   33%,66%{
     background-image: url(6-Number-PNG.png);
-    transform: scale(0.25);
-    top: -39%;
-    right: -33.5%;
+    transform: scale(0.35);
+    top: -28%;
+    right: -42.5%;
     width: 150%;
     height: 150%;
   }
@@ -3683,42 +3574,6 @@ section {
   }
 }
 
-.shoot2of6animation{
-  animation-name: shoot2of6;
-  animation-duration: 6s;
-  animation-timing-function: ease-out;
-}
-.shootanimat2of6 {
-  position: absolute;
-  background-repeat: no-repeat;
-  z-index: 9;
-}
-@keyframes shoot2of6 {
-  0%,33% { 
-    background-image: url(photo2-6.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-  33%,66%{
-    background-image: url(photo2-6.png);
-    transform: scale(0.14);
-    top: -36%;
-    right: -25.5%;
-    width: 150%;
-    height: 150%;
-  }
-  66%,100% { 
-    background-image: url(photo2-6.png);
-    transform: scale(0);
-    top: -40%;
-    right: -14.5%;
-    width: 130%;
-    height: 150%;
-  }
-} 
 .shoot3of6animation{
   animation-name: shoot3of6;
   animation-duration: 6s;
@@ -6666,52 +6521,6 @@ button.pay:active::before {
 }
 /* records  end*/
 
-.balancediv{
-  position: absolute;
-  text-align: right;
-  font-size: 45px;
-  font-weight: 800;
-  z-index: 1;
-  top: 75.5%;
-
-  color: rgb(0, 0, 0);
-  animation-name: balancediv;
-  animation-duration: 2s;
-  animation-iteration-count: 10;
-}
-
-@keyframes balancediv{
-  0% {
-    top: 93.5%;
-    bottom: 68%;
-    left: 1.9%;
-    scale: 0.5;
-    z-index: 4;
-  }
-  30% {
-    top: 91.5%;
-    bottom: 68%;
-    left: 1.9%;
-    scale: 1;
-    z-index: 4;
-  }
-  80% {
-    top: 91.5%;
-    bottom: 68%;
-    left: 1.9%;
-    scale: 1;
-    z-index: 4;
-  }
-  100% {
-    top: 93.5%;
-    bottom: 68%;
-    left: 1.9%;
-    scale: 0.5;
-    z-index: 4;
-  }
-}
-
-
 
 /* loading start */
 .loading{
@@ -6980,9 +6789,9 @@ button.pay:active::before {
     }
     33%,66%{
       background-image: url(10-Number-PNG.png);
-      transform: scale(0.19);
-      top: -39%;
-      right: -28.5%;
+      transform: scale(0.35);
+      top: -28%;
+      right: -42.5%;
       width: 150%;
       height: 150%;
     }
@@ -7016,9 +6825,9 @@ button.pay:active::before {
     }
     33%,66%{
       background-image: url(9-Number-PNG.png);
-      transform: scale(0.25);
-      top: -39%;
-      right: -33.5%;
+      transform: scale(0.35);
+      top: -28%;
+      right: -42.5%;
       width: 150%;
       height: 150%;
     }
@@ -7052,9 +6861,9 @@ button.pay:active::before {
     }
     33%,66%{
       background-image: url(8-Number-PNG.png);
-      transform: scale(0.25);
-      top: -39%;
-      right: -33.5%;
+      transform: scale(0.35);
+      top: -28%;
+      right: -42.5%;
       width: 150%;
       height: 150%;
     }
@@ -7089,9 +6898,9 @@ button.pay:active::before {
     }
     33%,66%{
       background-image: url(7-Number-PNG.png);
-      transform: scale(0.25);
-      top: -39%;
-      right: -33.5%;
+      transform: scale(0.35);
+      top: -28%;
+      right: -42.5%;
       width: 150%;
       height: 150%;
     }
@@ -8777,3 +8586,9 @@ main h3 {
   /* margin: 1rem 0 0.6rem; */
   font-size: .7rem;
 }
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+}
+/* Small phones (default styles already apply) */
