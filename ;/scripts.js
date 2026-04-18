@@ -23,6 +23,12 @@ if('BroadcastChannel' in window) {
     // console.log('Boardcast Channel API is not supported in this browser.');
 }
 
+// Authentication variables
+let isLoggedIn = false;
+let currentUser = null;
+let selectedAgentId = null;
+let messagePollingInterval = null;
+
 function erstoregamestatus() {
     const gameplayedstatus = [
         {
@@ -7143,6 +7149,8 @@ function addmoneyinPopup() {
     input.value = '';
     input.focus();
 }
+var moneyin = 1;
+var moneyout = 0;
 function addmoneyoutPopup() {
     const button = document.querySelector('.cash-btn-out');
     console.log("money out clicked");
@@ -7255,6 +7263,11 @@ function allbetchoos() {
     mybetschoosen.classList.remove('selected');
     topchoosen.classList.remove('selected');
     activetable = 1;
+    // Stop transaction polling when switching away from Records tab
+    if (playerRequestPollingInterval) {
+        clearInterval(playerRequestPollingInterval);
+        playerRequestPollingInterval = null;
+    }
 }
 function mybetchoos() {
     if(activetable==1 || activetable==3) {
@@ -7266,6 +7279,10 @@ function mybetchoos() {
             previousetablechange = 1;
             // runprevioustable();
         }
+        // Start polling for transaction updates when Records tab is opened
+        if (isLoggedIn) {
+            startPlayerRequestPolling();
+        }
     }
 }
 function topbetchoos() {
@@ -7274,6 +7291,11 @@ function topbetchoos() {
         topchoosentable.classList.add("section-appear-table-header");
         previouschoosentable.classList.remove("section-appear-table-header");
         allbetchoosentable.classList.remove("section-appear-table-header");
+        // Stop transaction polling when switching away from Records tab
+        if (playerRequestPollingInterval) {
+            clearInterval(playerRequestPollingInterval);
+            playerRequestPollingInterval = null;
+        }
     }
 }
 // Get all the circle elements
@@ -7307,13 +7329,13 @@ chatinput.addEventListener("input", function () {
 // Chat functionality
 let selectedAgent = null;
 
-function selectAgent(name, imgSrc) {
+function selectAgent(id, displayName, imgSrc) {
     // Update chat header
     const headerImg = document.querySelector('.chat-header img');
     const agentName = document.querySelector('.chat-agent-name');
     if (headerImg && agentName) {
         headerImg.src = imgSrc;
-        agentName.textContent = name;
+        agentName.textContent = displayName;
     }
     // Clear previous messages
     const messageBody = document.querySelector('.chat-message-body');
@@ -7321,12 +7343,21 @@ function selectAgent(name, imgSrc) {
         messageBody.innerHTML = '';
     }
     // Set selected agent
-    selectedAgent = { name, imgSrc };
+    selectedAgent = { id, displayName, imgSrc };
     // hide panel after selecting an agent
     const panel = document.querySelector('.all-agents-panel');
     if (panel) {
         panel.classList.remove('visible');
     }
+
+    const inputBar = document.querySelector('.chat-body-message-input');
+    if (inputBar) {
+        inputBar.style.display = 'flex';
+    }
+    if (chatInput) {
+        chatInput.placeholder = `Message ${displayName}`;
+    }
+    loadPlayerTransactionRequests();
 }
 
 // Send message functionality
@@ -7400,6 +7431,84 @@ amountinput.addEventListener("input", function () {
     amountinput.value = value;
 });
 
+const cashSendButton = document.querySelector('.cash-send-btn');
+if (cashSendButton) {
+    cashSendButton.addEventListener('click', function() {
+        if (!requireLogin()) return;
+
+        const selectedAgentId = getSelectedAgentId();
+        if (!selectedAgentId) {
+            alert('Please choose an agent in the chat section before sending a transaction request.');
+            return;
+        }
+
+        const rawAmount = Number((amountinput.value || '').replace(/,/g, ''));
+        if (!rawAmount || rawAmount <= 0) {
+            alert('Enter a valid amount first.');
+            amountinput.focus();
+            return;
+        }
+
+        const requestType = moneyout === 1 ? 'cash_out' : 'cash_in';
+        const currentBalance = Number(qaziCheking?.balance || newBalance || 0);
+
+        if (requestType === 'cash_out' && rawAmount > currentBalance) {
+            alert('Cash out ntibishoboka kuko amafaranga ari kuri balance yawe adahagije.');
+            return;
+        }
+
+        fetch('submit_transaction_request.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                agent_id: selectedAgentId,
+                request_type: requestType,
+                amount: rawAmount
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || 'Unable to send transaction request.');
+                return;
+            }
+
+            amountinput.value = '';
+            removecashPopup();
+
+            if (requestType === 'cash_out' && data.balance_action === 'hold_cash_out') {
+                applyApprovedTransactionUpdate({
+                    id: data.request?.id || 0,
+                    request_type: requestType,
+                    amount: rawAmount,
+                    action: 'hold_cash_out'
+                });
+            }
+
+            queuePlayerStateSync('transaction_request', `Player requested ${requestType === 'cash_in' ? 'cash in' : 'cash out'} of ${rawAmount}`, {
+                request_type: requestType,
+                amount: rawAmount,
+                request_id: data.request?.id || null
+            });
+
+            if (isLoggedIn && selectedAgent) {
+                loadMessages();
+            }
+
+             loadPlayerTransactionRequests();
+
+            alert(data.message || 'Transaction request sent.');
+        })
+        .catch(error => {
+            console.error('Error submitting transaction request:', error);
+            alert('Unable to send transaction request.');
+        });
+    });
+}
+
 function updateMobileOrientationOverlay() {
     const overlay = document.getElementById('orientationOverlay');
     if (!overlay) return;
@@ -7428,3 +7537,943 @@ window.addEventListener('load', () => {
     window.addEventListener('orientationchange', updateMobileOrientationOverlay);
 });
 // transaction bar
+
+// Authentication Functions
+window.addEventListener('load', function() {
+    document.body.classList.add('login-required');
+
+    // Check if user is already logged in
+    checkLoginStatus();
+
+    // Initialize game (but require login for actions)
+    initializeGame();
+});
+
+function checkLoginStatus() {
+    fetch('check_session.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.logged_in) {
+                isLoggedIn = true;
+                currentUser = data.user;
+                closeLoginModal();
+                updatePlayerProfile();
+                initializeChat();
+                queuePlayerStateSync('session_opened', 'Player opened the game session');
+                startBalanceUpdatePolling();
+                startPlayerRequestPolling();
+            } else {
+                showLoginModal();
+            }
+        })
+        .catch(error => {
+            console.error('Error checking login status:', error);
+            showLoginModal();
+        });
+}
+
+function showLoginModal() {
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        document.body.classList.add('login-required');
+        modal.style.display = 'flex';
+    }
+}
+
+function closeLoginModal() {
+    if (!isLoggedIn) {
+        return;
+    }
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('login-required');
+    }
+}
+
+// Transaction Modal Functions
+function showTransactionDetails(request) {
+    const modal = document.getElementById('transaction-modal');
+    const detailsContainer = document.getElementById('transaction-details');
+    const cancelBtn = document.getElementById('cancel-transaction-btn');
+
+    if (!modal || !detailsContainer) return;
+
+    const icon = request.request_type === 'cash_in' ? '📥' : '📤';
+    const typeLabel = request.request_type === 'cash_in' ? 'Cash In' : 'Cash Out';
+    const amount = `Frw ${Number(request.amount || 0).toLocaleString()}`;
+    const status = request.status.charAt(0).toUpperCase() + request.status.slice(1);
+    const time = formatTransactionTime(request.created_at);
+
+    detailsContainer.innerHTML = `
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Type:</span>
+            <span class="transaction-detail-value">${icon} ${typeLabel}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Amount:</span>
+            <span class="transaction-detail-value">${amount}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Status:</span>
+            <span class="transaction-detail-value status-${request.status}">${status}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Request Time:</span>
+            <span class="transaction-detail-value">${time}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Request ID:</span>
+            <span class="transaction-detail-value">#${request.id}</span>
+        </div>
+    `;
+
+    // Show cancel button only for pending requests
+    if (request.status === 'pending') {
+        cancelBtn.style.display = 'inline-block';
+        cancelBtn.onclick = () => confirmCancelTransaction(request.id);
+    } else {
+        cancelBtn.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeTransactionModal() {
+    const modal = document.getElementById('transaction-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function confirmCancelTransaction(requestId) {
+    if (confirm('Are you sure you want to cancel this transaction request?')) {
+        cancelPlayerTransactionRequest(requestId);
+        closeTransactionModal();
+    }
+}
+
+function navigateToGamePage() {
+    const gamePage = 'MOO-GAME.html';
+    const currentPath = window.location.pathname.replace(/\\/g, '/');
+
+    if (currentPath.endsWith(`/${gamePage}`) || currentPath.endsWith(gamePage)) {
+        closeLoginModal();
+        updatePlayerProfile();
+        initializeChat();
+        return;
+    }
+
+    window.location.assign(gamePage);
+}
+
+function updatePlayerProfile() {
+    if (currentUser && currentUser.phone) {
+        const playerName = document.getElementById('playerName');
+        const playerPhone = document.getElementById('playerPhone');
+        const gamesPlayerName = document.getElementById('gamesPlayerName');
+        const gamesPlayerPhone = document.getElementById('gamesPlayerPhone');
+        
+        if (playerName) {
+            playerName.textContent = `Player`;
+        }
+        if (playerPhone) {
+            const phone = currentUser.phone || '';
+            // Mask the phone number except last 3 digits
+            const maskedPhone = phone.length > 3 
+                ? phone.substring(0, phone.length - 3).replace(/./g, '*') + phone.substring(phone.length - 3)
+                : phone;
+            playerPhone.textContent = maskedPhone;
+        }
+        if (gamesPlayerName) {
+            gamesPlayerName.textContent = `Player`;
+        }
+        if (gamesPlayerPhone) {
+            const phone = currentUser.phone || '';
+            const maskedPhone = phone.length > 3 
+                ? phone.substring(0, phone.length - 3).replace(/./g, '*') + phone.substring(phone.length - 3)
+                : phone;
+            gamesPlayerPhone.textContent = maskedPhone;
+        }
+    }
+}
+
+function playerLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear session on server and logout
+        fetch('logout.php', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+        .then(() => {
+            isLoggedIn = false;
+            currentUser = null;
+            selectedAgent = null;
+            window.location.href = 'MOO-GAME.html';
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+            // Force logout anyway
+            isLoggedIn = false;
+            currentUser = null;
+            window.location.href = 'MOO-GAME.html';
+        });
+    }
+}
+
+function normalizePhoneNumber(value) {
+    return value.replace(/\s+/g, '');
+}
+
+function setAuthMessage(type, message) {
+    const messageDiv = document.getElementById('auth-message');
+    messageDiv.className = type;
+    messageDiv.textContent = message;
+}
+
+function parseAuthResponse(response) {
+    return response.text().then(text => {
+        let data = null;
+
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch (error) {
+            throw new Error('Invalid server response');
+        }
+
+        if (!response.ok) {
+            throw new Error(data?.message || 'Request failed');
+        }
+
+        return data;
+    });
+}
+
+function showLoginForm() {
+    document.getElementById('login-tab').classList.add('active');
+    document.getElementById('register-tab').classList.remove('active');
+    document.getElementById('login-form').classList.remove('hidden');
+    document.getElementById('register-form').classList.add('hidden');
+    document.getElementById('auth-message').textContent = '';
+}
+
+function showRegisterForm() {
+    document.getElementById('register-tab').classList.add('active');
+    document.getElementById('login-tab').classList.remove('active');
+    document.getElementById('register-form').classList.remove('hidden');
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('auth-message').textContent = '';
+}
+
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const phpAuthMode = loginForm?.dataset.authMode === 'php' || registerForm?.dataset.authMode === 'php';
+
+// Login form submission
+if (loginForm && !phpAuthMode) {
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const phone = normalizePhoneNumber(document.getElementById('login-phone').value.trim());
+    const password = document.getElementById('login-password').value;
+
+    if (!phone || !password) {
+        setAuthMessage('error', 'Phone and password are required');
+        return;
+    }
+
+    const submitBtn = this.querySelector('.auth-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
+    setAuthMessage('', '');
+
+    fetch('login.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `phone=${encodeURIComponent(phone)}&password=${encodeURIComponent(password)}`
+    })
+    .then(parseAuthResponse)
+    .then(data => {
+        if (data.success) {
+            setAuthMessage('success', data.message);
+            isLoggedIn = true;
+            currentUser = data.user || { phone };
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Login';
+            setTimeout(() => {
+                navigateToGamePage();
+            }, 1000);
+        } else {
+            setAuthMessage('error', data.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Login';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setAuthMessage('error', error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+    });
+});
+}
+
+// Register form submission
+if (registerForm && !phpAuthMode) {
+registerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const phone = normalizePhoneNumber(document.getElementById('register-phone').value.trim());
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+    if (!phone || !password || !confirmPassword) {
+        setAuthMessage('error', 'All fields are required');
+        return;
+    }
+
+    if (password.length < 4 || password.length > 5) {
+        setAuthMessage('error', 'Password must be 4-5 digits');
+        return;
+    }
+
+    if (!/^\d+$/.test(password)) {
+        setAuthMessage('error', 'Password must contain only digits (0-9)');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        setAuthMessage('error', 'Passwords do not match');
+        return;
+    }
+
+    const submitBtn = this.querySelector('.auth-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registering...';
+    setAuthMessage('', '');
+
+    fetch('register.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `phone=${encodeURIComponent(phone)}&password=${encodeURIComponent(password)}&confirm_password=${encodeURIComponent(confirmPassword)}`
+    })
+    .then(parseAuthResponse)
+    .then(data => {
+        if (data.success) {
+            setAuthMessage('success', 'Registration successful! Redirecting to verification...');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Register';
+            setTimeout(() => {
+                window.location.href = 'verify_phone.php';
+            }, 1000);
+        } else {
+            setAuthMessage('error', data.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Register';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setAuthMessage('error', error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+    });
+});
+}
+
+function initializeGame() {
+    // Game can be viewed but actions require login
+    console.log('Game initialized');
+}
+
+function getSelectedAgentId() {
+    return selectedAgent?.id || null;
+}
+
+function collectPlayerState() {
+    const winElement = document.querySelector('.winafter');
+    const currentWin = Number((winElement?.textContent || '0').replace(/[^0-9]/g, '')) / 100 || 0;
+    const currentBalance = Number(qaziCheking?.balance || newBalance || 0);
+    const totalCashIn = Number(localStorage.getItem('cashin') || 0);
+    const totalCashOut = Number(localStorage.getItem('cashout') || 0);
+
+    return {
+        agent_id: getSelectedAgentId(),
+        selected_agent_name: selectedAgent?.displayName || '',
+        current_balance: currentBalance,
+        current_win: currentWin,
+        total_cash_in: totalCashIn,
+        total_cash_out: totalCashOut
+    };
+}
+
+let playerStateSyncTimer = null;
+let balanceUpdatePollingInterval = null;
+let playerRequestPollingInterval = null;
+
+function syncPlayerState(lastAction = '', actionSummary = '', actionPayload = null) {
+    if (!isLoggedIn) return;
+
+    const payload = {
+        ...collectPlayerState(),
+        last_action: lastAction,
+        action_summary: actionSummary,
+        action_payload: actionPayload
+    };
+
+    fetch('sync_player_state.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    }).catch(error => console.error('Error syncing player state:', error));
+}
+
+function queuePlayerStateSync(lastAction = '', actionSummary = '', actionPayload = null) {
+    if (playerStateSyncTimer) {
+        clearTimeout(playerStateSyncTimer);
+    }
+
+    playerStateSyncTimer = setTimeout(() => {
+        syncPlayerState(lastAction, actionSummary, actionPayload);
+    }, 250);
+}
+
+function acknowledgeTransactionEffect(requestId, options = {}) {
+    const params = new URLSearchParams({ request_id: String(requestId) });
+    if (options.markHold) params.append('mark_hold', '1');
+    if (options.markRelease) params.append('mark_release', '1');
+    if (options.markApply) params.append('mark_apply', '1');
+
+    return fetch('acknowledge_transaction_update.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString()
+    }).catch(error => console.error('Error acknowledging transaction update:', error));
+}
+
+function applyApprovedTransactionUpdate(update) {
+    const amount = Number(update.amount || 0);
+    if (!amount) return Promise.resolve();
+
+    if (update.action === 'hold_cash_out') {
+        qaziCheking.withdraw(amount);
+        localStorage.setItem('cashout', Number(localStorage.getItem('cashout') || 0) + amount);
+    } else if (update.action === 'release_cash_out') {
+        qaziCheking.deposit(amount);
+        localStorage.setItem('cashout', Number(localStorage.getItem('cashout') || 0) - amount);
+    } else if (update.action === 'apply_cash_in') {
+        qaziCheking.deposit(amount);
+        localStorage.setItem('cashin', Number(localStorage.getItem('cashin') || 0) + amount);
+    } else if (update.action === 'apply_approved_cash_out') {
+        qaziCheking.withdraw(amount);
+        localStorage.setItem('cashout', Number(localStorage.getItem('cashout') || 0) + amount);
+    }
+
+    newBalance = Number(qaziCheking.balance);
+    balanceDiv.innerText = Math.floor(newBalance * 100);
+    sizebal();
+    storegamestatus();
+    const summaryMap = {
+        hold_cash_out: `Cash out ${amount} moved to pending`,
+        release_cash_out: `Cash out ${amount} returned to balance`,
+        apply_cash_in: `Cash in ${amount} added to balance`,
+        apply_approved_cash_out: `Approved cash out ${amount} removed from balance`,
+        finalize_cash_out: `Cash out ${amount} approved by agent`
+    };
+
+    queuePlayerStateSync('transaction_applied', summaryMap[update.action] || 'Transaction updated', {
+        request_id: update.id,
+        request_type: update.request_type,
+        amount,
+        action: update.action
+    });
+
+    if (update.action === 'hold_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markHold: true });
+    }
+    if (update.action === 'release_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markRelease: true, markApply: true });
+    }
+    if (update.action === 'apply_cash_in') {
+        return acknowledgeTransactionEffect(update.id, { markApply: true });
+    }
+    if (update.action === 'apply_approved_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markHold: true, markApply: true });
+    }
+    if (update.action === 'finalize_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markApply: true });
+    }
+
+    return Promise.resolve();
+}
+
+function checkApprovedTransactionUpdates() {
+    if (!isLoggedIn) return;
+
+    fetch('get_player_balance_updates.php', {
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success || !Array.isArray(data.updates) || data.updates.length === 0) {
+            return;
+        }
+
+        data.updates.reduce((promise, update) => {
+            return promise.then(() => applyApprovedTransactionUpdate(update));
+        }, Promise.resolve());
+    })
+    .catch(error => console.error('Error checking balance updates:', error));
+}
+
+function startBalanceUpdatePolling() {
+    if (balanceUpdatePollingInterval) {
+        clearInterval(balanceUpdatePollingInterval);
+    }
+
+    checkApprovedTransactionUpdates();
+    balanceUpdatePollingInterval = setInterval(checkApprovedTransactionUpdates, 3000);
+}
+
+function ensurePlayerRequestPanel() {
+    const chatBody = document.querySelector('.chat-body');
+    if (!chatBody) return null;
+
+    let panel = document.getElementById('player-request-panel');
+    if (panel) return panel;
+
+    panel = document.createElement('div');
+    panel.id = 'player-request-panel';
+    panel.style.width = '100%';
+    panel.style.padding = '0.35rem 0.5rem';
+    panel.style.display = 'flex';
+    panel.style.flexDirection = 'column';
+    panel.style.gap = '0.35rem';
+
+    const messageBody = document.querySelector('.chat-message-body');
+    if (messageBody) {
+        chatBody.insertBefore(panel, messageBody);
+    } else {
+        chatBody.prepend(panel);
+    }
+
+    return panel;
+}
+
+function renderPlayerTransactionRequests(requests) {
+    // Render to chat area (existing functionality)
+    const panel = ensurePlayerRequestPanel();
+    if (panel) {
+        panel.innerHTML = '';
+        const relevantRequests = requests.filter(request => ['pending', 'declined', 'cancelled'].includes(request.status));
+
+        relevantRequests.slice(0, 3).forEach(request => {
+            const card = document.createElement('div');
+            card.style.background = request.status === 'pending' ? '#2d2d2f' : '#353539';
+            card.style.color = '#fff';
+            card.style.borderRadius = '0.7rem';
+            card.style.padding = '0.5rem 0.7rem';
+            card.style.fontSize = '12px';
+
+            const typeLabel = request.request_type === 'cash_in' ? 'Cash in' : 'Cash out';
+            const meta = `${typeLabel} ${Number(request.amount || 0).toLocaleString()} - ${request.status}`;
+            card.innerHTML = `<div style="font-weight:700; margin-bottom:0.25rem;">${meta}</div>`;
+
+            if (request.status === 'pending') {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.style.background = '#dc3545';
+                cancelBtn.style.color = '#fff';
+                cancelBtn.style.border = 'none';
+                cancelBtn.style.borderRadius = '999px';
+                cancelBtn.style.padding = '0.25rem 0.7rem';
+                cancelBtn.style.cursor = 'pointer';
+                cancelBtn.onclick = () => cancelPlayerTransactionRequest(request.id);
+                card.appendChild(cancelBtn);
+            } else if (request.agent_note) {
+                const note = document.createElement('div');
+                note.style.marginTop = '0.25rem';
+                note.style.color = '#d4d4d4';
+                note.textContent = request.agent_note;
+                card.appendChild(note);
+            }
+
+            panel.appendChild(card);
+        });
+    }
+
+    // Render to Records tab (new functionality)
+    renderRecordsTransactionCards(requests);
+}
+
+function renderRecordsTransactionCards(requests) {
+    const grid = document.querySelector('.transaction-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    if (requests.length === 0) {
+        const emptyCard = document.createElement('div');
+        emptyCard.className = 'transaction-card transaction-card-empty';
+        emptyCard.innerHTML = `
+            <div class="transaction-icon">📋</div>
+            <div class="transaction-type">No Transactions</div>
+            <div class="transaction-amount">No requests yet</div>
+            <div class="transaction-status">Empty</div>
+            <div class="transaction-time">-</div>
+        `;
+        grid.appendChild(emptyCard);
+        return;
+    }
+
+    requests.forEach(request => {
+        const card = document.createElement('div');
+        card.className = `transaction-card transaction-card-${request.request_type === 'cash_in' ? 'in' : 'out'}`;
+
+        const icon = request.request_type === 'cash_in' ? '📥' : '📤';
+        const typeLabel = request.request_type === 'cash_in' ? 'Cash In' : 'Cash Out';
+        const amount = `Frw ${Number(request.amount || 0).toLocaleString()}`;
+        const status = request.status.charAt(0).toUpperCase() + request.status.slice(1);
+        const time = formatTransactionTime(request.created_at);
+
+        card.innerHTML = `
+            <div class="transaction-icon">${icon}</div>
+            <div class="transaction-type">${typeLabel}</div>
+            <div class="transaction-amount">${amount}</div>
+            <div class="transaction-status ${request.status}">${status}</div>
+            <div class="transaction-time">${time}</div>
+        `;
+
+        // Make pending cards clickable to show details
+        if (request.status === 'pending') {
+            card.style.cursor = 'pointer';
+            card.onclick = () => showTransactionDetails(request);
+        }
+
+        grid.appendChild(card);
+    });
+}
+
+function formatTransactionTime(timestamp) {
+    if (!timestamp) return '-';
+
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString();
+}
+
+function loadPlayerTransactionRequests() {
+    if (!isLoggedIn) return;
+
+    const agentId = getSelectedAgentId();
+    const url = agentId ? `get_player_transaction_requests.php?agent_id=${agentId}` : 'get_player_transaction_requests.php';
+
+    fetch(url, { credentials: 'same-origin' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && Array.isArray(data.requests)) {
+                renderPlayerTransactionRequests(data.requests);
+            }
+        })
+        .catch(error => console.error('Error loading player transaction requests:', error));
+}
+
+function startPlayerRequestPolling() {
+    if (playerRequestPollingInterval) {
+        clearInterval(playerRequestPollingInterval);
+    }
+
+    loadPlayerTransactionRequests();
+    playerRequestPollingInterval = setInterval(loadPlayerTransactionRequests, 3000);
+}
+
+function cancelPlayerTransactionRequest(requestId) {
+    fetch('cancel_transaction_request.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `request_id=${encodeURIComponent(requestId)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            alert(data.message || 'Unable to cancel transaction request.');
+            return;
+        }
+
+        loadMessages();
+        loadPlayerTransactionRequests();
+        checkApprovedTransactionUpdates();
+    })
+    .catch(error => {
+        console.error('Error cancelling transaction request:', error);
+        alert('Unable to cancel transaction request.');
+    });
+}
+
+function requireLogin() {
+    if (!isLoggedIn) {
+        showLoginModal();
+        return false;
+    }
+    return true;
+}
+
+// Override game action functions to require login
+const originalTransbtn = window.transbtn;
+window.transbtn = function() {
+    if (requireLogin()) {
+        const result = originalTransbtn.apply(this, arguments);
+        queuePlayerStateSync('transaction_popup', 'Player opened the transaction popup');
+        return result;
+    }
+};
+
+const originalBetbutton = window.betbutton;
+window.betbutton = function() {
+    if (requireLogin()) {
+        const result = originalBetbutton.apply(this, arguments);
+        queuePlayerStateSync('cash_action', 'Player opened a cash action');
+        return result;
+    }
+};
+
+const originalCountClicks1 = window.countClicks1;
+window.countClicks1 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks1.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks2 = window.countClicks2;
+window.countClicks2 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks2.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks3 = window.countClicks3;
+window.countClicks3 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks3.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks4 = window.countClicks4;
+window.countClicks4 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks4.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks5 = window.countClicks5;
+window.countClicks5 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks5.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks6 = window.countClicks6;
+window.countClicks6 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks6.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks7 = window.countClicks7;
+window.countClicks7 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks7.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks8 = window.countClicks8;
+window.countClicks8 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks8.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks9 = window.countClicks9;
+window.countClicks9 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks9.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks10 = window.countClicks10;
+window.countClicks10 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks10.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+
+function initializeChat() {
+    // Start polling for new messages every 3 seconds
+    if (messagePollingInterval) {
+        clearInterval(messagePollingInterval);
+    }
+
+    const inputBar = document.querySelector('.chat-body-message-input');
+    if (inputBar) {
+        inputBar.style.display = 'flex';
+    }
+
+    if (selectedAgent && isLoggedIn) {
+        queuePlayerStateSync('agent_selected', 'Player connected to an agent chat');
+        loadPlayerTransactionRequests();
+        messagePollingInterval = setInterval(() => {
+            loadMessages();
+        }, 3000);
+    }
+}
+
+function loadMessages() {
+    if (!selectedAgent || !isLoggedIn) return;
+
+    const selectedAgentId = selectedAgent?.id;
+
+    if (!selectedAgentId) return;
+
+    fetch(`get_messages.php?agent_id=${selectedAgentId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayMessages(data.messages);
+            }
+        })
+        .catch(error => console.error('Error loading messages:', error));
+}
+
+function displayMessages(messages) {
+    const messageBody = document.querySelector('.chat-message-body');
+    if (!messageBody) return;
+
+    // Only update if there are new messages
+    const currentMessageCount = messageBody.children.length;
+    if (messages.length <= currentMessageCount) return;
+
+    messageBody.innerHTML = '';
+
+    messages.forEach(message => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message';
+
+        const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        messageDiv.innerHTML = `<strong>${message.sender_type === 'user' ? 'You' : message.agent_name}:</strong> ${message.message} <span style="font-size: 0.8em; color: #666;">${time}</span>`;
+
+        messageBody.appendChild(messageDiv);
+    });
+
+    // Scroll to bottom
+    messageBody.scrollTop = messageBody.scrollHeight;
+}
+
+// Override the existing sendMessage function
+const originalSendMessage = window.sendMessage;
+window.sendMessage = function() {
+    if (!requireLogin()) return;
+
+    const message = document.querySelector('.chat-input').value.trim();
+    if (message === '' || !selectedAgent) return;
+
+    selectedAgentId = selectedAgent?.id;
+
+    if (!selectedAgentId) {
+        alert('Invalid agent selected');
+        return;
+    }
+
+    fetch('send_message.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `message=${encodeURIComponent(message)}&agent_id=${selectedAgentId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector('.chat-input').value = '';
+            loadMessages(); // Refresh messages immediately
+            queuePlayerStateSync('chat_message', 'Player sent a message to the agent', {
+                message_preview: message.slice(0, 120)
+            });
+        } else {
+            alert('Failed to send message: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while sending the message.');
+    });
+};
+
+// Override selectAgent to initialize chat polling
+const originalSelectAgent = window.selectAgent;
+window.selectAgent = function(id, displayName, imgSrc) {
+    originalSelectAgent.apply(this, arguments);
+
+    if (isLoggedIn) {
+        initializeChat();
+        loadMessages(); // Load existing messages immediately
+        queuePlayerStateSync('agent_selected', `Player selected ${displayName}`, {
+            selected_agent: displayName
+        });
+    }
+};
+
+const originalStoreGameStatus = window.storegamestatus;
+window.storegamestatus = function() {
+    const result = originalStoreGameStatus.apply(this, arguments);
+    queuePlayerStateSync();
+    return result;
+};
+
+// Add event listener for transaction modal close
+document.addEventListener('DOMContentLoaded', function() {
+    const transactionModal = document.getElementById('transaction-modal');
+    if (transactionModal) {
+        transactionModal.addEventListener('click', function(event) {
+            if (event.target === transactionModal) {
+                closeTransactionModal();
+            }
+        });
+    }
+});
