@@ -40,8 +40,9 @@ body {
   font-family: 'Poppins', sans-serif;
   background-color: #eee;
   transition: background-color 0.35s ease-in-out;
-  overflow: hidden;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
   font-size: clamp(12px, 2vw, 16px);
 }
 
@@ -5080,15 +5081,39 @@ section {
 } 
 
 
+/* bottom button shared class */
+.bottom-button {
+  position: absolute !important;
+  z-index: 100 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 55px !important;
+  min-height: 55px !important;
+  width: clamp(45px, 6vw, 70px) !important;
+  height: clamp(45px, 6vw, 70px) !important;
+  padding: 0.65em !important;
+  margin: 0 !important;
+  transform: none !important;
+  background-color: inherit !important;
+}
+
+.bottom-button::before {
+  box-sizing: border-box !important;
+}
+
 /* button1 */
 button.learn-more1 {
   position: absolute;
   top: 76.9%;
-  left: 11%;
+  left: 50%;
   font-weight: 600;
   color: #382b22;
   text-transform: uppercase;
-  padding: 3em 3em;
+  padding: 6em 6em;
   background: url(R1.webp);
   background-position: center;
   background-size: 90%;
@@ -5109,7 +5134,7 @@ button.learn-more1::before {
   height: 100%;
   top: 0;
   left: 0;
-  right: 0;
+  right: 10;
   bottom: 0;
   background: #f9c4e2;
   border-radius: inherit;
@@ -5867,7 +5892,7 @@ button.learn-more10:active::before {
   /* top: 95%; */
   width: 100%;
   height: 100%;
-  z-index: 3;
+  z-index: 0;
 }
 
 #wheel {
