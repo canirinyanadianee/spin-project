@@ -80,6 +80,80 @@ $updateStmt->bind_param("ssii", $status, $agentNote, $requestId, $agentId);
 $updateStmt->execute();
 $updateStmt->close();
 
+// If cash-in is approved, automatically update the player's balance on the server
+if ($status === 'approved' && $request['request_type'] === 'cash_in') {
+    $amount = (float)$request['amount'];
+    
+    // Add amount to player's balance
+    $balanceStmt = $conn->prepare("
+        UPDATE player_state_snapshots
+        SET current_balance = current_balance + ?, 
+            total_cash_in = total_cash_in + ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = ?
+    ");
+    $balanceStmt->bind_param("ddi", $amount, $amount, $request['user_id']);
+    $balanceStmt->execute();
+    $balanceStmt->close();
+    
+    // Create snapshot record if it doesn't exist
+    $checkStmt = $conn->prepare("SELECT id FROM player_state_snapshots WHERE user_id = ?");
+    $checkStmt->bind_param("i", $request['user_id']);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
+    $checkStmt->close();
+    
+    if ($checkResult->num_rows === 0) {
+        // Insert new snapshot if it doesn't exist
+        $insertStmt = $conn->prepare("
+            INSERT INTO player_state_snapshots (user_id, current_balance, total_cash_in)
+            VALUES (?, ?, ?)
+        ");
+        $insertStmt->bind_param("idd", $request['user_id'], $amount, $amount);
+        $insertStmt->execute();
+        $insertStmt->close();
+    }
+} 
+// If cash-out is approved, verify balance and deduct if sufficient
+elseif ($status === 'approved' && $request['request_type'] === 'cash_out') {
+    $amount = (float)$request['amount'];
+    
+    // Get current balance
+    $checkStmt = $conn->prepare("SELECT current_balance FROM player_state_snapshots WHERE user_id = ?");
+    $checkStmt->bind_param("i", $request['user_id']);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
+    $balanceRow = $checkResult->fetch_assoc();
+    $checkStmt->close();
+    
+    if ($balanceRow && $balanceRow['current_balance'] >= $amount) {
+        // Sufficient balance, deduct the amount
+        $balanceStmt = $conn->prepare("
+            UPDATE player_state_snapshots
+            SET current_balance = current_balance - ?, 
+                total_cash_out = total_cash_out + ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE user_id = ?
+        ");
+        $balanceStmt->bind_param("ddi", $amount, $amount, $request['user_id']);
+        $balanceStmt->execute();
+        $balanceStmt->close();
+    } else {
+        // Insufficient balance, auto-decline the request
+        $rejectStmt = $conn->prepare("
+            UPDATE transaction_requests
+            SET status = 'declined', agent_note = 'Auto-rejected: Insufficient player balance'
+            WHERE id = ?
+        ");
+        $rejectStmt->bind_param("i", $requestId);
+        $rejectStmt->execute();
+        $rejectStmt->close();
+        
+        // Override the status in the response
+        $status = 'declined';
+    }
+}
+
 $label = $request['request_type'] === 'cash_in' ? 'cash in' : 'cash out';
 $decisionText = $status === 'approved' ? 'approved' : 'declined';
 $message = "Your {$label} request #" . $requestId . " for " . number_format((float)$request['amount'], 2) . " was {$decisionText}.";
