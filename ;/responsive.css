@@ -1,0 +1,678 @@
+/* ============= RESPONSIVE DESIGN FOR MOO-GAME ============= */
+
+/* Tablet and Medium Screens (768px - 1024px) */
+@media screen and (max-width: 1200px) {
+  body {
+    font-size: clamp(11px, 1.8vw, 15px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    top: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  #app {
+    width: clamp(250px, 85vw, 380px);
+    height: clamp(250px, 85vw, 380px);
+    top: -20%;
+  }
+  
+  .wheel {
+    width: 95%;
+    height: 95%;
+    left: -14%;
+  }
+  
+  .marker {
+    width: 5vw;
+    height: auto;
+    top: 12%;
+    left: 48%;
+  }
+  
+  .button {
+    width: 60%;
+    height: 60%;
+    left: 20%;
+    top: 43%;
+  }
+  
+  .result {
+    font-size: 1.5rem;
+    left: 35%;
+  }
+  
+  /* Adjust text displays */
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(28px, 4vw, 45px);
+  }
+  
+  .win, .cashout {
+    width: clamp(250px, 90vw, 320px);
+    height: clamp(120px, 30%, 170px);
+  }
+  
+  .winafter, #output1 {
+    width: clamp(220px, 85%, 285px);
+    height: clamp(100px, 25%, 130px);
+    font-size: clamp(32px, 5vw, 50px);
+    padding-right: clamp(70px, 20%, 110px);
+    padding-top: clamp(30px, 8%, 45px);
+  }
+  
+  /* Button scaling */
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    padding: 2.2em 2.2em;
+    font-size: 0.75rem;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 65px;
+    height: 30px;
+    font-size: 26px;
+  }
+}
+
+/* Mobile and Small Screens (480px - 767px) */
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 12px;
+  }
+  
+  body {
+    font-size: clamp(10px, 2vw, 14px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    top: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  #app {
+    width: clamp(200px, 95vw, 350px);
+    height: clamp(200px, 95vw, 350px);
+    top: 0;
+    margin-top: 0.5rem;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    left: -14.8%;
+  }
+  
+  .marker {
+    width: 6vw;
+    top: 10%;
+    left: 47%;
+  }
+  
+  .button {
+    width: 55%;
+    height: 55%;
+    left: 22.5%;
+  }
+  
+  .result {
+    font-size: 1.2rem;
+    left: 30%;
+  }
+  
+  /* Text elements */
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(20px, 4vw, 40px);
+    top: clamp(30px, 4%, 50px);
+  }
+  
+  .win, .cashout {
+    width: clamp(220px, 90vw, 300px);
+    height: clamp(100px, 25%, 150px);
+    font-size: 16px;
+  }
+  
+  .winafter, #output1 {
+    width: clamp(190px, 85%, 270px);
+    height: clamp(90px, 22%, 120px);
+    font-size: clamp(28px, 5vw, 45px);
+    padding-right: clamp(60px, 18%, 100px);
+    padding-top: clamp(25px, 7%, 40px);
+    top: clamp(20px, 4%, 45px);
+  }
+  
+ /* Buttons - Reduce spacing for mobile */
+  button.learn-more1 { left: clamp(8%, 8%, 11%); top: 75%; }
+  button.learn-more2 { left: clamp(16%, 16%, 19%); top: 75%; }
+  button.learn-more3 { left: clamp(24%, 24%, 27%); top: 75%; }
+  button.learn-more4 { left: clamp(32%, 32%, 35%); top: 75%; }
+  button.learn-more5 { left: clamp(40%, 40%, 43%); top: 75%; }
+  button.learn-more6 { left: clamp(48%, 48%, 51%); top: 75%; }
+  button.learn-more7 { left: clamp(56%, 56%, 59%); top: 75%; }
+  button.learn-more8 { left: clamp(64%, 64%, 67%); top: 75%; }
+  button.learn-more9 { left: clamp(72%, 72%, 75%); top: 75%; }
+  button.learn-more10 { left: clamp(80%, 80%, 83%); top: 75%; }
+  
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    padding: 1.8em 1.8em;
+    font-size: 0.65rem;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 55px;
+    height: 25px;
+    font-size: 20px;
+    top: 70%;
+  }
+  
+  /* Popups */
+  .popup, .popup1 {
+    width: clamp(280px, 90vw, 360px);
+  }
+  
+  #user, #tbuser {
+    width: 160px;
+    height: 160px;
+    font-size: 40px;
+  }
+  
+  /* Rectangle elements */
+  .rectangle1, .rectangle2 {
+    width: 80px;
+    height: 380px;
+    display: none;
+  }
+  
+  /* Win display elements */
+  .WINDISPLAY, .CREDITDISPLAY {
+    width: 170px;
+    height: 60px;
+    font-size: 35px;
+  }
+}
+
+/* Extra Small Screens (< 480px) */
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 10px;
+  }
+  
+  body {
+    font-size: clamp(9px, 2.5vw, 12px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    top: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  #app {
+    width: clamp(160px, 95vw, 350px);
+    height: clamp(160px, 95vw, 350px);
+    top: 0;
+    margin-top: 0.5rem;
+  }
+  
+  .wheel {
+    width: 105%;
+    height: 105%;
+    left: -15%;
+  }
+  
+  .marker {
+    width: 8vw;
+    top: 8%;
+    left: 46%;
+  }
+  
+  .button {
+    width: 50%;
+    height: 50%;
+    left: 25%;
+    top: 42%;
+  }
+  
+  .result {
+    font-size: 1rem;
+    left: 25%;
+    top: 2%;
+  }
+  
+  /* Text elements */
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(16px, 3.5vw, 30px);
+  }
+  
+  .win, .cashout {
+    width: clamp(200px, 88vw, 280px);
+    height: clamp(90px, 22%, 130px);
+    font-size: 14px;
+  }
+  
+  .winafter, #output1 {
+    width: clamp(170px, 80%, 250px);
+    height: clamp(80px, 20%, 110px);
+    font-size: clamp(22px, 4vw, 38px);
+    padding-right: 50px;
+    padding-top: 20px;
+  }
+  
+  /* Compressed button layout */
+  button.learn-more1 { left: 4%; }
+  button.learn-more2 { left: 13.5%; }
+  button.learn-more3 { left: 23%; }
+  button.learn-more4 { left: 32.5%; }
+  button.learn-more5 { left: 42%; }
+  button.learn-more6 { left: 51.5%; }
+  button.learn-more7 { left: 61%; }
+  button.learn-more8 { left: 70.5%; }
+  button.learn-more9 { left: 80%; }
+  button.learn-more10 { left: 89%; }
+  
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    padding: 1.5em 1.5em;
+    font-size: 0.6rem;
+    top: 75.5%;
+  }
+  
+  button.learn-more1::before,
+  button.learn-more2::before,
+  button.learn-more3::before,
+  button.learn-more4::before,
+  button.learn-more5::before,
+  button.learn-more6::before,
+  button.learn-more7::before,
+  button.learn-more8::before,
+  button.learn-more9::before,
+  button.learn-more10::before {
+    box-shadow: 0 0 0 1px #b18597, 0 0.4em 0 0 #ffe3e2;
+    transform: translate3d(0, 0.5em, -1em);
+  }
+  
+  #display1 { left: 5.5%; top: 71%; }
+  #display2 { left: 14.5%; top: 71%; }
+  #display3 { left: 24%; top: 71%; }
+  #display4 { left: 33.5%; top: 71%; }
+  #display5 { left: 43%; top: 71%; }
+  #display6 { left: 52.5%; top: 71%; }
+  #display7 { left: 62%; top: 71%; }
+  #display8 { left: 71.5%; top: 71%; }
+  #display9 { left: 81%; top: 71%; }
+  #display10 { left: 90%; top: 71%; }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 50px;
+    height: 25px;
+    font-size: 18px;
+  }
+  
+  /* Adjust popup sizes */
+  .popup, .popup1 {
+    width: clamp(260px, 85vw, 330px);
+  }
+  
+  #user, #tbuser {
+    width: 130px;
+    height: 130px;
+    font-size: 32px;
+  }
+  
+  /* Hide elements that don't fit */
+  .rectangle1, .rectangle2 {
+    display: none;
+  }
+  
+  .WINDISPLAY, .CREDITDISPLAY {
+    width: 140px;
+    height: 50px;
+    font-size: 28px;
+  }
+}
+
+/* Landscape Mode Adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  html, body {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  #app {
+    width: 60vh;
+    height: 60vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    position: relative;
+   
+  }
+
+  .wheel {
+    width: 100%;
+    height: 100%;
+    left: 0;
+      top: -20%;
+  
+  }
+
+  .marker {
+    width: 8vw;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .button {
+    width: 44%;
+    height: 44%;
+    left: 50%;
+    top: -10%;
+    transform: translateX(-50%);
+  }
+
+  .result {
+    font-size: 0.9rem;
+    left: 35%;
+    top: 2%;
+  }
+
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(14px, 2.5vw, 24px);
+  }
+
+  .win, .cashout {
+    width: 35vw;
+    height: clamp(70px, 10vh, 95px);
+    font-size: 12px;
+  }
+
+  .winafter, #output1 {
+    width: 32vw;
+    height: clamp(65px, 9vh, 88px);
+    font-size: clamp(18px, 2.5vw, 28px);
+    padding-right: 0.6rem;
+    padding-top: 0.5rem;
+  }
+
+  .popup, .popup1 {
+    width: min(88vw, 300px);
+  }
+
+  #user, #tbuser {
+    width: 95px;
+    height: 95px;
+    font-size: 26px;
+  }
+  
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    width: clamp(36px, 8vw, 45px);
+    height: clamp(36px, 8vw, 45px);
+    padding: 0.8em 0.8em;
+    font-size: 0.52rem;
+    top: 72%;
+  }
+
+  button.learn-more1 { left: 3%; }
+  button.learn-more2 { left: 11.5%; }
+  button.learn-more3 { left: 20%; }
+  button.learn-more4 { left: 28.5%; }
+  button.learn-more5 { left: 37%; }
+  button.learn-more6 { left: 45.5%; }
+  button.learn-more7 { left: 54%; }
+  button.learn-more8 { left: 62.5%; }
+  button.learn-more9 { left: 71%; }
+  button.learn-more10 { left: 79.5%; }
+
+  #display1 { left: 4%; top: 67%; }
+  #display2 { left: 12.5%; top: 67%; }
+  #display3 { left: 21%; top: 67%; }
+  #display4 { left: 29.5%; top: 67%; }
+  #display5 { left: 38%; top: 67%; }
+  #display6 { left: 46.5%; top: 67%; }
+  #display7 { left: 55%; top: 67%; }
+  #display8 { left: 63.5%; top: 67%; }
+  #display9 { left: 72%; top: 67%; }
+  #display10 { left: 80.5%; top: 67%; }
+
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 38px;
+    height: 20px;
+    font-size: 14px;
+  }
+
+  .WINDISPLAY, .CREDITDISPLAY {
+    width: 110px;
+    height: 38px;
+    font-size: 22px;
+  }
+
+  .rectangle1, .rectangle2 {
+    display: none;
+  }
+}
+
+/* High DPI Screens (Retina Display) */
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  body {
+    font-size: clamp(11px, 2vw, 16px);
+  }
+}
+
+/* Touch Device Optimization */
+@media (hover: none) and (pointer: coarse) {
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    min-height: 32px;
+  }
+}
+/* Pixel 7 / Very Small Screens */
+@media screen and (max-width: 430px) {
+  html, body {
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    top: 0;
+  }
+
+  body {
+    position: relative;
+  }
+
+  #app {
+    width: 88vw;
+    height: 88vw;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0.4rem auto 0;
+  }
+
+  .wheel {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    z-index: 2;
+  }
+
+  .table {
+    z-index: 0;
+  }
+
+  #app {
+    z-index: 2;
+  }
+
+  .marker {
+    width: 10vw;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .button {
+    width: 46%;
+    height: 46%;
+    left: 50%;
+    top: 40%;
+    transform: translateX(-50%);
+  }
+
+  .result {
+    font-size: 1rem;
+    left: 30%;
+    top: 1.5%;
+  }
+
+  #text, .wintext, .balancefrancs, .francs {
+    font-size: clamp(16px, 3vw, 28px);
+  }
+
+  .win, .cashout {
+    width: 42vw;
+    height: clamp(80px, 12vw, 110px);
+    font-size: 14px;
+  }
+
+  .winafter, #output1 {
+    width: 36vw;
+    height: clamp(72px, 11vw, 100px);
+    font-size: clamp(20px, 3vw, 32px);
+    padding-right: 0.85rem;
+    padding-top: 0.6rem;
+  }
+
+  .popup, .popup1 {
+    width: min(92vw, 320px);
+  }
+
+  #user, #tbuser {
+    width: 110px;
+    height: 110px;
+    font-size: 30px;
+  }
+
+  button.learn-more1,
+  button.learn-more2,
+  button.learn-more3,
+  button.learn-more4,
+  button.learn-more5,
+  button.learn-more6,
+  button.learn-more7,
+  button.learn-more8,
+  button.learn-more9,
+  button.learn-more10 {
+    width: clamp(40px, 9vw, 50px);
+    height: clamp(40px, 9vw, 50px);
+    padding: 0.9em 0.9em;
+    font-size: 0.55rem;
+    top: 74%;
+  }
+
+  button.learn-more1 { left: 4%; }
+  button.learn-more2 { left: 13%; }
+  button.learn-more3 { left: 22%; }
+  button.learn-more4 { left: 31%; }
+  button.learn-more5 { left: 40%; }
+  button.learn-more6 { left: 49%; }
+  button.learn-more7 { left: 58%; }
+  button.learn-more8 { left: 67%; }
+  button.learn-more9 { left: 76%; }
+  button.learn-more10 { left: 85%; }
+
+  #display1 { left: 5.5%; top: 69%; }
+  #display2 { left: 14.5%; top: 69%; }
+  #display3 { left: 23.5%; top: 69%; }
+  #display4 { left: 32.5%; top: 69%; }
+  #display5 { left: 41.5%; top: 69%; }
+  #display6 { left: 50.5%; top: 69%; }
+  #display7 { left: 59.5%; top: 69%; }
+  #display8 { left: 68.5%; top: 69%; }
+  #display9 { left: 77.5%; top: 69%; }
+  #display10 { left: 86.5%; top: 69%; }
+
+  #display1, #display2, #display3, #display4, #display5,
+  #display6, #display7, #display8, #display9, #display10 {
+    width: 42px;
+    height: 22px;
+    font-size: 16px;
+  }
+
+  .WINDISPLAY, .CREDITDISPLAY {
+    width: 130px;
+    height: 42px;
+    font-size: 26px;
+  }
+}

@@ -23,6 +23,12 @@ if('BroadcastChannel' in window) {
     // console.log('Boardcast Channel API is not supported in this browser.');
 }
 
+// Authentication variables
+let isLoggedIn = false;
+let currentUser = null;
+let selectedAgentId = null;
+let messagePollingInterval = null;
+
 function erstoregamestatus() {
     const gameplayedstatus = [
         {
@@ -95,11 +101,11 @@ window.addEventListener('storage', function(event) {
         gameplayedstatus = JSON.parse(localStorage.getItem('gameplayedstatus')) || 0;
         startbal = Number(gameplayedstatus[0].balancevalue || 0)
         qaziCheking = new Bank(startbal);
-        balanceDiv.innerText = Math.floor(startbal *100);
+        balanceDiv.innerText = Math.floor(startbal);
         sizebal()
         console.log("startbal",startbal);
         win = Number(gameplayedstatus[0].winvalue) || 0;
-        winafter.innerHTML = win *100;
+        winafter.innerHTML = win ;
         count1 = Number(gameplayedstatus[0].button1 || 0)
         count2 = Number(gameplayedstatus[0].button2 || 0)
         count3 = Number(gameplayedstatus[0].button3 || 0)
@@ -116,31 +122,10 @@ window.addEventListener('storage', function(event) {
 });
 
 var highbalance= Number(newBalance);
-document.addEventListener('keydown', function(event) {
-    // Check if F12 key is pressed
-    if (event.key === 'F12' || event.keyCode === 123) {
-        event.preventDefault();
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'I') {
-        event.preventDefault();
-        console.log("Developer tools shortcut prevented.");
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'J') {
-        event.preventDefault();
-        console.log("JavaScript Console shortcut prevented.");
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'C') {
-        event.preventDefault();
-    }
-});
 
 var allowstart=0;
 
-window.addEventListener("contextmenu", function(){
-    stopcounting();
-});
 function transbtn() {
-    stopcounting();
     if(event.button==0 && gamerunning==0) {
         transaction();
         allowstart=1;
@@ -204,16 +189,31 @@ function transaction() {
                 depositInput.focus();
             }else if(amount<=999){
                 // var amount = Number(depositInput.value)/100;
-                qaziCheking.deposit(amount)
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
-                sizebal()
-                newBalance = Number(qaziCheking.balance);
-                console.log({Balance: newBalance})
-                // password.value = ''
+                if(selectedAgentId){
+                    fetch('submit_transaction_request.php', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            agent_id: selectedAgentId,
+                            request_type: 'cash_out',
+                            amount: amount
+                        })
+                    }).then(response => response.json()).then(data => {
+                        if (!data.success) {
+                            alert(data.message || 'Unable to send transaction request.');
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert('Error sending request.');
+                    });
+                } else {
+                    alert('Please select an agent first.');
+                }
                 depositInput.value = '';
                 withdrawInput.value = '';
-                newBalance = Number(qaziCheking.balance);
-                // balancestored()
                 storegamestatus()
                 popu=0;
                 document.querySelector(".popup").classList.remove("active");
@@ -228,17 +228,32 @@ function transaction() {
                 withdrawInput.focus();
             }else if(amount>newBalance){
                 if(cashpop==1) {
-                    qaziCheking.winvalue(amount)
-                    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
-                    sizebal()
-                    console.log('CASH', amount)
-                    newBalance = Number(qaziCheking.balance);
-                    console.log({Balance: newBalance})
+                    if(selectedAgentId){
+                        fetch('submit_transaction_request.php', {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                agent_id: selectedAgentId,
+                                request_type: 'cash_in',
+                                amount: amount
+                            })
+                        }).then(response => response.json()).then(data => {
+                            if (!data.success) {
+                                alert(data.message || 'Unable to send transaction request.');
+                            }
+                        }).catch(error => {
+                            console.error('Error:', error);
+                            alert('Error sending request.');
+                        });
+                    } else {
+                        alert('Please select an agent first.');
+                    }
                     withdrawInput.value = '';
                     depositInput.value = '';
                     withdrawInput.focus();
-                    newBalance = Number(qaziCheking.balance);
-                    // balancestored()
                     storegamestatus()
                     valueinbox =0;
                     popu=0;
@@ -247,22 +262,45 @@ function transaction() {
                     document.getElementById('cashbtn').value = 'Add';
                     document.getElementById('user').placeholder = 'CASH';
                 }else {
+                    alert('Insufficient balance.');
                     withdrawInput.value = ''
                     withdrawInput.focus();
                 }
             }else if(amount<=newBalance){
                 if(cashpop==0){
-                    qaziCheking.withdraw(amount);
-                    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
-                    sizebal()
-                    console.log('CASH', amount)
-                    newBalance = Number(qaziCheking.balance);
-                    console.log({Balance: newBalance})
+                    if(selectedAgentId){
+                        fetch('submit_transaction_request.php', {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                agent_id: selectedAgentId,
+                                request_type: 'cash_out',
+                                amount: amount
+                            })
+                        }).then(response => response.json()).then(data => {
+                            if (!data.success) {
+                                alert(data.message || 'Unable to send transaction request.');
+                            } else {
+                                // Immediately reduce balance for pending cashout
+                                qaziCheking.withdraw(amount);
+                                balanceDiv.innerText = Math.floor(qaziCheking.balance);
+                                sizebal();
+                                newBalance = Number(qaziCheking.balance);
+                                storegamestatus();
+                            }
+                        }).catch(error => {
+                            console.error('Error:', error);
+                            alert('Error sending request.');
+                        });
+                    } else {
+                        alert('Please select an agent first.');
+                    }
                     withdrawInput.value = '';
                     depositInput.value = '';
                     withdrawInput.focus();
-                    newBalance = Number(qaziCheking.balance);
-                    // balancestored()
                     storegamestatus()
                     valueinbox =0;
                     popu=0;
@@ -270,7 +308,7 @@ function transaction() {
                     removeannimaiton();
                 }else if(cashpop==1) {
                     qaziCheking.winvalue(amount)
-                    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                    balanceDiv.innerText = Math.floor(qaziCheking.balance);
                     sizebal()
                     console.log('CASH', amount)
                     newBalance = Number(qaziCheking.balance);
@@ -323,32 +361,14 @@ function transaction() {
         } 
     }  
 }
-const logoanimat = document.querySelector('.logoanimat');
 const timesanimat = document.querySelector('.timesanimat');
 const shoot1 = document.querySelector('.shootanimat1');
 const shoot2 = document.querySelector('.shootanimat2');
-const shoot2of2 = document.querySelector('.shootanimat2of2');
 const shoot3 = document.querySelector('.shootanimat3');
-const shoot2of3 = document.querySelector('.shootanimat2of3');
-const shoot3of3 = document.querySelector('.shootanimat3of3');
 const shoot6 = document.querySelector('.shootanimat6');
 const shoot5 = document.querySelector('.shootanimat5');
 const shoot4 = document.querySelector('.shootanimat4');
-const shoot2of6 = document.querySelector('.shootanimat2of6');
-const shoot3of6 = document.querySelector('.shootanimat3of6');
-const shoot4of6 = document.querySelector('.shootanimat4of6');
-const shoot5of6 = document.querySelector('.shootanimat5of6');
-const shoot6of6 = document.querySelector('.shootanimat6of6');
 const shoot10 = document.querySelector('.shootanimat10');
-const shoot2of10 = document.querySelector('.shootanimat2of10');
-const shoot3of10 = document.querySelector('.shootanimat3of10');
-const shoot4of10 = document.querySelector('.shootanimat4of10');
-const shoot5of10 = document.querySelector('.shootanimat5of10');
-const shoot6of10 = document.querySelector('.shootanimat6of10');
-const shoot7of10 = document.querySelector('.shootanimat7of10');
-const shoot8of10 = document.querySelector('.shootanimat8of10');
-const shoot9of10 = document.querySelector('.shootanimat9of10');
-const shoot10of10 = document.querySelector('.shootanimat10of10');
 
 
 // *3animation 
@@ -362,7 +382,7 @@ const arsenal3 = document.querySelector('.win10player8-3');
 const liverpool3 = document.querySelector('.win10player9-3');
 const chelsea5 = document.querySelector('.win5player10-5');
 // *3animation
-// *100-10 animation
+// -10 animation
 const bar100 = document.querySelector('.win100times1-100');
 const bar50 = document.querySelector('.win100times1-50');
 const madrid40 = document.querySelector('.win40times2-40');
@@ -373,7 +393,7 @@ const city20 = document.querySelector('.win20player6-20');
 const united10 = document.querySelector('.win10player7-10');
 const arsenal10 = document.querySelector('.win10player8-10');
 const liverpool10 = document.querySelector('.win10player9-10');
-// *100-10 animation
+// -10 animation
 // *players animation
 const bar = document.querySelector('.win100player1');
 const madrid = document.querySelector('.win40player2');
@@ -388,7 +408,6 @@ const chelsea = document.querySelector('.win5player10');
 // // *players animation
 setTimeout(autoanimation, 10000);
 function autoanimation() {
-    logoanimat.classList.add("logoanimation");
     // timesanimat.classList.add("timesanimation");
     // soundeffect();
 }
@@ -426,33 +445,15 @@ function allowbutton(){
 }
 function removeannimaiton(){
     removenotescoins();
-    logoanimat.classList.remove("logoanimation");
     // if(runnan==1){
     //     clearTimeout(runplayerannimation);
     // }
     // timesanimat.classList.remove("timesanimation");
     shoot1.classList.remove("shoot1animation");
     shoot2.classList.remove("shoot2animation");
-    shoot2of2.classList.remove("shoot2of2animation");
     shoot3.classList.remove("shoot3animation");
-    shoot2of3.classList.remove("shoot2of3animation");
-    shoot3of3.classList.remove("shoot3of3animation");
     shoot6.classList.remove("shoot6animation");
-    shoot2of6.classList.remove("shoot2of6animation");
-    shoot3of6.classList.remove("shoot3of6animation");
-    shoot4of6.classList.remove("shoot4of6animation");
-    shoot5of6.classList.remove("shoot5of6animation");
-    shoot6of6.classList.remove("shoot6of6animation");
     shoot10.classList.remove("shoot10animation");
-    shoot2of10.classList.remove("shoot2of10animation");
-    shoot3of10.classList.remove("shoot3of10animation");
-    shoot4of10.classList.remove("shoot4of10animation");
-    shoot5of10.classList.remove("shoot5of10animation");
-    shoot6of10.classList.remove("shoot6of10animation");
-    shoot7of10.classList.remove("shoot7of10animation");
-    shoot8of10.classList.remove("shoot8of10animation");
-    shoot9of10.classList.remove("shoot9of10animation");
-    shoot10of10.classList.remove("shoot10of10animation");
     // remove display
     // 1 shoots
     position1.classList.remove("shootr2-5");
@@ -772,7 +773,6 @@ function gobtn() {
     if(betcondition==0) {
         //
         gamerunning=0;
-        stopcounting();
         console.log("start button begin..");
         document.querySelector(".popup").classList.remove("active");
         document.querySelector(".popup1").classList.remove("active");
@@ -798,7 +798,6 @@ function gobtn() {
             //
             update= new Date().getTime();
             deadline = Number(localStorage.getItem('deadline') || 0);
-            stopcounting();
             console.log("sumbutton",sumbutton);
             distart++;
             removeannimaiton();
@@ -995,7 +994,6 @@ var balancecash=0;
 function backbtn() {
     console.warn('back button pressed!!!....1');
     if(gamerunning==0) {
-        stopcounting();
         console.warn('back button pressed!!!....2');
         const winafter = document.querySelector('.winafter');
         let win = Number(winafter.textContent)/100 || 0;
@@ -1031,7 +1029,7 @@ function backbtn() {
                 var allbut = count1 + count2 + count3 + count4 + count5 + count6 + count7 + count8 + count9 + count10;
                 var amount = allbut;
                 qaziCheking.winvalue(amount);
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance);
                 sizebal()
                 newBalance = Number(qaziCheking.balance);
                 balancedivrec();
@@ -1066,14 +1064,10 @@ window.addEventListener("keyup", function(e){
     };
     if(e.keyCode==87){
         backbtn();
-    }else if(stopall==0){
-        stopcounting();
-    };
+    }
     if(e.keyCode==8){
         backbtn();
-    }else if(stopall==0){
-        stopcounting();
-    };
+    }
 });
 // BACK end...............................
 
@@ -1084,16 +1078,16 @@ var popu=0;
 var soundp=1;
 
 function allbuttondappear() {
-    output1.innerHTML = count1*100;
-    output2.innerHTML = count2*100;
-    output3.innerHTML = count3*100;
-    output4.innerHTML = count4*100;
-    output5.innerHTML = count5*100;
-    output6.innerHTML = count6*100;
-    output7.innerHTML = count7*100;
-    output8.innerHTML = count8*100;
-    output9.innerHTML = count9*100;
-    output10.innerHTML = count10*100;
+    output1.innerHTML = count1;
+    output2.innerHTML = count2;
+    output3.innerHTML = count3;
+    output4.innerHTML = count4;
+    output5.innerHTML = count5;
+    output6.innerHTML = count6;
+    output7.innerHTML = count7;
+    output8.innerHTML = count8;
+    output9.innerHTML = count9;
+    output10.innerHTML = count10;
     out1();
     out2();
     out3();
@@ -1118,7 +1112,7 @@ function out6() {
     } else {
       token6.style.fontSize = "33px";
     }
-    token6.innerHTML = count6*100;
+    token6.innerHTML = count6;
 };
 function out5() {
     const token5 = document.getElementById('display5');
@@ -1133,7 +1127,7 @@ function out5() {
     } else {
       token5.style.fontSize = "33px";
     }
-    token5.innerHTML = count5*100;
+    token5.innerHTML = count5;
 };
 function out4() {
     const token4 = document.getElementById('display4');
@@ -1148,7 +1142,7 @@ function out4() {
     } else {
       token4.style.fontSize = "33px";
     }
-    token4.innerHTML = count4*100;
+    token4.innerHTML = count4;
 };
 function out3() {
     const token3 = document.getElementById('display3');
@@ -1163,7 +1157,7 @@ function out3() {
     } else {
       token3.style.fontSize = "33px";
     }
-    token3.innerHTML = count3*100;
+    token3.innerHTML = count3;
 };
 function out2() {
     const token2 = document.getElementById('display2');
@@ -1178,7 +1172,7 @@ function out2() {
     } else {
       token2.style.fontSize = "33px";
     }
-    token2.innerHTML = count2*100;
+    token2.innerHTML = count2;
 };
 function out1() {
     const token1 = document.getElementById('display1');
@@ -1193,7 +1187,7 @@ function out1() {
     } else {
       token1.style.fontSize = "33px";
     }
-    token1.innerHTML = count1*100;
+    token1.innerHTML = count1;
 };
 function out7() {
     const token7 = document.getElementById('display7');
@@ -1208,7 +1202,7 @@ function out7() {
     } else {
       token7.style.fontSize = "33px";
     }
-    token7.innerHTML = count7*100;
+    token7.innerHTML = count7;
 };
 function out8() {
     const token8 = document.getElementById('display8');
@@ -1223,7 +1217,7 @@ function out8() {
     } else {
       token8.style.fontSize = "33px";
     }
-    token8.innerHTML = count8*100;
+    token8.innerHTML = count8;
 };
 function out9() {
     const token9 = document.getElementById('display9');
@@ -1238,7 +1232,7 @@ function out9() {
     } else {
       token9.style.fontSize = "33px";
     }
-    token9.innerHTML = count9*100;
+    token9.innerHTML = count9;
 };
 function out10() {
     const token10 = document.getElementById('display10');
@@ -1253,7 +1247,7 @@ function out10() {
     } else {
       token10.style.fontSize = "33px";
     }
-    token10.innerHTML = count10*100;
+    token10.innerHTML = count10;
 };
 var rec=0;
 console.log("rec",rec);
@@ -1321,7 +1315,7 @@ if(gameplayedstatus==0){
 }
 var startbal = Number(gameplayedstatus[0].balancevalue || 0);
 var qaziCheking = new Bank(startbal);
-balanceDiv.innerText = Math.floor(startbal *100);
+balanceDiv.innerText = Math.floor(startbal);
 var newBalance = Number(qaziCheking.balance);
 console.log('newBalance',newBalance);
 
@@ -1393,7 +1387,6 @@ function checkamou() {
 }
 function btn10() {
     if(gamerunning==0 && betcondition==0) {
-        stopcounting();
         if(popu==1){
         
         }else{
@@ -1411,7 +1404,7 @@ function btn10() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance);
                 sizebal()
                 allbuttondappear();
                 totalbuttonvalue();
@@ -1427,14 +1420,6 @@ function btn10() {
 }
 function btn9() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1452,7 +1437,7 @@ function btn9() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance);
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1468,14 +1453,6 @@ function btn9() {
 }
 function btn8() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1492,7 +1469,7 @@ function btn8() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1508,14 +1485,6 @@ function btn8() {
 }
 function btn7() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1532,7 +1501,7 @@ function btn7() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1555,7 +1524,6 @@ function btn6() {
         update= new Date().getTime();
         deadline = Number(localStorage.getItem('deadline') || 0);
         
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1572,7 +1540,7 @@ function btn6() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1595,7 +1563,6 @@ function btn5() {
         update= new Date().getTime();
         deadline = Number(localStorage.getItem('deadline') || 0);
         
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1612,7 +1579,7 @@ function btn5() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1628,18 +1595,10 @@ function btn5() {
 }
 function btn4() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
-            addtobalance()
+            addtobalance() 
             newBalance = Number(qaziCheking.balance);
             console.log({Balance: newBalance})
             if(newBalance>=1){
@@ -1652,7 +1611,7 @@ function btn4() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1668,14 +1627,6 @@ function btn4() {
 }
 function btn3() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1692,7 +1643,7 @@ function btn3() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1708,14 +1659,6 @@ function btn3() {
 }
 function btn2() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1732,7 +1675,7 @@ function btn2() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1748,14 +1691,6 @@ function btn2() {
 }
 function btn1() {
     if(gamerunning==0 && betcondition==0) {
-        // if(Number(newBalance)>1000) {
-        //     console.log("sub expired here....");
-        //     // location.href = "./;/settings/sub/sub.html";
-        // };
-        update= new Date().getTime();
-        deadline = Number(localStorage.getItem('deadline') || 0);
-        
-        stopcounting();
         if(popu==1){
 
         }else{
@@ -1772,7 +1707,7 @@ function btn1() {
                 newtime =0;
                 localStorage.setItem('newtime',newtime);
                 // startButton.style.pointerEvents = 'auto';
-                balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+                balanceDiv.innerText = Math.floor(qaziCheking.balance );
                 sizebal()
                 allbuttondappear()
                 totalbuttonvalue()
@@ -1867,8 +1802,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn10()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==111){
         if(popu==1){
             e.preventDefault();
@@ -1878,8 +1812,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn10()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==90){
         if(popu==1){
             e.preventDefault();
@@ -1889,8 +1822,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn1()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==88){
         if(popu==1){
             e.preventDefault();
@@ -1900,8 +1832,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn2()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==67){
         if(popu==1){
             e.preventDefault();
@@ -1911,8 +1842,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn3()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==86){
         if(popu==1){
             e.preventDefault();
@@ -1922,8 +1852,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn4()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==66){
         if(popu==1){
             e.preventDefault();
@@ -1933,8 +1862,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn5()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==78){
         if(popu==1){
             e.preventDefault();
@@ -1944,8 +1872,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn6()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==77){
         if(popu==1){
             e.preventDefault();
@@ -1955,8 +1882,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn7()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==96){
         if(popu==1){
             e.preventDefault();
@@ -1966,8 +1892,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn7()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==188){
         if(popu==1){
             e.preventDefault();
@@ -1977,8 +1902,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn8()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==190){
         if(popu==1){
             e.preventDefault();
@@ -1988,8 +1912,7 @@ window.addEventListener("keydown", function(e){
         }else {
             btn9()
         }
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==110){
         if(popu==1){
             e.preventDefault();
@@ -1999,63 +1922,39 @@ window.addEventListener("keydown", function(e){
         }else {
             btn9()
         }
-    }else if(stopall==0){
-    };
+    }
     // number button-38.3308*38.317910,..,0N////000,,,,...MMMMM00,,,...//////
     if(e.keyCode==48){
         btn10();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==49){
         btn9();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==50){
         btn8();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==51){
         btn7();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==52){
         btn6();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==53){
         btn5();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==54){
         btn4();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==55){
         btn3();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==56){
         btn2();
-    }else if(stopall==0){
-    };
+    }
     if(e.keyCode==57){
         btn1();
-    }else if(stopall==0){
-    };
+    }
 });
-
-const balancerec = document.querySelector('.balancediv');
-
-function balancedivrec() {
-    balancerec.innerHTML = localStorage.getItem("cashin") - localStorage.getItem("cashout");
-    balancerec.classList.add("balancediv");
-}
-
-function balancedivclear() {
-    balancerec.classList.remove("balancediv");
-    console.log("clean innerHTML");
-    balancerec.innerHTML = "";
-}
 
 function to0(){
     count1 = 0;
@@ -2217,14 +2116,14 @@ function sizewin() {
 var moneyrunonce = 1;
 const winafter = document.querySelector('.winafter');
 var win = Number(gameplayedstatus[0].winvalue) || 0;
-winafter.innerHTML = win *100;
+winafter.innerHTML = win ;
 function windisplay() {
     if(betcondition==1) {
         winafter.innerHTML = win * 100;
         if(win>0 && moneyrunonce==0) {
             moneyrunonce = 1;
-            console.log("already here... note is displayed the amount is: ",win*100);
-            let moneyvalue = win*100;
+            console.log("already here... note is displayed the amount is: ",win);
+            let moneyvalue = win;
             allnote(moneyvalue);
         };
         sizewin()
@@ -2319,8 +2218,8 @@ function savegamestatus() {
     gamenow = [
         {
             no: gamenbr,
-            bet: Number(sumbutton*100),
-            win: Number(win*100)
+            bet: Number(sumbutton),
+            win: Number(win)
         }
     ];
     lastgamestastus.unshift(gamenow[0]);
@@ -2380,7 +2279,7 @@ function addtobalance() {
     let win = Number(winafter.textContent)/100 || 0;
     var amount = win;
     qaziCheking.winvalue(amount);
-    balanceDiv.innerText = qaziCheking.balance *100;
+    balanceDiv.innerText = qaziCheking.balance ;
     sizebal();
     newBalance = Number(qaziCheking.balance);
     // if(Number(newBalance)>1000) {
@@ -2403,7 +2302,7 @@ function Clicks11() {
     qaziCheking.withdraw(amount)
     balanceDiv.innerText = qaziCheking.balance;    
     sizebal()
-    output1.innerHTML = a1*100;
+    output1.innerHTML = a1;
 }
 
 function Clicks12() {
@@ -2411,7 +2310,7 @@ function Clicks12() {
     qaziCheking.withdraw(amount)
     balanceDiv.innerText = qaziCheking.balance;    
     sizebal()
-    output1.innerHTML = a2*100;;
+    output1.innerHTML = a2;;
 }
 
 function Clicks13() {
@@ -2419,7 +2318,7 @@ function Clicks13() {
     qaziCheking.withdraw(amount)
     balanceDiv.innerText = qaziCheking.balance;    
     sizebal()
-    output1.innerHTML = a3*100;;
+    output1.innerHTML = a3;;
 }
 
 function Clicks14() {
@@ -2427,7 +2326,7 @@ function Clicks14() {
     qaziCheking.withdraw(amount)
     balanceDiv.innerText = qaziCheking.balance;    
     sizebal()
-    output1.innerHTML = a4*100;;
+    output1.innerHTML = a4;;
 }   
 
 function Clicks15() {
@@ -2435,7 +2334,7 @@ function Clicks15() {
     qaziCheking.withdraw(amount)
     balanceDiv.innerText = qaziCheking.balance;    
     sizebal()
-    output1.innerHTML = a5*100;;
+    output1.innerHTML = a5;;
 }
 
 function Clicks16() {
@@ -2443,7 +2342,7 @@ function Clicks16() {
     qaziCheking.withdraw(amount)
     balanceDiv.innerText = qaziCheking.balance;    
     sizebal()
-    output1.innerHTML = amount*100;;
+    output1.innerHTML = amount;;
 }
 
 function Clicks17() {
@@ -2524,16 +2423,16 @@ function callbtns(){
     var count8 = localStorage.getItem("btn8rec")
     var count9 = localStorage.getItem("btn9rec")
     var count10 = localStorage.getItem("btn10rec")
-    output10.innerHTML = count10*100;
-    output9.innerHTML = count9*100;
-    output8.innerHTML = count8*100;
-    output7.innerHTML = count7*100;
-    output6.innerHTML = count6*100;
-    output5.innerHTML = count5*100;
-    output4.innerHTML = count4*100;
-    output3.innerHTML = count3*100;
-    output2.innerHTML = count2*100;
-    output1.innerHTML = count1*100;
+    output10.innerHTML = count10;
+    output9.innerHTML = count9;
+    output8.innerHTML = count8;
+    output7.innerHTML = count7;
+    output6.innerHTML = count6;
+    output5.innerHTML = count5;
+    output4.innerHTML = count4;
+    output3.innerHTML = count3;
+    output2.innerHTML = count2;
+    output1.innerHTML = count1;
 }
 
 
@@ -2541,18 +2440,18 @@ function callvalue1() {
     count1 = localStorage.getItem("king")
     var amount = count1;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output1.innerHTML = count1*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML = count1;
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2562,18 +2461,18 @@ function callvalue2() {
     count2 = localStorage.getItem("Real madrid")
     var amount = count2;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output2.innerHTML = count2*100;
-    output1.innerHTML = localStorage.getItem("king")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output2.innerHTML = count2;
+    output1.innerHTML = localStorage.getItem("king");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;  
@@ -2582,18 +2481,18 @@ function callvalue3() {
     count3 = localStorage.getItem("Barcelona")
     var amount = count3;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);   
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );   
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = count3*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = count3;
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2603,18 +2502,18 @@ function callvalue4() {
     count4 = localStorage.getItem("Paris germain")
     var amount = count4;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = count4*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = count4;
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2624,18 +2523,18 @@ function callvalue5() {
     count5 = localStorage.getItem("Bayern munich")
     var amount = count5;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = count5*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = count5;
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2644,18 +2543,18 @@ function callvalue6() {
     count6 = localStorage.getItem("Machester city")
     var amount = count6;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = count6*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = count6;
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2664,18 +2563,18 @@ function callvalue7() {
     count7 = localStorage.getItem("Machester united")
     var amount = count7;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = count7*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = count7;
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2684,18 +2583,18 @@ function callvalue8() {
     count8 = localStorage.getItem("Arsenal")
     var amount = count8;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100); 
+    balanceDiv.innerText = Math.floor(qaziCheking.balance ); 
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = count8*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = count8;
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2704,18 +2603,18 @@ function callvalue9() {
     count9 = localStorage.getItem("livepool")
     var amount = count9;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = count9*100;
-    output10.innerHTML = localStorage.getItem("chelsea")*100;
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = count9;
+    output10.innerHTML = localStorage.getItem("chelsea");
     newBalance = Number(qaziCheking.balance);   
     // balancestored()
     voidkujurira=0;
@@ -2724,18 +2623,18 @@ function callvalue10() {
     count10 = localStorage.getItem("chelsea")
     var amount = count10;
     qaziCheking.withdraw(amount)
-    balanceDiv.innerText = Math.floor(qaziCheking.balance *100);  
+    balanceDiv.innerText = Math.floor(qaziCheking.balance );  
     sizebal()
-    output1.innerHTML =localStorage.getItem("king")*100;
-    output2.innerHTML = localStorage.getItem("Real madrid")*100;
-    output3.innerHTML = localStorage.getItem("Barcelona")*100;
-    output4.innerHTML = localStorage.getItem("Paris germain")*100;
-    output5.innerHTML = localStorage.getItem("Bayern munich")*100;
-    output6.innerHTML = localStorage.getItem("Machester city")*100;
-    output7.innerHTML = localStorage.getItem("Machester united")*100;
-    output8.innerHTML = localStorage.getItem("Arsenal")*100;
-    output9.innerHTML = localStorage.getItem("livepool")*100;
-    output10.innerHTML = count10*100;   
+    output1.innerHTML =localStorage.getItem("king");
+    output2.innerHTML = localStorage.getItem("Real madrid");
+    output3.innerHTML = localStorage.getItem("Barcelona");
+    output4.innerHTML = localStorage.getItem("Paris germain");
+    output5.innerHTML = localStorage.getItem("Bayern munich");
+    output6.innerHTML = localStorage.getItem("Machester city");
+    output7.innerHTML = localStorage.getItem("Machester united");
+    output8.innerHTML = localStorage.getItem("Arsenal");
+    output9.innerHTML = localStorage.getItem("livepool");
+    output10.innerHTML = count10;   
     newBalance = Number(qaziCheking.balance);
     // balancestored()
     voidkujurira=0;
@@ -2798,12 +2697,12 @@ function moreshoot() {
     });
 };
 function saving() {
-    dep = Math.ceil(localStorage.getItem("cashin")*100);
+    dep = Math.ceil(localStorage.getItem("cashin"));
     console.log("dep",dep);
     cashreceived.innerHTML = dep;
 }
 function cashand() {
-    energy = Math.floor(localStorage.getItem("cashout")*100);
+    energy = Math.floor(localStorage.getItem("cashout"));
     console.log("cas",energy);
     energy1.innerHTML = energy;
 }
@@ -2859,7 +2758,7 @@ function a100result(){
     start = 729;
     end = 9;
     win = count1 * 100;
-    console.log("king*100 luckcontrol");
+    console.log("king luckcontrol");
     moreshoot();
 }
 
@@ -2867,8 +2766,8 @@ function a100result3(){
     start = 2169;
     end = 9;
     win3 = count1 * 100;
-    console.log("king*100 luckcontrol");
-    //  king *100
+    console.log("king luckcontrol");
+    //  king 
     moreshoot();
     setTimeout(() => {
         win = win1+win23+win3
@@ -2891,8 +2790,8 @@ function a100result6(){
     start = 4329;
     end = 9;
     win6 = count1 * 100;
-    console.log("king*100 luckcontrol");
-    //  king *100
+    console.log("king luckcontrol");
+    //  king 
     moreshoot();
     setTimeout(() => {
         win = win1+win23+win3+win4+win5+win6;
@@ -2987,7 +2886,7 @@ function s40result3(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3000,7 +2899,7 @@ function s3result3(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3015,7 +2914,7 @@ function s40result6(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23+win3+win4+win5)*100;
+            winafter.innerHTML = (win1+win23+win3+win4+win5);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3054,7 +2953,7 @@ function d3result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3068,7 +2967,7 @@ function d30result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3082,7 +2981,7 @@ function d30result6(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23+win3+win4)*100;
+            winafter.innerHTML = (win1+win23+win3+win4);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3172,7 +3071,7 @@ function f20result62(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23+win3)*100;
+            winafter.innerHTML = (win1+win23+win3);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3225,7 +3124,7 @@ function g20result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3238,7 +3137,7 @@ function g3result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3252,7 +3151,7 @@ function g20result62(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3266,7 +3165,7 @@ function g20result3(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3279,7 +3178,7 @@ function g3result3(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3293,7 +3192,7 @@ function g20result6(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23+win3+win4+win5)*100;
+            winafter.innerHTML = (win1+win23+win3+win4+win5);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3357,7 +3256,7 @@ function h20result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3370,7 +3269,7 @@ function h3result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3384,7 +3283,7 @@ function h20result6(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23+win3+win4)*100;
+            winafter.innerHTML = (win1+win23+win3+win4);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3474,7 +3373,7 @@ function j10result6(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23+win3)*100;
+            winafter.innerHTML = (win1+win23+win3);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3514,7 +3413,7 @@ function k10result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3527,7 +3426,7 @@ function k3result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3541,7 +3440,7 @@ function k10result6(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3555,7 +3454,7 @@ function k10result3(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3568,7 +3467,7 @@ function k3result3(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win23)*100;
+            winafter.innerHTML = (win1+win23);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3632,7 +3531,7 @@ function l10result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -3656,7 +3555,7 @@ function l3result2(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4615,7 +4514,7 @@ function p5all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = win1 *100;
+            winafter.innerHTML = win1 ;
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4630,7 +4529,7 @@ function l10all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2)*100;
+            winafter.innerHTML = (win1+win2);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4645,7 +4544,7 @@ function k10all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3)*100;
+            winafter.innerHTML = (win1+win2+win3);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4660,7 +4559,7 @@ function j10all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4)*100;
+            winafter.innerHTML = (win1+win2+win3+win4);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4675,7 +4574,7 @@ function h20all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4+win5)*100;
+            winafter.innerHTML = (win1+win2+win3+win4+win5);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4690,7 +4589,7 @@ function g20all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4+win5+win6)*100;
+            winafter.innerHTML = (win1+win2+win3+win4+win5+win6);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4705,7 +4604,7 @@ function f20all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7)*100;
+            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4720,7 +4619,7 @@ function d30all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7+win8)*100;
+            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7+win8);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4735,7 +4634,7 @@ function s40all(){
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7+win8+win9)*100;
+            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7+win8+win9);
         }
     }, 1500);
     // setTimeout(windisplay, 1500);
@@ -4746,11 +4645,11 @@ function a100all(){
     win10 = count1 * 100;
     introlucky=15;
     // king * 100
-    console.log("king*100 luckcontrol");
+    console.log("king luckcontrol");
     moreshoot();
     setTimeout(() => {
         if(betcondition==1) {
-            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7+win8+win9+win10)*100;
+            winafter.innerHTML = (win1+win2+win3+win4+win5+win6+win7+win8+win9+win10);
             win = win1+win2+win3+win4+win5+win6+win7+win8+win9+win10;
         }
     }, 1500);
@@ -4876,57 +4775,10 @@ document.addEventListener("mousedown", () => {
     document.documentElement.requestFullscreen().catch();
 });
 
-function subbtn(){
-    if(gamerunning==0) {
-        location.href = "./;/settings/setting.html";
-    };
-};
 
 var fill=0;
 var allowenter=0;
-function fail() {
-    failback = setInterval(() => {
-        document.querySelector('.btn-primary').classList.add("fail");
-        setTimeout(() => {
-            document.querySelector('.btn-primary').classList.remove("fail");
-        }, 100);
-    }, 200);
-    setTimeout(() => {
-        clearInterval(failback);
-        setTimeout(() => {
-            codes[0].value='';
-            codes[1].value='';
-            codes[2].value='';
-            codes[3].value='';
-            codes[4].value='';
-            codes[5].value='';
-            codes[6].value='';
-            codes[7].value='';
-            codes[8].value='';
-            codes[9].value='';
-            codes[10].value='';
-            codes[11].value='';
-            codes[12].value='';
-            codes[13].value='';
-            codes[14].value='';
-            codes[15].value='';
-            codes[16].value='';
-            codes[17].value='';
-            codes[18].value='';
-            codes[19].value='';
-            codes[0].focus();
-            }, 500);
-    }, 3000);
-}
-function done() {
-    doneback = setInterval(() => {
-        document.querySelector('.btn-secondary').classList.add("done");
-        setTimeout(() => {
-            document.querySelector('.btn-secondary').classList.remove("done");
-        }, 100);
-    }, 200);
-}
-// balanceDiv.innerText = Math.floor(qaziCheking.balance *100);
+// balanceDiv.innerText = Math.floor(qaziCheking.balance );
 
 var turn = [];
 var array = [];
@@ -5352,8 +5204,8 @@ function runmoneyann() {
 
 // localStorage.setItem('bonusequence',0);
 // runmoneyann();
-var totalwincredits = 429; // win or cashout or cashin. before *100;0104391423
-var totalrealamount = Number(totalwincredits*100); // result in real amount;
+var totalwincredits = 429; // win or cashout or cashin. before ;0104391423
+var totalrealamount = Number(totalwincredits); // result in real amount;
 // console.log("For amount " + totalrealamount + ": ", allnote(totalrealamount));
 // money display end here.............
 var shootloopincome =  JSON.parse(localStorage.getItem('shootloopincome'));
@@ -5405,14 +5257,14 @@ function runshootnomoney() {
     var t=0;
     // new shoot start
     // stored shoots
-    var abcdefghjklp=count1*100+count2*40+count3*30+count4*20+count5*20+count6*20+count7*10+count8*10+count9*10+count10*6; //all
+    var abcdefghjklp=count1+count2*40+count3*30+count4*20+count5*20+count6*20+count7*10+count8*10+count9*10+count10*6; //all
     console.log("allshoothere ",abcdefghjklp);
-    var abcdef=count1*100+count2*40+count3*30+count4*20+count5*20+count6*20;
+    var abcdef=count1+count2*40+count3*30+count4*20+count5*20+count6*20;
     console.log("abcdef",abcdef);
-    var abc=count1*100+count2*40+count3*30;
+    var abc=count1+count2*40+count3*30;
     console.log("abc",abc);
     // stored shoot end here
-    var abcghj=count1*100+count2*40+count3*30+count7*10+count8*10+count9*10;
+    var abcghj=count1+count2*40+count3*30+count7*10+count8*10+count9*10;
     console.log("abcghj",abcghj);
     // new shoot end!
     var defghj=count4*20+count5*20+count6*20+count7*10+count8*10+count9*10;
@@ -5771,7 +5623,7 @@ function runshootnomoney() {
 function runshoot() {
     gamerunning = 1;
     recordbtnto0();
-    var a=count1*100;
+    var a=count1;
     var b=count2*40;
     var c=count3*30;
     var d=count4*20;
@@ -5792,14 +5644,14 @@ function runshoot() {
     var t=count9*5;
     // new shoot start
     // stored shoots
-    var abcdefghjklp=count1*100+count2*40+count3*30+count4*20+count5*20+count6*20+count7*10+count8*10+count9*10+count10*6; //all
+    var abcdefghjklp=count1+count2*40+count3*30+count4*20+count5*20+count6*20+count7*10+count8*10+count9*10+count10*6; //all
     console.log("allshoothere ",abcdefghjklp);
-    var abcdef=count1*100+count2*40+count3*30+count4*20+count5*20+count6*20;
+    var abcdef=count1+count2*40+count3*30+count4*20+count5*20+count6*20;
     console.log("abcdef",abcdef);
-    var abc=count1*100+count2*40+count3*30;
+    var abc=count1+count2*40+count3*30;
     console.log("abc",abc);
     // stored shoot end here
-    var abcghj=count1*100+count2*40+count3*30+count7*10+count8*10+count9*10;
+    var abcghj=count1+count2*40+count3*30+count7*10+count8*10+count9*10;
     console.log("abcghj",abcghj);
     
     // new shoot end!
@@ -6618,7 +6470,7 @@ function findLongestNameIndex(nowarray) {
 // end of new system
 
 function moneychoice1() {
-    let moneychoice= Math.floor(Math.random()*100);
+    let moneychoice= Math.floor(Math.random());
     console.log("moneychoice",moneychoice);
     if(moneychoice<=50){
         money=10;
@@ -6629,7 +6481,7 @@ function moneychoice1() {
     console.log('money',money);
 }
 function moneychoice2() {
-    let moneychoice= Math.floor(Math.random()*100);
+    let moneychoice= Math.floor(Math.random());
     console.log("moneychoice",moneychoice);
     if(moneychoice<=30){
         money2=30;
@@ -6642,7 +6494,7 @@ function moneychoice2() {
     console.log('money2',money2);
 }
 function moneychoice3() {
-    let moneychoice= Math.floor(Math.random()*100);
+    let moneychoice= Math.floor(Math.random());
     console.log("moneychoice",moneychoice);
     if(moneychoice<=25){
         money3=60;
@@ -6657,7 +6509,7 @@ function moneychoice3() {
     console.log('money3',money3);
 }
 function moneychoice4() {
-    moneychoice= Math.floor(Math.random()*100);
+    moneychoice= Math.floor(Math.random());
     console.log("moneychoice",moneychoice);
     if(moneychoice<=30){
         money4=170;
@@ -6670,7 +6522,7 @@ function moneychoice4() {
     console.log('money4',money4);
 }
 function highmoneychoice1(){
-    highmoneychoice= Math.floor(Math.random()*100);
+    highmoneychoice= Math.floor(Math.random());
     console.log("highmoneychoice",highmoneychoice);
     if(highmoneychoice<=12){
         highmoney=30;
@@ -6693,7 +6545,7 @@ function highmoneychoice1(){
     console.log('highmoney',highmoney);
 }
 function topmoneychoice1() {
-    topmoneychoice = Math.floor(Math.random()*100);
+    topmoneychoice = Math.floor(Math.random());
     console.log("topmoneychoice", topmoneychoice);
     if(topmoneychoice<=10) {
         topmoney=120;
@@ -6940,18 +6792,18 @@ function recents() {
     eachgame = [
         {
             dates: `${nowtime.getDate()}/${nowtime.getMonth()+1}/${nowtime.getFullYear()}, ${nowtime.getHours()}:${nowtime.getMinutes() < 10 ? '0' + nowtime.getMinutes() : nowtime.getMinutes()}:${nowtime.getSeconds() < 10 ? '0' + nowtime.getSeconds() : nowtime.getSeconds()}`,
-            amount: Number(count1+count2+count3+count4+count5+count6+count7+count8+count9+count10)*100,
-            b1: count1*100,
-            b2: count2*100,
-            b3: count3*100,
-            b4: count4*100,
-            b5: count5*100,
-            b6: count6*100,
-            b7: count7*100,
-            b8: count8*100,
-            b9: count9*100,
-            b0: count10*100,
-            win: win*100
+            amount: Number(count1+count2+count3+count4+count5+count6+count7+count8+count9+count10),
+            b1: count1,
+            b2: count2,
+            b3: count3,
+            b4: count4,
+            b5: count5,
+            b6: count6,
+            b7: count7,
+            b8: count8,
+            b9: count9,
+            b0: count10,
+            win: win
         }
     ];
     lastgame = JSON.parse(localStorage.getItem('recents')) || [];
@@ -6970,21 +6822,6 @@ document.querySelector('.outer-count').innerText = logintimerem;
 
 var remainTime;
 var countingstart=0
-function clickremainder() {
-    countingstart=1
-    remainTime = setInterval(() => {
-        logintimerem--;
-        document.querySelector('.outer-count').innerText = logintimerem
-        if(logintimerem==0){
-            clearInterval(remainTime);
-            document.querySelector('.outer-count').innerText = "Out";
-            if(allownewuserlogin==0) {
-                allownewuserlogin = 1;
-                clearInterval(continueupdate);
-            };
-        };
-    }, 1000);
-}
 
 var helpcheck=0;
 var nowstart=0;
@@ -7050,7 +6887,7 @@ function normalcounting() {
 }
 
 function stopcounting() {
-    normalcounting()
+    // normalcounting()
 }
 console.log("clicked for activate time")
 // HERE IS TO GENERATE NEW LOGIN REPORT
@@ -7156,14 +6993,6 @@ function updateloginform() {
 }
 // localStorage.setItem("2/6/2024", []);
 // gamestartingdate
-const startindate = localStorage.getItem("startingdate");
-if(!startindate){
-    nowtime = new Date();
-    const logindates = `${nowtime.getFullYear()}-${Number(nowtime.getMonth()+1) < 10 ? '0' + Number(nowtime.getMonth()+1) : Number(nowtime.getMonth()+1)}-${nowtime.getDate() < 10 ? '0' + nowtime.getDate() : nowtime.getDate()}`;
-    localStorage.setItem('startingdate',logindates);
-}else {
-    console.log("startingdates",startindate);
-}
 // daily report records
 function reportrec() {
     nowtime = new Date();
@@ -7180,9 +7009,9 @@ function reportrec() {
     matchrec = [
         {
             Time: `${nowtime.getHours() < 10 ? '0' + nowtime.getHours() : nowtime.getHours()}:${nowtime.getMinutes() < 10 ? '0' + nowtime.getMinutes() : nowtime.getMinutes()}:${nowtime.getSeconds() < 10 ? '0' + nowtime.getSeconds() : nowtime.getSeconds()}`,
-            Bet: Number(sumbutton)*100,
-            win: win*100,
-            income: Number(sumbutton-win)*100
+            Bet: Number(sumbutton),
+            win: win,
+            income: Number(sumbutton-win)
         }
     ];
     // console.table(matchrec);
@@ -7200,18 +7029,6 @@ function reportrec() {
 }
 // reportrec();
 let continueupdate;
-function runreport() {
-    startloginform()
-    continueupdate = setInterval(() => {
-        updateloginform()
-    }, 1000);
-}
-runreport();
-normalcounting();
-var gametb = Number(localStorage.getItem('gametab')||0);
-if(gametb==0) {
-    location.href = "./;/settings/about/game/game.html";
-}
 /// subtime protection
 // save now time to limit low time clock
 function nowDate(date) {
@@ -7225,13 +7042,7 @@ function nowDate(date) {
 };
 var lasttimeclock = 0;
 var nowtimeclock  = 0;
-setInterval(() => { 
-    innocent();
-}, 1000);
 
-function clearallmusic(){
-    clearTimeout(startgame);
-};
 var startgame;
 let countdowntxt;
 var timetogo = 5;
@@ -7341,6 +7152,8 @@ function addmoneyinPopup() {
     input.value = '';
     input.focus();
 }
+var moneyin = 1;
+var moneyout = 0;
 function addmoneyoutPopup() {
     const button = document.querySelector('.cash-btn-out');
     console.log("money out clicked");
@@ -7453,6 +7266,11 @@ function allbetchoos() {
     mybetschoosen.classList.remove('selected');
     topchoosen.classList.remove('selected');
     activetable = 1;
+    // Stop transaction polling when switching away from Records tab
+    if (playerRequestPollingInterval) {
+        clearInterval(playerRequestPollingInterval);
+        playerRequestPollingInterval = null;
+    }
 }
 function mybetchoos() {
     if(activetable==1 || activetable==3) {
@@ -7462,7 +7280,11 @@ function mybetchoos() {
         topchoosentable.classList.remove("section-appear-table-header");
         if(previousetablechange==0) {
             previousetablechange = 1;
-            runprevioustable();
+            // runprevioustable();
+        }
+        // Start polling for transaction updates when Records tab is opened
+        if (isLoggedIn) {
+            startPlayerRequestPolling();
         }
     }
 }
@@ -7472,6 +7294,11 @@ function topbetchoos() {
         topchoosentable.classList.add("section-appear-table-header");
         previouschoosentable.classList.remove("section-appear-table-header");
         allbetchoosentable.classList.remove("section-appear-table-header");
+        // Stop transaction polling when switching away from Records tab
+        if (playerRequestPollingInterval) {
+            clearInterval(playerRequestPollingInterval);
+            playerRequestPollingInterval = null;
+        }
     }
 }
 // Get all the circle elements
@@ -7500,4 +7327,1508 @@ chatinput.addEventListener("input", function () {
     chatinput.value = value;
 
     chatinput.setSelectionRange(start, end);
+});
+
+// Chat functionality
+let selectedAgent = null;
+
+function selectAgent(id, displayName, imgSrc) {
+    // Update chat header
+    const headerImg = document.querySelector('.chat-header img');
+    const agentName = document.querySelector('.chat-agent-name');
+    if (headerImg && agentName) {
+        headerImg.src = imgSrc;
+        agentName.textContent = displayName;
+    }
+    // Clear previous messages
+    const messageBody = document.querySelector('.chat-message-body');
+    if (messageBody) {
+        messageBody.innerHTML = '';
+    }
+    // Set selected agent
+    selectedAgent = { id, displayName, imgSrc };
+    // hide panel after selecting an agent
+    const panel = document.querySelector('.all-agents-panel');
+    if (panel) {
+        panel.classList.remove('visible');
+    }
+
+    const inputBar = document.querySelector('.chat-body-message-input');
+    if (inputBar) {
+        inputBar.style.display = 'flex';
+    }
+    if (chatInput) {
+        chatInput.placeholder = `Message ${displayName}`;
+    }
+    loadPlayerTransactionRequests();
+}
+
+// Send message functionality
+const sendBtn = document.querySelector('.chat-send-btn');
+const chatInput = document.querySelector('.chat-input');
+
+if (sendBtn) {
+    sendBtn.addEventListener('click', sendMessage);
+}
+
+if (chatInput) {
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+}
+
+function sendMessage() {
+    if (!selectedAgent) {
+        alert('Please select an agent first.');
+        return;
+    }
+    const message = chatInput.value.trim();
+    if (message === '') return;
+    
+    // Append message to chat body
+    const messageBody = document.querySelector('.chat-message-body');
+    if (messageBody) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message';
+        messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+        messageBody.appendChild(messageDiv);
+        // Scroll to bottom
+        messageBody.scrollTop = messageBody.scrollHeight;
+    }
+    // Clear input
+    chatInput.value = '';
+}
+
+function toggleAgents() {
+    const panel = document.querySelector('.all-agents-panel');
+    if (!panel) return;
+    panel.classList.toggle('visible');
+}
+
+//
+function addCommas(number) {
+    // Convert number to string
+    let numStr = number.toString();
+
+    // Regex to match groups of three digits
+    let regex = /\B(?=(\d{3})+(?!\d))/g;
+
+    // Insert commas at every third position from the end
+    numStr = numStr.replace(regex, ',');
+
+    return numStr;
+}
+const amountinput = document.querySelector('.cash-inputfield');
+amountinput.addEventListener("input", function () {
+    let valuenow = amountinput.value;
+    // Remove all characters except numbers and limit to 7 digits
+    value = valuenow.replace(/[^0-9]/g, '').slice(0, 7);
+    // Prevent 0 as first number
+    if (value.startsWith('0') && value.length > 1) {
+        value = value.substring(1);
+    }
+    // Add comma after  every 3 digits
+    value = addCommas(value);
+    amountinput.value = value;
+});
+
+const cashSendButton = document.querySelector('.cash-send-btn');
+if (cashSendButton) {
+    cashSendButton.addEventListener('click', function() {
+        if (!requireLogin()) return;
+
+        const selectedAgentId = getSelectedAgentId();
+        if (!selectedAgentId) {
+            alert('Please choose an agent in the chat section before sending a transaction request.');
+            return;
+        }
+
+        const rawAmount = Number((amountinput.value || '').replace(/,/g, ''));
+        if (!rawAmount || rawAmount <= 0) {
+            alert('Enter a valid amount first.');
+            amountinput.focus();
+            return;
+        }
+
+        const requestType = moneyout === 1 ? 'cash_out' : 'cash_in';
+        const currentBalance = Number(qaziCheking?.balance || newBalance || 0);
+
+        if (requestType === 'cash_out' && rawAmount > currentBalance) {
+            alert('Insufficient balance.');
+            return;
+        }
+
+        fetch('submit_transaction_request.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                agent_id: selectedAgentId,
+                request_type: requestType,
+                amount: rawAmount
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || 'Unable to send transaction request.');
+                return;
+            }
+
+            amountinput.value = '';
+            removecashPopup();
+
+            queuePlayerStateSync('transaction_request', `Player requested ${requestType === 'cash_in' ? 'cash in' : 'cash out'} of ${rawAmount}`, {
+                request_type: requestType,
+                amount: rawAmount,
+                request_id: data.request?.id || null
+            });
+
+            if (isLoggedIn && selectedAgent) {
+                loadMessages();
+            }
+
+             loadPlayerTransactionRequests();
+
+            alert(data.message || 'Transaction request sent.');
+        })
+        .catch(error => {
+            console.error('Error submitting transaction request:', error);
+            alert('Unable to send transaction request.');
+        });
+    });
+}
+
+function updateMobileOrientationOverlay() {
+    const overlay = document.getElementById('orientationOverlay');
+    if (!overlay) return;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+    if (isMobile && isPortrait) {
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
+}
+
+function tryLandscapeLock() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {
+            // Some browsers only allow lock in fullscreen or after user gesture
+        }).finally(updateMobileOrientationOverlay);
+    } else {
+        updateMobileOrientationOverlay();
+    }
+}
+
+window.addEventListener('load', () => {
+    updateMobileOrientationOverlay();
+    window.addEventListener('resize', updateMobileOrientationOverlay);
+    window.addEventListener('orientationchange', updateMobileOrientationOverlay);
+});
+// transaction bar
+
+function formatUserStorageTimestamp(date = new Date()) {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    return `${day}-${month}-${year}, ${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+}
+
+function getCurrentRoundId() {
+    const storedRoundId = localStorage.getItem('roundid')
+        || localStorage.getItem('activeRoundId')
+        || localStorage.getItem('snbr');
+
+    if (storedRoundId !== null && storedRoundId !== '') {
+        return String(storedRoundId);
+    }
+
+    return `round-${Date.now()}`;
+}
+
+function getStoredPlayerProfiles() {
+    const profiles = JSON.parse(localStorage.getItem('playerProfiles') || '{}');
+    return profiles && typeof profiles === 'object' ? profiles : {};
+}
+
+function resolveUserIdentity(options = {}) {
+    const username = String(
+        options.username
+        || options.phone
+        || currentUser?.phone
+        || document.getElementById('register-phone')?.value
+        || document.getElementById('login-phone')?.value
+        || document.getElementById('username')?.value
+        || ''
+    ).trim();
+
+    const password = String(
+        options.password
+        || document.getElementById('register-password')?.value
+        || document.getElementById('login-password')?.value
+        || document.getElementById('userpassword')?.value
+        || ''
+    ).trim();
+
+    return { username, password };
+}
+
+function createnewuser(options = {}) {
+    const logindates = formatUserStorageTimestamp();
+    const { username, password } = resolveUserIdentity(options);
+
+    if (!username) {
+        return null;
+    }
+
+    const safeRoundId = getCurrentRoundId();
+    const currentBalance = Number(options.balance ?? 0);
+    const userinfo = [
+        {
+            username,
+            logindates,
+            password
+        }
+    ];
+    const userdashboard = [
+        {
+            button1: 0,
+            button2: 0,
+            button3: 0,
+            button4: 0,
+            button5: 0,
+            button6: 0,
+            button7: 0,
+            button8: 0,
+            button9: 0,
+            button10: 0,
+            win: 0,
+            balance: currentBalance
+        }
+    ];
+    const useragentchat = [
+        {
+            agent1: 'nkufashe nte?',
+            you: 'nkeneye kubitsa 10,000'
+        },
+        {
+            agent2: 'ndabizi ko ushobora kubikora'
+        },
+        {
+            agent3: "kugira amakuru y'umwaka"
+        }
+    ];
+    const userreport = [
+        {
+            date: logindates,
+            amount: 0,
+            type: 'deposit',
+            status: 'success'
+        }
+    ];
+    const userlastgame = [
+        {
+            roundid: safeRoundId,
+            date: logindates,
+            button1: count1 || 0,
+            button2: count2 || 0,
+            button3: count3 || 0,
+            button4: count4 || 0,
+            button5: count5 || 0,
+            button6: count6 || 0,
+            button7: count7 || 0,
+            button8: count8 || 0,
+            button9: count9 || 0,
+            button10: count10 || 0,
+            totalbetamount: 0,
+            winamount: 0,
+            balance: currentBalance
+        }
+    ];
+    const userroundid = [
+        {
+            roundid: safeRoundId
+        }
+    ];
+
+    const myarray = [];
+    myarray.push(userinfo, userdashboard, useragentchat, userreport, userlastgame, userroundid);
+
+    const profiles = getStoredPlayerProfiles();
+    profiles[username] = myarray;
+    localStorage.setItem('playerProfiles', JSON.stringify(profiles));
+    localStorage.setItem('userinformation', JSON.stringify(myarray));
+    localStorage.setItem('activePlayerProfileKey', username);
+
+    const userNames = JSON.parse(localStorage.getItem('userNames') || '[]');
+    if (!userNames.includes(username)) {
+        userNames.push(username);
+        localStorage.setItem('userNames', JSON.stringify(userNames));
+    }
+
+    applyStoredProfileToGame(myarray);
+
+    return myarray;
+}
+
+function loadStoredUserProfile(username) {
+    if (!username) return null;
+
+    const profiles = getStoredPlayerProfiles();
+    const profile = profiles[username] || null;
+
+    if (profile) {
+        localStorage.setItem('userinformation', JSON.stringify(profile));
+        localStorage.setItem('activePlayerProfileKey', username);
+        applyStoredProfileToGame(profile);
+    }
+
+    return profile;
+}
+
+function getActivePlayerProfileKey() {
+    return String(
+        currentUser?.phone
+        || localStorage.getItem('activePlayerProfileKey')
+        || ''
+    ).trim();
+}
+
+function getStoredProfileSections(profile) {
+    if (!Array.isArray(profile)) {
+        return {
+            userinfo: [{ username: '', logindates: formatUserStorageTimestamp(), password: '' }],
+            userdashboard: [{ button1: 0, button2: 0, button3: 0, button4: 0, button5: 0, button6: 0, button7: 0, button8: 0, button9: 0, button10: 0, win: 0, balance: 0 }],
+            useragentchat: [],
+            userreport: [],
+            userlastgame: [],
+            userroundid: []
+        };
+    }
+
+    return {
+        userinfo: Array.isArray(profile[0]) ? profile[0] : [],
+        userdashboard: Array.isArray(profile[1]) ? profile[1] : [],
+        useragentchat: Array.isArray(profile[2]) ? profile[2] : [],
+        userreport: Array.isArray(profile[3]) ? profile[3] : [],
+        userlastgame: Array.isArray(profile[4]) ? profile[4] : [],
+        userroundid: Array.isArray(profile[5]) ? profile[5] : []
+    };
+}
+
+function applyStoredProfileToGame(profile) {
+    const sections = getStoredProfileSections(profile);
+    const dashboard = sections.userdashboard[0] || {};
+    const lastGame = sections.userlastgame[0] || {};
+
+    count1 = Number(dashboard.button1 ?? lastGame.button1 ?? 0);
+    count2 = Number(dashboard.button2 ?? lastGame.button2 ?? 0);
+    count3 = Number(dashboard.button3 ?? lastGame.button3 ?? 0);
+    count4 = Number(dashboard.button4 ?? lastGame.button4 ?? 0);
+    count5 = Number(dashboard.button5 ?? lastGame.button5 ?? 0);
+    count6 = Number(dashboard.button6 ?? lastGame.button6 ?? 0);
+    count7 = Number(dashboard.button7 ?? lastGame.button7 ?? 0);
+    count8 = Number(dashboard.button8 ?? lastGame.button8 ?? 0);
+    count9 = Number(dashboard.button9 ?? lastGame.button9 ?? 0);
+    count10 = Number(dashboard.button10 ?? lastGame.button10 ?? 0);
+
+    const profileBalance = Number(dashboard.balance ?? lastGame.balance ?? 0);
+    const profileWin = Number(dashboard.win ?? lastGame.winamount ?? 0);
+
+    if (qaziCheking) {
+        qaziCheking.balance = profileBalance;
+    }
+    newBalance = profileBalance;
+    startbal = profileBalance;
+    win = profileWin;
+
+    if (balanceDiv) {
+        balanceDiv.innerText = Math.floor(profileBalance);
+        sizebal();
+    }
+
+    const winButton = document.querySelector('.winafter');
+    if (winButton) {
+        winButton.innerHTML = profileWin * 100;
+    }
+
+    if (typeof allbuttondappear === 'function') {
+        allbuttondappear();
+    }
+
+    storegamestatus();
+}
+
+function persistActiveUserProfile(options = {}) {
+    const activeKey = getActivePlayerProfileKey();
+    if (!activeKey) return null;
+
+    const profiles = getStoredPlayerProfiles();
+    const existingProfile = profiles[activeKey] || JSON.parse(localStorage.getItem('userinformation') || 'null');
+    const sections = getStoredProfileSections(existingProfile);
+    const timestamp = formatUserStorageTimestamp();
+    const currentBalance = Number(options.balance ?? qaziCheking?.balance ?? newBalance ?? 0);
+    const rawWinText = document.querySelector('.winafter')?.textContent || '0';
+    const fallbackWin = Number(rawWinText) / 100 || 0;
+    const currentWin = Number(options.win ?? fallbackWin);
+    const currentRoundId = String(options.roundid ?? getCurrentRoundId());
+
+    const userinfo = [
+        {
+            ...(sections.userinfo[0] || {}),
+            username: activeKey,
+            logindates: timestamp,
+            password: options.password ?? sections.userinfo[0]?.password ?? ''
+        }
+    ];
+
+    const userdashboard = [
+        {
+            button1: Number(count1 || 0),
+            button2: Number(count2 || 0),
+            button3: Number(count3 || 0),
+            button4: Number(count4 || 0),
+            button5: Number(count5 || 0),
+            button6: Number(count6 || 0),
+            button7: Number(count7 || 0),
+            button8: Number(count8 || 0),
+            button9: Number(count9 || 0),
+            button10: Number(count10 || 0),
+            win: currentWin,
+            balance: currentBalance
+        }
+    ];
+
+    const userlastgame = [
+        {
+            roundid: currentRoundId,
+            date: timestamp,
+            button1: Number(count1 || 0),
+            button2: Number(count2 || 0),
+            button3: Number(count3 || 0),
+            button4: Number(count4 || 0),
+            button5: Number(count5 || 0),
+            button6: Number(count6 || 0),
+            button7: Number(count7 || 0),
+            button8: Number(count8 || 0),
+            button9: Number(count9 || 0),
+            button10: Number(count10 || 0),
+            totalbetamount: Number(count1 || 0) + Number(count2 || 0) + Number(count3 || 0) + Number(count4 || 0) + Number(count5 || 0) + Number(count6 || 0) + Number(count7 || 0) + Number(count8 || 0) + Number(count9 || 0) + Number(count10 || 0),
+            winamount: currentWin,
+            balance: currentBalance
+        }
+    ];
+
+    const userroundid = [
+        {
+            roundid: currentRoundId
+        }
+    ];
+
+    const nextProfile = [
+        userinfo,
+        userdashboard,
+        sections.useragentchat,
+        sections.userreport,
+        userlastgame,
+        userroundid
+    ];
+
+    profiles[activeKey] = nextProfile;
+    localStorage.setItem('playerProfiles', JSON.stringify(profiles));
+    localStorage.setItem('userinformation', JSON.stringify(nextProfile));
+    localStorage.setItem('activePlayerProfileKey', activeKey);
+
+    return nextProfile;
+}
+
+window.createnewuser = createnewuser;
+
+// Authentication Functions
+window.addEventListener('load', function() {
+    document.body.classList.add('login-required');
+
+    // Check if user is already logged in
+    checkLoginStatus();
+
+    // Initialize game (but require login for actions)
+    initializeGame();
+});
+
+function checkLoginStatus() {
+    fetch('check_session.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.logged_in) {
+                isLoggedIn = true;
+                currentUser = data.user;
+                loadStoredUserProfile(currentUser?.phone) || createnewuser({ phone: currentUser?.phone });
+                closeLoginModal();
+                updatePlayerProfile();
+                initializeChat();
+                queuePlayerStateSync('session_opened', 'Player opened the game session');
+                startBalanceUpdatePolling();
+                startPlayerRequestPolling();
+            } else {
+                showLoginModal();
+            }
+        })
+        .catch(error => {
+            console.error('Error checking login status:', error);
+            showLoginModal();
+        });
+}
+
+function showLoginModal() {
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        document.body.classList.add('login-required');
+        modal.style.display = 'flex';
+    }
+}
+
+function closeLoginModal() {
+    if (!isLoggedIn) {
+        return;
+    }
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('login-required');
+    }
+}
+
+// Transaction Modal Functions
+function showTransactionDetails(request) {
+    const modal = document.getElementById('transaction-modal');
+    const detailsContainer = document.getElementById('transaction-details');
+    const cancelBtn = document.getElementById('cancel-transaction-btn');
+
+    if (!modal || !detailsContainer) return;
+
+    const icon = request.request_type === 'cash_in' ? '📥' : '📤';
+    const typeLabel = request.request_type === 'cash_in' ? 'Cash In' : 'Cash Out';
+    const amount = `Frw ${Number(request.amount || 0).toLocaleString()}`;
+    const status = request.status.charAt(0).toUpperCase() + request.status.slice(1);
+    const time = formatTransactionTime(request.created_at);
+
+    detailsContainer.innerHTML = `
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Type:</span>
+            <span class="transaction-detail-value">${icon} ${typeLabel}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Amount:</span>
+            <span class="transaction-detail-value">${amount}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Status:</span>
+            <span class="transaction-detail-value status-${request.status}">${status}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Request Time:</span>
+            <span class="transaction-detail-value">${time}</span>
+        </div>
+        <div class="transaction-detail-item">
+            <span class="transaction-detail-label">Request ID:</span>
+            <span class="transaction-detail-value">#${request.id}</span>
+        </div>
+    `;
+
+    // Show cancel button only for pending requests
+    if (request.status === 'pending') {
+        cancelBtn.style.display = 'inline-block';
+        cancelBtn.onclick = () => confirmCancelTransaction(request.id);
+    } else {
+        cancelBtn.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeTransactionModal() {
+    const modal = document.getElementById('transaction-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function confirmCancelTransaction(requestId) {
+    if (confirm('Are you sure you want to cancel this transaction request?')) {
+        cancelPlayerTransactionRequest(requestId);
+        closeTransactionModal();
+    }
+}
+
+function navigateToGamePage() {
+    const gamePage = 'MOO-GAME.html';
+    const currentPath = window.location.pathname.replace(/\\/g, '/');
+
+    if (currentPath.endsWith(`/${gamePage}`) || currentPath.endsWith(gamePage)) {
+        closeLoginModal();
+        updatePlayerProfile();
+        initializeChat();
+        return;
+    }
+
+    window.location.assign(gamePage);
+}
+
+function updatePlayerProfile() {
+    if (currentUser && currentUser.phone) {
+        const playerName = document.getElementById('playerName');
+        const playerPhone = document.getElementById('playerPhone');
+        const gamesPlayerName = document.getElementById('gamesPlayerName');
+        const gamesPlayerPhone = document.getElementById('gamesPlayerPhone');
+        
+        if (playerName) {
+            playerName.textContent = `Player`;
+        }
+        if (playerPhone) {
+            const phone = currentUser.phone || '';
+            // Mask the phone number except last 3 digits
+            const maskedPhone = phone.length > 3 
+                ? phone.substring(0, phone.length - 3).replace(/./g, '*') + phone.substring(phone.length - 3)
+                : phone;
+            playerPhone.textContent = maskedPhone;
+        }
+        if (gamesPlayerName) {
+            gamesPlayerName.textContent = `Player`;
+        }
+        if (gamesPlayerPhone) {
+            const phone = currentUser.phone || '';
+            const maskedPhone = phone.length > 3 
+                ? phone.substring(0, phone.length - 3).replace(/./g, '*') + phone.substring(phone.length - 3)
+                : phone;
+            gamesPlayerPhone.textContent = maskedPhone;
+        }
+    }
+}
+
+function playerLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear session on server and logout
+        fetch('logout.php', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+        .then(() => {
+            isLoggedIn = false;
+            currentUser = null;
+            selectedAgent = null;
+            window.location.href = 'MOO-GAME.html';
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+            // Force logout anyway
+            isLoggedIn = false;
+            currentUser = null;
+            window.location.href = 'MOO-GAME.html';
+        });
+    }
+}
+
+function normalizePhoneNumber(value) {
+    return value.replace(/\s+/g, '');
+}
+
+function setAuthMessage(type, message) {
+    const messageDiv = document.getElementById('auth-message');
+    messageDiv.className = type;
+    messageDiv.textContent = message;
+}
+
+function parseAuthResponse(response) {
+    return response.text().then(text => {
+        let data = null;
+
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch (error) {
+            throw new Error('Invalid server response');
+        }
+
+        if (!response.ok) {
+            throw new Error(data?.message || 'Request failed');
+        }
+
+        return data;
+    });
+}
+
+function showLoginForm() {
+    document.getElementById('login-tab').classList.add('active');
+    document.getElementById('register-tab').classList.remove('active');
+    document.getElementById('login-form').classList.remove('hidden');
+    document.getElementById('register-form').classList.add('hidden');
+    document.getElementById('auth-message').textContent = '';
+}
+
+function showRegisterForm() {
+    document.getElementById('register-tab').classList.add('active');
+    document.getElementById('login-tab').classList.remove('active');
+    document.getElementById('register-form').classList.remove('hidden');
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('auth-message').textContent = '';
+}
+
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const phpAuthMode = loginForm?.dataset.authMode === 'php' || registerForm?.dataset.authMode === 'php';
+
+if (registerForm && phpAuthMode) {
+    registerForm.addEventListener('submit', function() {
+        createnewuser({
+            username: document.getElementById('register-phone')?.value,
+            password: document.getElementById('register-password')?.value
+        });
+    });
+}
+
+if (loginForm && phpAuthMode) {
+    loginForm.addEventListener('submit', function() {
+        loadStoredUserProfile(normalizePhoneNumber(document.getElementById('login-phone')?.value.trim() || ''));
+    });
+}
+
+// Login form submission
+if (loginForm && !phpAuthMode) {
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const phone = normalizePhoneNumber(document.getElementById('login-phone').value.trim());
+    const password = document.getElementById('login-password').value;
+
+    if (!phone || !password) {
+        setAuthMessage('error', 'Phone and password are required');
+        return;
+    }
+
+    const submitBtn = this.querySelector('.auth-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
+    setAuthMessage('', '');
+
+    fetch('login.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `phone=${encodeURIComponent(phone)}&password=${encodeURIComponent(password)}`
+    })
+    .then(parseAuthResponse)
+    .then(data => {
+        if (data.success) {
+            setAuthMessage('success', data.message);
+            isLoggedIn = true;
+            currentUser = data.user || { phone };
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Login';
+            setTimeout(() => {
+                navigateToGamePage();
+            }, 1000);
+        } else {
+            setAuthMessage('error', data.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Login';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setAuthMessage('error', error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+    });
+});
+}
+
+// Register form submission
+if (registerForm && !phpAuthMode) {
+registerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const phone = normalizePhoneNumber(document.getElementById('register-phone').value.trim());
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+    if (!phone || !password || !confirmPassword) {
+        setAuthMessage('error', 'All fields are required');
+        return;
+    }
+
+    if (password.length < 4 || password.length > 5) {
+        setAuthMessage('error', 'Password must be 4-5 digits');
+        return;
+    }
+
+    if (!/^\d+$/.test(password)) {
+        setAuthMessage('error', 'Password must contain only digits (0-9)');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        setAuthMessage('error', 'Passwords do not match');
+        return;
+    }
+
+    const submitBtn = this.querySelector('.auth-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registering...';
+    setAuthMessage('', '');
+
+    fetch('register.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `phone=${encodeURIComponent(phone)}&password=${encodeURIComponent(password)}&confirm_password=${encodeURIComponent(confirmPassword)}`
+    })
+    .then(parseAuthResponse)
+    .then(data => {
+        if (data.success) {
+            setAuthMessage('success', 'Registration successful! Redirecting to verification...');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Register';
+            setTimeout(() => {
+                window.location.href = 'verify_phone.php';
+            }, 1000);
+        } else {
+            setAuthMessage('error', data.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Register';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setAuthMessage('error', error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+    });
+});
+}
+
+function initializeGame() {
+    // Game can be viewed but actions require login
+    console.log('Game initialized');
+}
+
+function getSelectedAgentId() {
+    return selectedAgent?.id || null;
+}
+
+function collectPlayerState() {
+    const winElement = document.querySelector('.winafter');
+    const currentWin = Number((winElement?.textContent || '0').replace(/[^0-9]/g, '')) / 100 || 0;
+    const currentBalance = Number(qaziCheking?.balance || newBalance || 0);
+    const totalCashIn = Number(localStorage.getItem('cashin') || 0);
+    const totalCashOut = Number(localStorage.getItem('cashout') || 0);
+
+    return {
+        agent_id: getSelectedAgentId(),
+        selected_agent_name: selectedAgent?.displayName || '',
+        current_balance: currentBalance,
+        current_win: currentWin,
+        total_cash_in: totalCashIn,
+        total_cash_out: totalCashOut
+    };
+}
+
+let playerStateSyncTimer = null;
+let balanceUpdatePollingInterval = null;
+let playerRequestPollingInterval = null;
+
+function syncPlayerState(lastAction = '', actionSummary = '', actionPayload = null) {
+    if (!isLoggedIn) return;
+
+    const payload = {
+        ...collectPlayerState(),
+        last_action: lastAction,
+        action_summary: actionSummary,
+        action_payload: actionPayload
+    };
+
+    fetch('sync_player_state.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    }).catch(error => console.error('Error syncing player state:', error));
+}
+
+function queuePlayerStateSync(lastAction = '', actionSummary = '', actionPayload = null) {
+    if (playerStateSyncTimer) {
+        clearTimeout(playerStateSyncTimer);
+    }
+
+    playerStateSyncTimer = setTimeout(() => {
+        syncPlayerState(lastAction, actionSummary, actionPayload);
+    }, 250);
+}
+
+function acknowledgeTransactionEffect(requestId, options = {}) {
+    const params = new URLSearchParams({ request_id: String(requestId) });
+    if (options.markHold) params.append('mark_hold', '1');
+    if (options.markRelease) params.append('mark_release', '1');
+    if (options.markApply) params.append('mark_apply', '1');
+
+    return fetch('acknowledge_transaction_update.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString()
+    }).catch(error => console.error('Error acknowledging transaction update:', error));
+}
+
+function applyApprovedTransactionUpdate(update) {
+    const amount = Number(update.amount || 0);
+    if (!amount) return Promise.resolve();
+
+    if (update.action === 'hold_cash_out') {
+        // Already withdrawn on submit
+    } else if (update.action === 'release_cash_out') {
+        qaziCheking.deposit(amount);
+    } else if (update.action === 'apply_cash_in') {
+        qaziCheking.deposit(amount);
+        localStorage.setItem('cashin', Number(localStorage.getItem('cashin') || 0) + amount);
+    } else if (update.action === 'apply_approved_cash_out') {
+        // Already withdrawn on submit
+    }
+
+    newBalance = Number(qaziCheking.balance);
+    balanceDiv.innerText = Math.floor(newBalance);
+    sizebal();
+    storegamestatus();
+    const summaryMap = {
+        hold_cash_out: `Cash out ${amount} held by agent`,
+        release_cash_out: `Cash out ${amount} rejected, balance restored`,
+        apply_cash_in: `Cash in ${amount} added to balance`,
+        apply_approved_cash_out: `Cash out ${amount} approved`,
+        finalize_cash_out: `Cash out ${amount} finalized`
+    };
+
+    queuePlayerStateSync('transaction_applied', summaryMap[update.action] || 'Transaction updated', {
+        request_id: update.id,
+        request_type: update.request_type,
+        amount,
+        action: update.action
+    });
+
+    if (update.action === 'hold_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markHold: true });
+    }
+    if (update.action === 'release_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markRelease: true, markApply: true });
+    }
+    if (update.action === 'apply_cash_in') {
+        // For cash-in approvals, also fetch the latest balance from server
+        fetchPlayerBalance();
+        return acknowledgeTransactionEffect(update.id, { markApply: true });
+    }
+    if (update.action === 'apply_approved_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markHold: true, markApply: true });
+    }
+    if (update.action === 'finalize_cash_out') {
+        return acknowledgeTransactionEffect(update.id, { markApply: true });
+    }
+
+    return Promise.resolve();
+}
+
+// Fetch player's current balance from server
+function fetchPlayerBalance() {
+    if (!isLoggedIn) return;
+
+    fetch('get_player_balance.php', {
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.balance !== undefined) {
+            // Sync server balance with local balance
+            const serverBalance = Number(data.balance || 0);
+            qaziCheking.balance = serverBalance;
+            newBalance = serverBalance;
+            
+            if (balanceDiv) {
+                balanceDiv.innerText = Math.floor(newBalance);
+                sizebal();
+            }
+        }
+    })
+    .catch(error => console.error('Error fetching player balance:', error));
+}
+
+function checkApprovedTransactionUpdates() {
+    if (!isLoggedIn) return;
+
+    fetch('get_player_balance_updates.php', {
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success || !Array.isArray(data.updates) || data.updates.length === 0) {
+            return;
+        }
+
+        data.updates.reduce((promise, update) => {
+            return promise.then(() => applyApprovedTransactionUpdate(update));
+        }, Promise.resolve());
+    })
+    .catch(error => console.error('Error checking balance updates:', error));
+}
+
+function startBalanceUpdatePolling() {
+    if (balanceUpdatePollingInterval) {
+        clearInterval(balanceUpdatePollingInterval);
+    }
+
+    checkApprovedTransactionUpdates();
+    balanceUpdatePollingInterval = setInterval(checkApprovedTransactionUpdates, 3000);
+}
+
+function ensurePlayerRequestPanel() {
+    const chatBody = document.querySelector('.chat-body');
+    if (!chatBody) return null;
+
+    let panel = document.getElementById('player-request-panel');
+    if (panel) return panel;
+
+    panel = document.createElement('div');
+    panel.id = 'player-request-panel';
+    panel.style.width = '100%';
+    panel.style.padding = '0.35rem 0.5rem';
+    panel.style.display = 'flex';
+    panel.style.flexDirection = 'column';
+    panel.style.gap = '0.35rem';
+
+    const messageBody = document.querySelector('.chat-message-body');
+    if (messageBody) {
+        chatBody.insertBefore(panel, messageBody);
+    } else {
+        chatBody.prepend(panel);
+    }
+
+    return panel;
+}
+
+function renderPlayerTransactionRequests(requests) {
+    // Render to chat area (existing functionality)
+    const panel = ensurePlayerRequestPanel();
+    if (panel) {
+        panel.innerHTML = '';
+        const relevantRequests = requests.filter(request => ['pending', 'declined', 'cancelled'].includes(request.status));
+
+        relevantRequests.slice(0, 3).forEach(request => {
+            const card = document.createElement('div');
+            card.style.background = request.status === 'pending' ? '#2d2d2f' : '#353539';
+            card.style.color = '#fff';
+            card.style.borderRadius = '0.7rem';
+            card.style.padding = '0.5rem 0.7rem';
+            card.style.fontSize = '12px';
+
+            const typeLabel = request.request_type === 'cash_in' ? 'Cash in' : 'Cash out';
+            const meta = `${typeLabel} ${Number(request.amount || 0).toLocaleString()} - ${request.status}`;
+            card.innerHTML = `<div style="font-weight:700; margin-bottom:0.25rem;">${meta}</div>`;
+
+            if (request.status === 'pending') {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.style.background = '#dc3545';
+                cancelBtn.style.color = '#fff';
+                cancelBtn.style.border = 'none';
+                cancelBtn.style.borderRadius = '999px';
+                cancelBtn.style.padding = '0.25rem 0.7rem';
+                cancelBtn.style.cursor = 'pointer';
+                cancelBtn.onclick = () => cancelPlayerTransactionRequest(request.id);
+                card.appendChild(cancelBtn);
+            } else if (request.agent_note) {
+                const note = document.createElement('div');
+                note.style.marginTop = '0.25rem';
+                note.style.color = '#d4d4d4';
+                note.textContent = request.agent_note;
+                card.appendChild(note);
+            }
+
+            panel.appendChild(card);
+        });
+    }
+
+    // Render to Records tab (new functionality)
+    renderRecordsTransactionCards(requests);
+}
+
+function renderRecordsTransactionCards(requests) {
+    const grid = document.querySelector('.transaction-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    if (requests.length === 0) {
+        const emptyCard = document.createElement('div');
+        emptyCard.className = 'transaction-card transaction-card-empty';
+        emptyCard.innerHTML = `
+            <div class="transaction-icon">📋</div>
+            <div class="transaction-type">No Transactions</div>
+            <div class="transaction-amount">No requests yet</div>
+            <div class="transaction-status">Empty</div>
+            <div class="transaction-time">-</div>
+        `;
+        grid.appendChild(emptyCard);
+        return;
+    }
+
+    requests.forEach(request => {
+        const card = document.createElement('div');
+        card.className = `transaction-card transaction-card-${request.request_type === 'cash_in' ? 'in' : 'out'}`;
+
+        const icon = request.request_type === 'cash_in' ? '📥' : '📤';
+        const typeLabel = request.request_type === 'cash_in' ? 'Cash In' : 'Cash Out';
+        const amount = `Frw ${Number(request.amount || 0).toLocaleString()}`;
+        const status = request.status.charAt(0).toUpperCase() + request.status.slice(1);
+        const time = formatTransactionTime(request.created_at);
+
+        card.innerHTML = `
+            <div class="transaction-icon">${icon}</div>
+            <div class="transaction-type">${typeLabel}</div>
+            <div class="transaction-amount">${amount}</div>
+            <div class="transaction-status ${request.status}">${status}</div>
+            <div class="transaction-time">${time}</div>
+        `;
+
+        // Make pending cards clickable to show details
+        if (request.status === 'pending') {
+            card.style.cursor = 'pointer';
+            card.onclick = () => showTransactionDetails(request);
+        }
+
+        grid.appendChild(card);
+    });
+}
+
+function formatTransactionTime(timestamp) {
+    if (!timestamp) return '-';
+
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString();
+}
+
+function loadPlayerTransactionRequests() {
+    if (!isLoggedIn) return;
+
+    const agentId = getSelectedAgentId();
+    const url = agentId ? `get_player_transaction_requests.php?agent_id=${agentId}` : 'get_player_transaction_requests.php';
+
+    fetch(url, { credentials: 'same-origin' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && Array.isArray(data.requests)) {
+                renderPlayerTransactionRequests(data.requests);
+            }
+        })
+        .catch(error => console.error('Error loading player transaction requests:', error));
+}
+
+function startPlayerRequestPolling() {
+    if (playerRequestPollingInterval) {
+        clearInterval(playerRequestPollingInterval);
+    }
+
+    loadPlayerTransactionRequests();
+    playerRequestPollingInterval = setInterval(loadPlayerTransactionRequests, 3000);
+}
+
+function cancelPlayerTransactionRequest(requestId) {
+    fetch('cancel_transaction_request.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `request_id=${encodeURIComponent(requestId)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            alert(data.message || 'Unable to cancel transaction request.');
+            return;
+        }
+
+        loadMessages();
+        loadPlayerTransactionRequests();
+        checkApprovedTransactionUpdates();
+    })
+    .catch(error => {
+        console.error('Error cancelling transaction request:', error);
+        alert('Unable to cancel transaction request.');
+    });
+}
+
+function requireLogin() {
+    if (!isLoggedIn) {
+        showLoginModal();
+        return false;
+    }
+    return true;
+}
+
+// Override game action functions to require login
+const originalTransbtn = window.transbtn;
+window.transbtn = function() {
+    if (requireLogin()) {
+        const result = originalTransbtn.apply(this, arguments);
+        queuePlayerStateSync('transaction_popup', 'Player opened the transaction popup');
+        return result;
+    }
+};
+
+const originalBetbutton = window.betbutton;
+window.betbutton = function() {
+    if (requireLogin()) {
+        const result = originalBetbutton.apply(this, arguments);
+        queuePlayerStateSync('cash_action', 'Player opened a cash action');
+        return result;
+    }
+};
+
+const originalCountClicks1 = window.countClicks1;
+window.countClicks1 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks1.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks2 = window.countClicks2;
+window.countClicks2 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks2.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks3 = window.countClicks3;
+window.countClicks3 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks3.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks4 = window.countClicks4;
+window.countClicks4 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks4.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks5 = window.countClicks5;
+window.countClicks5 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks5.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks6 = window.countClicks6;
+window.countClicks6 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks6.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks7 = window.countClicks7;
+window.countClicks7 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks7.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks8 = window.countClicks8;
+window.countClicks8 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks8.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks9 = window.countClicks9;
+window.countClicks9 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks9.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+const originalCountClicks10 = window.countClicks10;
+window.countClicks10 = function() {
+    if (requireLogin()) {
+        const result = originalCountClicks10.apply(this, arguments);
+        queuePlayerStateSync('bet_update', 'Player updated bets on the game board');
+        return result;
+    }
+};
+
+function initializeChat() {
+    // Start polling for new messages every 3 seconds
+    if (messagePollingInterval) {
+        clearInterval(messagePollingInterval);
+    }
+
+    const inputBar = document.querySelector('.chat-body-message-input');
+    if (inputBar) {
+        inputBar.style.display = 'flex';
+    }
+
+    if (selectedAgent && isLoggedIn) {
+        queuePlayerStateSync('agent_selected', 'Player connected to an agent chat');
+        loadPlayerTransactionRequests();
+        messagePollingInterval = setInterval(() => {
+            loadMessages();
+        }, 3000);
+    }
+}
+
+function loadMessages() {
+    if (!selectedAgent || !isLoggedIn) return;
+
+    const selectedAgentId = selectedAgent?.id;
+
+    if (!selectedAgentId) return;
+
+    fetch(`get_messages.php?agent_id=${selectedAgentId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayMessages(data.messages);
+            }
+        })
+        .catch(error => console.error('Error loading messages:', error));
+}
+
+function displayMessages(messages) {
+    const messageBody = document.querySelector('.chat-message-body');
+    if (!messageBody) return;
+
+    // Only update if there are new messages
+    const currentMessageCount = messageBody.children.length;
+    if (messages.length <= currentMessageCount) return;
+
+    messageBody.innerHTML = '';
+
+    messages.forEach(message => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message';
+
+        const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        messageDiv.innerHTML = `<strong>${message.sender_type === 'user' ? 'You' : message.agent_name}:</strong> ${message.message} <span style="font-size: 0.8em; color: #666;">${time}</span>`;
+
+        messageBody.appendChild(messageDiv);
+    });
+
+    // Scroll to bottom
+    messageBody.scrollTop = messageBody.scrollHeight;
+}
+
+// Override the existing sendMessage function
+const originalSendMessage = window.sendMessage;
+window.sendMessage = function() {
+    if (!requireLogin()) return;
+
+    const message = document.querySelector('.chat-input').value.trim();
+    if (message === '' || !selectedAgent) return;
+
+    selectedAgentId = selectedAgent?.id;
+
+    if (!selectedAgentId) {
+        alert('Invalid agent selected');
+        return;
+    }
+
+    fetch('send_message.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `message=${encodeURIComponent(message)}&agent_id=${selectedAgentId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector('.chat-input').value = '';
+            loadMessages(); // Refresh messages immediately
+            queuePlayerStateSync('chat_message', 'Player sent a message to the agent', {
+                message_preview: message.slice(0, 120)
+            });
+        } else {
+            alert('Failed to send message: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while sending the message.');
+    });
+};
+
+// Override selectAgent to initialize chat polling
+const originalSelectAgent = window.selectAgent;
+window.selectAgent = function(id, displayName, imgSrc) {
+    originalSelectAgent.apply(this, arguments);
+
+    if (isLoggedIn) {
+        initializeChat();
+        loadMessages(); // Load existing messages immediately
+        queuePlayerStateSync('agent_selected', `Player selected ${displayName}`, {
+            selected_agent: displayName
+        });
+    }
+};
+
+const originalStoreGameStatus = window.storegamestatus;
+window.storegamestatus = function() {
+    const result = originalStoreGameStatus.apply(this, arguments);
+    persistActiveUserProfile();
+    queuePlayerStateSync();
+    return result;
+};
+
+// Add event listener for transaction modal close
+document.addEventListener('DOMContentLoaded', function() {
+    const transactionModal = document.getElementById('transaction-modal');
+    if (transactionModal) {
+        transactionModal.addEventListener('click', function(event) {
+            if (event.target === transactionModal) {
+                closeTransactionModal();
+            }
+        });
+    }
 });
